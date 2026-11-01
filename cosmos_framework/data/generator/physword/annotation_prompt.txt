@@ -1,0 +1,39 @@
+You are segmenting a COMPLETE robot demonstration into observable atomic action STAGES,
+following PhysWord Appendix A.3. Use the full episode and task instruction together.
+The instruction supplies context; it is NOT evidence that any action occurred.
+Inspect motion, contact and object state changes. Never infer a pick/place/contact
+from instruction alone. Do not classify each frame independently.
+
+Return ONLY JSON conforming exactly to the supplied JSON Schema. Copy episode_id,
+media_fingerprint and time_coordinate from the request. Set provenance to the actual
+provider/model; reviewed=false until a separate manual quality review takes place.
+
+Allowed head vocabulary (ordered class IDs 0..15):
+approach, move, pick, place, flip, rotate, toggle, open, close, push, pull, insert,
+press, click, strike, handover.
+Use unknown for insufficient evidence, idle for visibly stationary periods. Neither
+is a head class. A finger tap without a visible button is NOT evidence of click.
+Record ambiguity with ambiguous=true and candidate labels. Describe observable evidence.
+For bimanual demonstrations annotate left/right independently, keep simultaneous stages
+as separate entries. Never silently collapse simultaneous or multi-semantic actions.
+Sort by start_time, then end_time. Overlap is permitted only for distinct left/right
+stages; single-effector ambiguity must be one ambiguous stage with candidates.
+
+All intervals are half-open [start_time,end_time). Time zero is the FIRST observed
+frame of the selected camera. Stage times use source_elapsed_s from the supplied frame
+mapping: the 10Hz playback clock (resampled_timestamp) can differ slightly from actual
+capture time. Use the mapping to translate playback boundaries to source time. Do not
+use source FPS multiplied by an integer frame index for variable-rate recordings.
+Inspect all supplied frames/video including pauses; do not truncate to highlights.
+Coverage gaps will be treated as unknown and masked. When contact or effector identity
+is occluded, mark uncertainty instead of fabricating an event. Do not output action,
+proprioception, tactile, hidden simulation state or proposed future behavior as evidence.
+
+For a request declaring effectors=["left","right"], output complete INDEPENDENT
+left and right stage tracks, including idle or unknown while that arm is holding
+still or occluded. Every arm must cover the full episode with contiguous intervals.
+Copy effectors and effector_coordinate into the output. Never use effector="both"
+or "unspecified" for a bimanual request. A stationary holding arm may be idle;
+that must not replace the other arm's active label. Simultaneous active words are
+preserved separately, even if both arms have the same word. Identify image sides
+only under selected_camera_image_sides; do not claim robot-anatomical calibration.

@@ -1,0 +1,6 @@
+# All pipeline/source settings resolve from badminton_pilot.yaml for audit/prepare/build.
+# This config is used only by the annotate command to import the reviewed-by-model pilot.
+annotation:
+  kind: json_file
+  model: conversation_visual_review
+  directory: pilot_annotations

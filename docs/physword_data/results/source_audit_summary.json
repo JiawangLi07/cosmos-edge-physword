@@ -1,0 +1,20 @@
+{
+  "episodes": 207,
+  "camera_timestamp_logs_checked": 621,
+  "failures": [],
+  "source_frame_rows": 526192,
+  "declared_writer_fps_counts": {
+    "30": 621
+  },
+  "camera_counts": {
+    "wrist": 207,
+    "main": 207,
+    "wrist2": 207
+  },
+  "largest_capture_gap_s": 0.3024600000062492,
+  "profiles_fully_probed": [
+    "badminton__episode_0001",
+    "badminton__episode_0002",
+    "badminton__episode_0003"
+  ]
+}
