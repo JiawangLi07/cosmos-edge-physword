@@ -1,15 +1,15 @@
 {
-  "episodes": 207,
-  "camera_timestamp_logs_checked": 621,
+  "episodes": 206,
+  "camera_timestamp_logs_checked": 618,
   "failures": [],
-  "source_frame_rows": 526192,
+  "source_frame_rows": 525934,
   "declared_writer_fps_counts": {
-    "30": 621
+    "30": 618
   },
   "camera_counts": {
-    "wrist": 207,
-    "main": 207,
-    "wrist2": 207
+    "wrist": 206,
+    "main": 206,
+    "wrist2": 206
   },
   "largest_capture_gap_s": 0.3024600000062492,
   "profiles_fully_probed": [

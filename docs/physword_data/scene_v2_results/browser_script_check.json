@@ -6,18 +6,14 @@
       "episode_id": "badminton__episode_0001",
       "initial": "left: approach | right: rest ; source=0.000s",
       "after_seek": "right: rest | left: grasp ; source=2.583s",
+      "stage_click_playback_time": 25.6,
       "syntax_and_callbacks": "passed"
     },
     {
       "episode_id": "badminton__episode_0017",
       "initial": "left: approach | right: rest ; source=0.000s",
       "after_seek": "right: rest | left: grasp ; source=2.569s",
-      "syntax_and_callbacks": "passed"
-    },
-    {
-      "episode_id": "badminton__episode_0038",
-      "initial": "left: rest | right: rest ; source=0.000s",
-      "after_seek": "right: rest | left: grasp ; source=2.584s",
+      "stage_click_playback_time": 18.8,
       "syntax_and_callbacks": "passed"
     }
   ]

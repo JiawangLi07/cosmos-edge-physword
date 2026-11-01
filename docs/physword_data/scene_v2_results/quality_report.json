@@ -59,26 +59,25 @@
     }
   },
   "vocabulary_hash": "00c119f403e4a8c41423a1ec351d8ba265b4e9d52db76e014b3df3bfd5f32cc7",
-  "episodes_processed": 3,
-  "frames_processed": 504,
-  "windows": 444,
+  "episodes_processed": 2,
+  "frames_processed": 473,
+  "windows": 433,
   "windows_with_valid_pw": 0,
-  "windows_with_valid_arm_pw": 444,
-  "windows_with_all_arm_pw": 318,
+  "windows_with_valid_arm_pw": 433,
+  "windows_with_all_arm_pw": 312,
   "split_episode_counts": {
     "train": 186,
-    "test": 21
+    "test": 20
   },
   "split_window_counts": {
-    "train": 433,
-    "test": 11
+    "train": 433
   },
   "tasks": {
     "badminton": {
-      "episodes": 3,
-      "windows": 444,
+      "episodes": 2,
+      "windows": 433,
       "windows_with_valid_pw": 0,
-      "targets": 1776,
+      "targets": 1732,
       "valid_targets": 0,
       "words": {
         "approach": 0,
@@ -108,7 +107,7 @@
         "release": 0
       },
       "mask_reasons": {
-        "parallel_or_multilabel": 1776
+        "parallel_or_multilabel": 1732
       },
       "unique_frame_words": {
         "approach": 0,
@@ -138,13 +137,13 @@
         "release": 0
       },
       "unique_frame_mask_reasons": {
-        "parallel_or_multilabel": 504
+        "parallel_or_multilabel": 473
       },
       "stage_words": {
-        "approach": 7,
-        "rest": 6,
-        "align": 5,
-        "grasp": 5,
+        "approach": 6,
+        "rest": 4,
+        "align": 4,
+        "grasp": 4,
         "lift": 4,
         "rotate": 2,
         "hold": 3,
@@ -156,10 +155,10 @@
         "lower": 1
       },
       "stage_durations_s": {
-        "approach": 8.549999999999997,
-        "rest": 18.002808000007647,
-        "align": 6.050000000000001,
-        "grasp": 8.434431000004407,
+        "approach": 7.1999999999999975,
+        "rest": 14.468377000003242,
+        "align": 5.500000000000001,
+        "grasp": 7.700000000000001,
         "lift": 3.4,
         "rotate": 1.8000000000000003,
         "hold": 34.968377000003244,
@@ -172,10 +171,10 @@
       },
       "arms": {
         "left": {
-          "targets": 1776,
-          "valid_targets": 1731,
+          "targets": 1732,
+          "valid_targets": 1692,
           "words": {
-            "approach": 21,
+            "approach": 3,
             "move": 0,
             "pick": 0,
             "place": 0,
@@ -193,19 +192,19 @@
             "handover": 0,
             "rest": 0,
             "hold": 1341,
-            "grasp": 115,
+            "grasp": 107,
             "lift": 64,
-            "align": 62,
+            "align": 49,
             "adjust": 0,
             "retract": 0,
             "lower": 64,
             "release": 0
           },
           "mask_reasons": {
-            "stage_boundary_uncertainty": 45
+            "stage_boundary_uncertainty": 40
           },
           "unique_frame_words": {
-            "approach": 31,
+            "approach": 19,
             "move": 0,
             "pick": 0,
             "place": 0,
@@ -221,24 +220,24 @@
             "click": 0,
             "strike": 0,
             "handover": 0,
-            "rest": 5,
+            "rest": 0,
             "hold": 347,
-            "grasp": 33,
+            "grasp": 27,
             "lift": 16,
-            "align": 25,
+            "align": 20,
             "adjust": 0,
             "retract": 0,
             "lower": 16,
             "release": 0
           },
           "unique_frame_mask_reasons": {
-            "stage_boundary_uncertainty": 15
+            "stage_boundary_uncertainty": 12
           },
-          "missing_rate": 0.02533783783783783
+          "missing_rate": 0.023094688221709014
         },
         "right": {
-          "targets": 1776,
-          "valid_targets": 1684,
+          "targets": 1732,
+          "valid_targets": 1640,
           "words": {
             "approach": 196,
             "move": 168,
@@ -256,7 +255,7 @@
             "click": 0,
             "strike": 0,
             "handover": 0,
-            "rest": 456,
+            "rest": 412,
             "hold": 0,
             "grasp": 184,
             "lift": 60,
@@ -286,7 +285,7 @@
             "click": 0,
             "strike": 0,
             "handover": 0,
-            "rest": 174,
+            "rest": 143,
             "hold": 0,
             "grasp": 46,
             "lift": 15,
@@ -299,7 +298,7 @@
           "unique_frame_mask_reasons": {
             "stage_boundary_uncertainty": 23
           },
-          "missing_rate": 0.05180180180180183
+          "missing_rate": 0.053117782909930744
         }
       },
       "missing_rate": 1.0
@@ -358,36 +357,6 @@
           "end_offset_s": 0.007834999996703118,
           "nearest_p95_s": 0.023018500000034692,
           "nearest_max_s": 0.04725699999835342
-        }
-      },
-      "annotation_provenance": {
-        "provider": "codex_visual_pilot",
-        "model": "conversation_multiview_review_v2",
-        "reviewed": false
-      }
-    },
-    {
-      "episode_id": "badminton__episode_0038",
-      "frames": 31,
-      "windows": 11,
-      "stage_count": 5,
-      "invalid_stale_frames": 0,
-      "near_uniform_frames": 0,
-      "source_clock": "capture_monotonic",
-      "sync": {
-        "wrist": {
-          "status": "shared_monotonic_clock",
-          "start_offset_s": 0.025616999992053024,
-          "end_offset_s": -0.02877299999818206,
-          "nearest_p95_s": 0.02525619999796618,
-          "nearest_max_s": 0.031529999992926605
-        },
-        "wrist2": {
-          "status": "shared_monotonic_clock",
-          "start_offset_s": -0.02196199999889359,
-          "end_offset_s": -0.5030949999927543,
-          "nearest_p95_s": 0.35090949999284937,
-          "nearest_max_s": 0.5030949999927543
         }
       },
       "annotation_provenance": {

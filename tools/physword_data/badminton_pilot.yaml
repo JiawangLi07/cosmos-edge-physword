@@ -1,3 +1,4 @@
+split_manifest: ../../docs/physword_data/results/split_manifest.json  # Preserve surviving membership after curation.
 pipeline:
   sampling_fps: 10
   train_ratio: 0.9

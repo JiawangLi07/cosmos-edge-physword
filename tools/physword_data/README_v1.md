@@ -43,7 +43,7 @@ PW_OUT=/aifs/lijiawang/physword/data_pilot/my_badminton_pilot
   --config tools/physword_data/badminton_pilot.yaml --output "$PW_OUT"
 "$PW_PY" -m cosmos_framework.data.generator.physword.cli prepare \
   --config tools/physword_data/badminton_pilot.yaml --output "$PW_OUT" \
-  --episode badminton__episode_0001 --episode badminton__episode_0017 --episode badminton__episode_0038
+  --episode badminton__episode_0001 --episode badminton__episode_0017
 "$PW_PY" -m cosmos_framework.data.generator.physword.cli annotate \
   --config tools/physword_data/badminton_annotation_import.yaml --output "$PW_OUT"
 "$PW_PY" -m cosmos_framework.data.generator.physword.cli build \

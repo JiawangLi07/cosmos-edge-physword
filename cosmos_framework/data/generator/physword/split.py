@@ -116,3 +116,20 @@ def check_leakage(manifest):
                 raise ValueError(f"Episode leakage via {field}: {value}")
             seen[value] = entry["split"]
     return True
+
+
+def inherit_split(manifest, parent):
+    """Preserve surviving memberships after curation instead of reshuffling test episodes."""
+    if manifest["seed"] != parent["seed"]:
+        raise ValueError("Inherited split seed differs from requested experiment seed")
+    assignments = {entry["original_episode_id"]: entry["split"] for entry in parent["episodes"]}
+    for entry in manifest["episodes"]:
+        if entry["original_episode_id"] not in assignments:
+            raise ValueError("New episode has no assignment in the canonical curated split")
+        entry["split"] = assignments[entry["original_episode_id"]]
+    check_leakage(manifest)
+    manifest.setdefault("notes", []).append(
+        "Surviving memberships inherited from canonical curated split; no reshuffle after exclusion."
+    )
+    manifest["parent_split_hash"] = digest(parent)
+    return manifest

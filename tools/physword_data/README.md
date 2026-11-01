@@ -1,6 +1,8 @@
+> 已执行 episode_0038 排除；清理与短视频筛查详见 [报告](../../docs/physword_data/episode_0038_removal_report.md)。
+
 # Badminton 双臂场景原语标注 v2
 
-当前版本为 `badminton_scene_v2`。按最新要求，重新审阅 3 条 badminton Pilot 的完整 main 10Hz 序列，并补查按采集时钟同步的 main / wrist / wrist2 图像；每只手臂独立标注，所有标签均为一个英文单词，**没有 `idle` 或 `unknown` 标注**。
+当前版本为 `badminton_scene_v2`。按最新要求，重新审阅 2 条 badminton Pilot 的完整 main 10Hz 序列，并补查按采集时钟同步的 main / wrist / wrist2 图像；每只手臂独立标注，所有标签均为一个英文单词，**没有 `idle` 或 `unknown` 标注**。
 
 旧版 16 类流程和历史结果保存在 [README_v1.md](README_v1.md) 与 [v1 Pilot 报告](../../docs/physword_data/pilot_report.md)。新版扩展的是数据词表，不声称与论文原始 16 类设置相同；没有修改模型、Loss，也没有启动训练。
 
@@ -19,10 +21,10 @@
 
 主输出：`/aifs/lijiawang/physword/data_pilot/badminton/scene_v2/`。
 
-- 3 条 Episode：`episode_0001 / episode_0017 / episode_0038`。
-- 504 个 10Hz RGB 帧、444 个完整窗口、45 个阶段，两臂各自连续覆盖整段 Episode。
-- 全部 207 条原始 Episode 的 186 Train / 21 Test 划分保持原样；Pilot 为 433 Train / 11 Test 窗口。
-- 双臂监督共 3,552 个位置，3,415 个有效（96.14%）；137 个位置仅因阶段边界不确定被 Mask。
+- 2 条 Episode：`episode_0001 / episode_0017`。
+- 473 个 10Hz RGB 帧、433 个完整窗口、40 个阶段，两臂各自连续覆盖整段 Episode。
+- 清理后 206 条原始 Episode 保留为 186 Train / 20 Test，幸存样本不重新打乱；Pilot 为 433 Train / 0 Test 窗口。
+- 双臂监督共 3,464 个位置，3,332 个有效（96.19%）；132 个位置仅因阶段边界不确定被 Mask。
 - 该比例是监督覆盖率，不是人工标注准确率；置信度仍为主观评分，`reviewed=false`。
 
 词表共有 25 类，原有 16 类 ID 保留，新增以下 9 类：
@@ -41,7 +43,7 @@
 
 完整映射与逐词定义：[vocabulary.json](scene_v2/vocabulary.json)。实际观察到 13 类：`approach / move / rotate / insert / rest / hold / grasp / lift / align / adjust / retract / lower / release`。
 
-这次重新划分了阶段和部分边界，并区分左臂持筒与右臂操作，没有将历史 `unknown` 一律机械替换成同一个词。短 Episode 0038 只标到抓握阶段，不添加未观察到的提起或插入。静止持物使用 `hold`，空手静止使用 `rest`，两者是新版词表的有效类别。
+这次重新划分了阶段和部分边界，并区分左臂持筒与右臂操作，没有将历史 `unknown` 一律机械替换成同一个词。静止持物使用 `hold`，空手静止使用 `rest`，两者是新版词表的有效类别。
 
 侧别约定仍为 `selected_camera_image_sides`：main 画面左/右手臂。需要与硬件臂名称对应时，应单独确认映射。
 
@@ -59,7 +61,7 @@ cd /aifs/lijiawang/physword/cosmos-framework-data
 
 `--publish` 在质量检查成功后更新原网页入口，同时归档 v1 抽检文件；省略则只生成新版本。输出目录已有内容时拒绝覆盖。词表、标注 JSON、Prompt 与严格 Schema 位于 [scene_v2/](scene_v2)。
 
-重新标注使用已有真实时间 Mapping 和不可变 RGB 媒体，通过链接复用 PNG/MP4，原始视频、v1 阶段标签、v1 窗口和 Episode 划分均保留。`badminton_scene_v2_repro` 已独立重建并获得相同词表、标签分布和窗口数量。
+重新标注使用已有真实时间 Mapping 和不可变 RGB 媒体，通过链接复用 PNG/MP4，保留样本的原始视频与两版标注均保留；0038 在所有版本中已移除，幸存样本的 Split 不变。`badminton_scene_v2_repro` 已独立重建并获得相同词表、标签分布和窗口数量。
 
 若需从零生成 10Hz 媒体，先按 [v1 基础预处理命令](README_v1.md) 执行 audit / prepare，再运行本命令。数据只包括 badminton，未处理 top。
 
@@ -92,6 +94,8 @@ PYTHONPATH=. /tmp/physword-data-venv/bin/python -m pytest \
   -c tools/physword_data/pytest.ini --confcutdir=tests/physword_data tests/physword_data -q
 ```
 
-50 项测试通过，包含旧 16 类回归、单词/禁用标签验证、扩展词表 ID 隔离、双臂完整覆盖与独立性、真实时间映射、边界 Mask、混合词表拒绝和旧 Word Head 防误用。扩展 Dataset/DataLoader 实测输出 `[2,2,4]` 标签与 Mask。
+55 项测试通过，包含旧 16 类回归、单词/禁用标签验证、扩展词表 ID 隔离、双臂完整覆盖与独立性、真实时间映射、边界 Mask、混合词表拒绝和旧 Word Head 防误用。扩展 Dataset/DataLoader 实测输出 `[2,2,4]` 标签与 Mask。
+
+当前已从原始副本及所有已发现的本地派生数据中排除截断的 `episode_0038`，保留隔离备份。全量 `<5s` 时长筛查另发现 `episode_0042`（约 3.66 秒），目前仅标记、未删除。[清理报告与只读复核命令](../../docs/physword_data/episode_0038_removal_report.md)记录了来源映射、范围、统计重算和恢复位置。`badminton_pilot.yaml` 的 `split_manifest` 固定继承清理后的 Split；不要移除该配置后重划现有实验。
 
 [新版质量报告](../../docs/physword_data/scene_v2_report.md) · [严格 JSON Schema](scene_v2/atomic_stages.schema.json) · [新版 Prompt](scene_v2/prompt.txt) · [Episode 0001 标注](scene_v2/annotations/badminton__episode_0001.json)

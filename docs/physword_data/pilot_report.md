@@ -1,4 +1,5 @@
 > 历史 v1 报告。按用户最新要求重新标注的场景词表版本，请看 [scene_v2_report.md](scene_v2_report.md)。
+> 后续已从活动数据移除 episode_0038；本页保留历史处理记录，当前数量及短视频筛查见 [清理报告](episode_0038_removal_report.md)。
 
 # PhysWord 数据 Pipeline Pilot 报告
 

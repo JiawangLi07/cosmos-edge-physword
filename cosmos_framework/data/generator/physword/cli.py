@@ -22,16 +22,23 @@ from cosmos_framework.data.generator.physword.annotation import (
 from cosmos_framework.data.generator.physword.common import PipelineConfig, digest, read_json, write_json
 from cosmos_framework.data.generator.physword.media import inspect_episode, process_episode
 from cosmos_framework.data.generator.physword.quality import quality_report, visualize_episode
-from cosmos_framework.data.generator.physword.split import build_split, check_leakage, source_content_hash
+from cosmos_framework.data.generator.physword.split import (
+    build_split,
+    check_leakage,
+    inherit_split,
+    source_content_hash,
+)
 from cosmos_framework.data.generator.physword.windows import generate_windows
 
 
 def load_config(path):
     path = Path(path).resolve()
     raw = yaml.safe_load(path.read_text())
-    allowed = {"pipeline", "sources", "annotation"}
+    allowed = {"pipeline", "sources", "annotation", "split_manifest"}
     if set(raw) - allowed:
         raise ValueError(f"Unknown top-level keys: {set(raw) - allowed}")
+    if raw.get("split_manifest"):
+        raw["split_manifest"] = str((path.parent / raw["split_manifest"]).resolve())
     for source in raw.get("sources", []):
         for key in ("root", "manifest"):
             if source.get(key):
@@ -69,11 +76,18 @@ def audit(raw, config, output, probe_limit=3):
         except Exception as exc:
             probes.append({"episode_id": ep["episode_id"], "error": type(exc).__name__, "detail": str(exc)})
     split = build_split(episodes, config)
+    if raw.get("split_manifest"):
+        split = inherit_split(split, read_json(raw["split_manifest"]))
     check_leakage(split)
     write_json(output / "split_manifest.json", split)
     write_json(
         output / "config_resolved.json",
-        {"pipeline": config.to_dict(), "sources": raw["sources"], "annotation": raw.get("annotation", {})},
+        {
+            "pipeline": config.to_dict(),
+            "sources": raw["sources"],
+            "annotation": raw.get("annotation", {}),
+            **({"split_manifest": raw["split_manifest"]} if raw.get("split_manifest") else {}),
+        },
     )
     inventory = {
         "episodes": episodes,

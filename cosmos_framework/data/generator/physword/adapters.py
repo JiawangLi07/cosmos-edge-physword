@@ -11,7 +11,7 @@ from pathlib import Path
 
 import h5py
 
-from cosmos_framework.data.generator.physword.common import digest, read_json
+from cosmos_framework.data.generator.physword.common import digest, file_sha256, read_json
 
 
 def discover_real(root, collection, instruction=None, instruction_map=None, camera="main"):
@@ -19,12 +19,27 @@ def discover_real(root, collection, instruction=None, instruction_map=None, came
     if not root.is_dir():
         raise FileNotFoundError(root)
     episodes, rejected = [], []
+    policy_path = root / "_episode_exclusions.json"
+    policy = read_json(policy_path) if policy_path.exists() else {}
+    blocked_ids = set(policy.get("original_episode_ids", []))
+    blocked_hashes = set(policy.get("source_sha256", []))
     for path in sorted(root.glob("*/manifest.json")):
         m = read_json(path)
         identity = {k: m.get(k) for k in ("episode", "start_wall", "start_mono", "stop_wall")}
         # Original capture identity remains stable across renumbering/re-encoding.
         original = "capture:" + digest(identity)
         ep_id = f"{collection}__{path.parent.name}"
+        video = path.parent / camera / "color_take001.mp4"
+        if original in blocked_ids or (blocked_hashes and video.is_file() and file_sha256(video) in blocked_hashes):
+            rejected.append(
+                {
+                    "episode_id": ep_id,
+                    "original_episode_id": original,
+                    "reason": "excluded_original_episode",
+                    "policy": str(policy_path),
+                }
+            )
+            continue
         text = (instruction_map or {}).get(ep_id, m.get("instruction", instruction))
         instruction_evidence = None
         inferred_source = None

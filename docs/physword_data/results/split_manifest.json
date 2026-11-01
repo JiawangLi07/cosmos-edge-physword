@@ -377,16 +377,6 @@
       "split": "test"
     },
     {
-      "episode_id": "badminton__episode_0038",
-      "original_episode_id": "capture:b7c3ce2c390718994748fb7a5378dd1da1ae52114c396553463466e4e5261b01",
-      "lineage_id": "capture:b7c3ce2c390718994748fb7a5378dd1da1ae52114c396553463466e4e5261b01",
-      "content_sha256": "e1c9fdbeac69ff9c9c1df1be176945b9dde92a8613d3404a7898252612458a78",
-      "group_id": "badminton__episode_0038",
-      "task_id": "badminton",
-      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0038/manifest.json",
-      "split": "test"
-    },
-    {
       "episode_id": "badminton__episode_0039",
       "original_episode_id": "capture:2ccab1e0424bc97ae8afd6808b7862da327d69e84fc3f934028ba621ae50a14e",
       "lineage_id": "capture:2ccab1e0424bc97ae8afd6808b7862da327d69e84fc3f934028ba621ae50a14e",
@@ -2077,11 +2067,13 @@
       "split": "train"
     }
   ],
-  "original_group_count": 207,
+  "original_group_count": 206,
   "notes": [
     "Task strata too small for a held-out group remain train; quotas use nearest feasible integer.",
     "Explicit lineage is REQUIRED for unknown transformed copies; content hashes detect byte-identical RGB sources.",
-    "No visual near-duplicate detector; provenance-less crops/re-encodes must supply lineage before inclusion."
+    "No visual near-duplicate detector; provenance-less crops/re-encodes must supply lineage before inclusion.",
+    "One excluded original episode removed; surviving train/test assignments retained without reshuffling."
   ],
-  "inventory_hash": "8d4f6e7c51a521176ff9ca931a030c055e7bd50e169e6126248d2a2e1536015e"
+  "inventory_hash": "338ba01c976e6fd224fe0d3fb395c04e5c583cded80c218e72fcfb5da51cac3a",
+  "curation_parent_sha256": "70f2717c8c4734c9e9bf6ab0402a9abe52fac2934b1bbce6ee20ddcd8c6f42da"
 }
