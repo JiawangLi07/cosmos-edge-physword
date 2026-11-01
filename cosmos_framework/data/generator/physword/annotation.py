@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import copy
 import json
 import math
 import os
@@ -12,14 +13,27 @@ from pathlib import Path
 
 import jsonschema
 
-from cosmos_framework.data.generator.physword.common import ATOMIC_ACTIONS, digest, read_json, write_json
+from cosmos_framework.data.generator.physword.common import digest, read_json, write_json
+from cosmos_framework.data.generator.physword.vocabulary import validate_vocabulary, vocabulary_for
 
 SCHEMA_PATH = Path(__file__).with_name("schemas") / "atomic_stages.schema.json"
 PROMPT_PATH = Path(__file__).with_name("annotation_prompt.txt")
 
 
+def annotation_schema(vocabulary=None):
+    schema = copy.deepcopy(read_json(SCHEMA_PATH))
+    if vocabulary is not None:
+        validate_vocabulary(vocabulary)
+        schema["$id"] = "https://physword.local/schemas/" + vocabulary["id"]
+        schema["title"] = vocabulary["id"] + " independent effector stages"
+        schema["properties"]["stages"]["items"]["properties"]["action"] = {"enum": vocabulary["words"]}
+        schema["properties"]["stages"]["items"]["properties"]["candidates"]["items"] = {"enum": vocabulary["words"]}
+        schema["required"] = schema["required"] + ["vocabulary", "effectors", "effector_coordinate"]
+    return schema
+
+
 def validate_annotation(annotation, metadata):
-    jsonschema.Draft202012Validator(read_json(SCHEMA_PATH)).validate(annotation)
+    jsonschema.Draft202012Validator(annotation_schema(annotation.get("vocabulary"))).validate(annotation)
     if (
         annotation["episode_id"] != metadata["episode"]["episode_id"]
         or annotation["media_fingerprint"] != metadata["fingerprint"]
@@ -64,6 +78,7 @@ def validate_annotation(annotation, metadata):
 
 def label_at(annotation, timestamp, config, effector=None):
     """Half-open stages on ACTUAL selected observation time, not rounded frame index."""
+    words = vocabulary_for(annotation)["words"]
     stages = [s for s in annotation["stages"] if effector is None or s["effector"] == effector]
     matches = [s for s in stages if s["start_time"] <= timestamp < s["end_time"]]
     if not matches:
@@ -76,18 +91,20 @@ def label_at(annotation, timestamp, config, effector=None):
     if len(matches) > 1:
         return 0, False, "parallel_or_multilabel"
     stage = matches[0]
+    class_id = words.index(stage["action"]) if stage["action"] in words else 0
+    invalid_id = class_id if "vocabulary" in annotation else 0
     if stage["ambiguous"] or stage["candidates"]:
-        return 0, False, "ambiguous"
-    if stage["action"] not in ATOMIC_ACTIONS:
+        return invalid_id, False, "ambiguous"
+    if stage["action"] not in words:
         return 0, False, stage["action"]
     if stage["confidence"] < config.min_confidence:
-        return 0, False, "low_confidence"
+        return invalid_id, False, "low_confidence"
     # Ignore outer episode edges; uncertain internal transitions are masked.
     boundaries = {s["start_time"] for s in stages if s["start_time"] > 0}
     boundaries.update(s["end_time"] for s in stages[:-1])
     if any(abs(timestamp - b) <= config.boundary_tolerance_s + 1e-9 for b in boundaries):
-        return 0, False, "stage_boundary_uncertainty"
-    return ATOMIC_ACTIONS.index(stage["action"]), True, "valid"
+        return invalid_id, False, "stage_boundary_uncertainty"
+    return class_id, True, "valid"
 
 
 def pending_annotation(metadata):
@@ -125,19 +142,34 @@ class AnnotationAdapter:
 
     def annotate(self, metadata, episode_dir, allow_network=False):
         episode_dir = Path(episode_dir).resolve()
+        vocabulary = read_json(self.config["vocabulary_file"]) if self.config.get("vocabulary_file") else None
+        prompt_path = Path(self.config["prompt_file"]) if self.config.get("prompt_file") else PROMPT_PATH
         request = {
             "model": self.config.get("model"),
             "effectors": self.config.get("effectors", ["left", "right"]),
             "effector_coordinate": self.config.get("effector_coordinate", "selected_camera_image_sides"),
             "parameters": self.config.get("parameters", {}),
-            "prompt": PROMPT_PATH.read_text(),
-            "schema": read_json(SCHEMA_PATH),
+            "prompt": prompt_path.read_text(),
+            "schema": annotation_schema(vocabulary),
             "episode_id": metadata["episode"]["episode_id"],
             "instruction": metadata["episode"].get("instruction"),
             "media_fingerprint": metadata["fingerprint"],
             "time_coordinate": metadata["time_coordinate"],
             "video_path": str(episode_dir / metadata["video_path"]),
             "frames": [{**r, "path": str(episode_dir / r["path"])} for r in metadata["frame_mapping"]],
+        }
+        if vocabulary is not None:
+            request["vocabulary"] = vocabulary
+        request["auxiliary_views"] = {
+            name: {
+                "video_path": metadata["episode"]["cameras"][name]["video_path"],
+                "source_timestamps": info["timestamps"],
+                "clock": info["clock"],
+                "main_time_origin": metadata["source_time_origin"],
+                "sync": metadata["audit"]["sync"].get(name),
+            }
+            for name, info in metadata["audit"]["cameras"].items()
+            if name != metadata["episode"]["camera"] and "error" not in info
         }
         public_config = {k: v for k, v in self.config.items() if k not in {"api_key"}}
         if "api_key" in self.config:
@@ -151,9 +183,16 @@ class AnnotationAdapter:
         cached = self.cache_dir / f"{key}.json"
         state = self.cache_dir / f"{key}.state.json"
         if cached.exists():
-            return validate_annotation(read_json(cached), metadata)
+            cached_annotation = read_json(cached)
+            if cached_annotation.get("vocabulary") != vocabulary:
+                raise ValueError("Cached annotation vocabulary differs from request")
+            return validate_annotation(cached_annotation, metadata)
         kind = self.config.get("kind", "pending")
         if kind == "pending":
+            if vocabulary is not None:
+                raise ValueError(
+                    "Scene vocabulary forbids placeholder labels: annotate observations before building windows"
+                )
             return pending_annotation(metadata)
         if kind == "http_json" and not allow_network:
             raise PermissionError("HTTP annotation requires explicit --allow-network; review the pilot request first")
@@ -192,6 +231,8 @@ class AnnotationAdapter:
                         annotation = json.load(response)
                 else:
                     raise ValueError(f"Unknown annotation adapter: {kind}")
+                if annotation.get("vocabulary") != vocabulary:
+                    raise ValueError("Response vocabulary differs from the explicitly configured vocabulary")
                 validate_annotation(annotation, metadata)
                 write_json(cached, annotation)
                 write_json(state, {"status": "complete", "attempt": attempt, "cache_key": key})

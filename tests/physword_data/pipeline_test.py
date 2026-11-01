@@ -482,3 +482,116 @@ def test_prepare_refuses_source_change_since_split_and_keeps_failure_state(prepa
     result = prepare(tmp_path, config, names=[inventory["episodes"][2]["episode_id"]], limit=1)
     assert result["successes"] and not result["failures"]
     assert len(read_json(tmp_path / "prepare_status.json")["failures"]) == 1
+
+
+@pytest.fixture
+def scene_annotation(example):
+    from pathlib import Path
+
+    _, _, meta, annotation, _ = example
+    annotation = copy.deepcopy(annotation)
+    annotation["vocabulary"] = read_json(
+        Path(__file__).resolve().parents[2] / "tools/physword_data/scene_v2/vocabulary.json"
+    )
+    end = meta["frame_mapping"][-1]["source_elapsed_s"] + 1 / meta["model_fps"]
+    template = annotation["stages"][0]
+    annotation.update(effectors=["left", "right"], effector_coordinate="selected_camera_image_sides")
+    annotation["stages"] = [
+        dict(template, start_time=0.0, end_time=end, action="hold", effector="left"),
+        dict(template, start_time=0.0, end_time=end, action="rest", effector="right"),
+    ]
+    return annotation
+
+
+def test_scene_vocabulary_has_valid_independent_hold_and_rest_targets(example, scene_annotation):
+    output, config, meta, _, entry = example
+    validate_annotation(scene_annotation, meta)
+    records, _ = generate_windows(meta, scene_annotation, entry, output, config)
+    record = records[0]
+    assert record["pw_vocabulary_id"] == "badminton_scene_v2"
+    assert record["pw_arm_class_targets"] == [[17] * 4, [16] * 4]
+    assert record["pw_arm_valid_mask"] == [[True] * 4, [True] * 4]
+    assert record["pw_valid_mask"] == [False] * 4  # Never collapse the two arms to one target.
+    validate_record(record, meta, scene_annotation, config)
+    scene_annotation["stages"][0]["confidence"] = 0.2
+    assert label_at(scene_annotation, 0.8, config, effector="left") == (17, False, "low_confidence")
+
+
+@pytest.mark.parametrize("invalid", ["idle", "unknown", "two words", "reach_for", "Hold"])
+def test_scene_profile_rejects_forbidden_or_multiple_words(example, scene_annotation, invalid):
+    _, _, meta, _, _ = example
+    scene_annotation["stages"][0]["action"] = invalid
+    with pytest.raises(Exception):
+        validate_annotation(scene_annotation, meta)
+
+
+def test_scene_vocabulary_definitions_and_identity_are_strict(scene_annotation):
+    from cosmos_framework.data.generator.physword.vocabulary import validate_vocabulary, vocabulary_for
+
+    vocabulary = scene_annotation["vocabulary"]
+    vocabulary["words"].append("hold")
+    with pytest.raises(ValueError):
+        validate_vocabulary(vocabulary)
+    vocabulary["words"].pop()
+    vocabulary["definitions"].pop("hold")
+    with pytest.raises(ValueError):
+        vocabulary_for(scene_annotation)
+
+
+def test_scene_vocabulary_cannot_reach_legacy_word_head(scene_annotation):
+    from cosmos_framework.data.generator.physword.vocabulary import require_legacy_model_vocabulary
+
+    sample = {"pw_vocabulary_id": "badminton_scene_v2", "pw_vocabulary": scene_annotation["vocabulary"]["words"]}
+    with pytest.raises(ValueError, match="legacy 16-class"):
+        require_legacy_model_vocabulary(sample)
+
+
+def test_scene_boundaries_keep_action_names_without_forcing_validity(example, scene_annotation):
+    _, config, meta, _, _ = example
+    first = scene_annotation["stages"][0]
+    end = first["end_time"]
+    scene_annotation["stages"] = [
+        dict(first, end_time=1.0),
+        scene_annotation["stages"][1],
+        dict(first, start_time=1.0, end_time=end, action="adjust"),
+    ]
+    scene_annotation["stages"].sort(key=lambda s: (s["start_time"], s["end_time"]))
+    validate_annotation(scene_annotation, meta)
+    assert label_at(scene_annotation, 1.0, config, effector="left") == (21, False, "stage_boundary_uncertainty")
+    assert label_at(scene_annotation, 1.2, config, effector="left") == (21, True, "valid")
+
+
+def test_scene_adapter_import_is_bound_to_explicit_vocabulary(example, scene_annotation, tmp_path):
+    _, _, meta, _, _ = example
+    write_json(tmp_path / "vocabulary.json", scene_annotation["vocabulary"])
+    write_json(tmp_path / f"{meta['episode']['episode_id']}.json", scene_annotation)
+    adapter = AnnotationAdapter(
+        {"kind": "json_file", "directory": str(tmp_path), "vocabulary_file": str(tmp_path / "vocabulary.json")},
+        tmp_path / "cache",
+    )
+    assert adapter.annotate(meta, tmp_path) == scene_annotation
+    assert adapter.annotate(meta, tmp_path) == scene_annotation
+    unconfigured = AnnotationAdapter(
+        {"kind": "json_file", "directory": str(tmp_path), "max_attempts": 1}, tmp_path / "other_cache"
+    )
+    with pytest.raises(RuntimeError):
+        unconfigured.annotate(meta, tmp_path)
+
+
+def test_dataset_rejects_mixed_class_mappings(example, scene_annotation, tmp_path):
+    output, config, meta, original, entry = example
+    a, _ = generate_windows(meta, original, entry, output, config)
+    b, _ = generate_windows(meta, scene_annotation, entry, output, config)
+    path = tmp_path / "mixed.jsonl"
+    path.write_text(json.dumps(a[0]) + "\n" + json.dumps(b[0]) + "\n")
+    with pytest.raises(ValueError, match="mix vocabularies"):
+        TrainingWindowDataset(path)
+
+
+def test_scene_bridges_reject_before_loading_torch_or_model(scene_annotation):
+    from cosmos_framework.data.generator.physword.dataset import m3_target_payload, to_m3_batch
+
+    sample = {"pw_vocabulary_id": "badminton_scene_v2", "pw_vocabulary": scene_annotation["vocabulary"]["words"]}
+    for bridge in (m3_target_payload, to_m3_batch):
+        with pytest.raises(ValueError, match="legacy 16-class"):
+            bridge(sample)

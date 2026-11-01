@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import html
+import json
 import random
 from collections import Counter, defaultdict
 from pathlib import Path
@@ -12,7 +13,6 @@ from PIL import Image, ImageDraw
 
 from cosmos_framework.data.generator.physword.annotation import label_at, validate_annotation
 from cosmos_framework.data.generator.physword.common import (
-    ATOMIC_ACTIONS,
     PipelineConfig,
     digest,
     file_sha256,
@@ -21,9 +21,14 @@ from cosmos_framework.data.generator.physword.common import (
 )
 from cosmos_framework.data.generator.physword.media import probe_video, time_grid
 from cosmos_framework.data.generator.physword.split import check_leakage
+from cosmos_framework.data.generator.physword.vocabulary import vocabulary_for, vocabulary_hash
 
 
 def validate_record(record, metadata, annotation, config):
+    vocabulary = vocabulary_for(annotation)
+    words = vocabulary["words"]
+    assert record["pw_vocabulary_id"] == vocabulary["id"]
+    assert record["pw_vocabulary"] == words and record["pw_vocabulary_hash"] == vocabulary_hash(vocabulary)
     h, f, p = (record[k] for k in ("history_frame_indices", "future_frame_indices", "pw_target_frame_indices"))
     assert len(h) == config.history_frames and len(f) == config.future_frames, "history/future length"
     assert h + f == list(range(h[0], h[0] + config.total_frames)), "history/future boundary"
@@ -40,7 +45,7 @@ def validate_record(record, metadata, annotation, config):
         len(record["pw_class_targets"]) == len(record["pw_valid_mask"]) == len(record["pw_target_timestamps"]) == len(p)
     )
     for j, i in enumerate(p):
-        assert 0 <= record["pw_class_targets"][j] < len(ATOMIC_ACTIONS), "invalid head class"
+        assert 0 <= record["pw_class_targets"][j] < len(words), "invalid head class"
         assert record["pw_target_timestamps"][j] == frames[i]["source_elapsed_s"], "target time misalignment"
         assert record["pw_target_source_timestamps"][j] == frames[i]["source_timestamp"]
         assert record["pw_target_source_frame_indices"][j] == frames[i]["source_frame_index"]
@@ -92,6 +97,7 @@ def _timeline(annotation, width, duration):
 
 
 def visualize_episode(metadata, annotation, episode_dir, records, seed=42, full_contact_sheets=True):
+    words = vocabulary_for(annotation)["words"]
     episode_dir = Path(episode_dir)
     report_dir = episode_dir / "review"
     report_dir.mkdir(exist_ok=True)
@@ -128,14 +134,21 @@ def visualize_episode(metadata, annotation, episode_dir, records, seed=42, full_
             text = f"H #{i}" if j < len(record["history_frame_indices"]) else f"F #{i}"
             if j >= len(record["history_frame_indices"]):
                 k = j - len(record["history_frame_indices"])
-                text += " " + (ATOMIC_ACTIONS[record["pw_class_targets"][k]] if record["pw_valid_mask"][k] else "MASK")
+                if "vocabulary" not in annotation:
+                    text += " " + (words[record["pw_class_targets"][k]] if record["pw_valid_mask"][k] else "MASK")
             draw.text((j * 192 + 2, 145), text, fill="black")
             draw.text((j * 192 + 2, 162), f"src={frames[i]['source_elapsed_s']:.3f}s", fill="black")
             if j >= len(record["history_frame_indices"]):
                 k = j - len(record["history_frame_indices"])
                 for arm_index, arm in enumerate(record["pw_effectors"]):
                     valid = record["pw_arm_valid_mask"][arm_index][k]
-                    word = ATOMIC_ACTIONS[record["pw_arm_class_targets"][arm_index][k]] if valid else "MASK"
+                    word = (
+                        words[record["pw_arm_class_targets"][arm_index][k]]
+                        if valid or "vocabulary" in annotation
+                        else "MASK"
+                    )
+                    if not valid and "vocabulary" in annotation:
+                        word += " *"
                     draw.text((j * 192 + 2, 180 + 16 * arm_index), f"{arm}: {word}", fill="black")
         name = f"{record['window_id']}.jpg"
         canvas.save(report_dir / name)
@@ -152,7 +165,7 @@ def visualize_episode(metadata, annotation, episode_dir, records, seed=42, full_
             " | ".join(f"{s['effector']}: {s['action']}" + (" [ambiguous]" if s["ambiguous"] else "") for s in matches)
             or "unknown"
         )
-        if len([stage for stage in matches if stage["action"] != "idle"]) > 1:
+        if "vocabulary" not in annotation and len([stage for stage in matches if stage["action"] != "idle"]) > 1:
             text += " [legacy single-sequence MASK]"
         start = frame["resampled_timestamp"]
         cues.extend(
@@ -170,13 +183,44 @@ def visualize_episode(metadata, annotation, episode_dir, records, seed=42, full_
         f"<h1>{html.escape(metadata['episode']['episode_id'])}</h1>",
         f"<p>Instruction: {html.escape(metadata['episode'].get('instruction') or 'MISSING — excluded from training')}</p>",
         f"<p>Annotation provenance: {html.escape(str(annotation['provenance']))}. Full sequence contact sheets use actual source times.</p>",
-        f"<video controls src='../{html.escape(metadata['video_path'])}'><track kind='captions' src='stages.vtt' srclang='en' label='Atomic stages' default></video>",
+        f"<video id='episode-video' controls src='../{html.escape(metadata['video_path'])}'><track kind='captions' src='stages.vtt' srclang='en' label='Atomic stages' default></video>",
+        f"<p>Vocabulary: {html.escape(vocabulary_for(annotation)['id'])}; independent left/right labels. * marks a masked supervision boundary, not an absent action label.</p>",
+        "<p id='current-stages' style='font-size:1.3em;font-weight:bold'></p>",
+        "<p>Timeline lanes: upper=left, lower=right. Click a stage start time in the table to seek the video.</p>",
         _timeline(annotation, 1200, duration),
+        "<h2>Independent arm stages</h2><table border='1' cellpadding='5'><tr><th>Arm</th><th>Source start</th><th>Source end</th><th>Word</th><th>Confidence</th></tr>",
+        *[
+            f"<tr><td>{html.escape(stage['effector'])}</td><td><button class='seek-stage' data-source='{stage['start_time']}'>{stage['start_time']:.3f}</button></td><td>{stage['end_time']:.3f}</td><td>{html.escape(stage['action'])}</td><td>{stage['confidence']:.2f}</td></tr>"
+            for stage in annotation["stages"]
+        ],
+        "</table>",
         "<h2>History + future PW keyframes</h2>",
     ]
     body.extend(f"<img src='{html.escape(name)}' alt='History and future keyframes'>" for name in gallery)
     body.append("<h2>Complete episode at model observation rate</h2>")
     body.extend(f"<img src='{name}' alt='Consecutive observations'>" for name in sheets)
+    # Only encode trusted scalar timing/action fields, escaping '<' for script embedding.
+    payload = {
+        "frames": [{"source": frame["source_elapsed_s"], "playback": frame["resampled_timestamp"]} for frame in frames],
+        "stages": [
+            {key: stage[key] for key in ("start_time", "end_time", "action", "effector")}
+            for stage in annotation["stages"]
+        ],
+    }
+    serialized = json.dumps(payload).replace("<", "\\u003c")
+    body.append(
+        "<script>const review="
+        + serialized
+        + ";"
+        + """
+const video=document.getElementById('episode-video');
+function showStages(){let frame=review.frames[0];for(const item of review.frames){if(item.playback>video.currentTime+1e-7)break;frame=item;}
+const active=review.stages.filter(s=>s.start_time<=frame.source && frame.source<s.end_time);
+document.getElementById('current-stages').textContent=active.map(s=>s.effector+': '+s.action).join(' | ')+' ; source='+frame.source.toFixed(3)+'s';}
+video.addEventListener('timeupdate',showStages);showStages();
+document.querySelectorAll('.seek-stage').forEach(button=>button.addEventListener('click',()=>{const source=Number(button.dataset.source);const frame=review.frames.find(f=>f.source>=source)||review.frames[review.frames.length-1];video.currentTime=frame.playback;showStages();}));
+</script>"""
+    )
     (report_dir / "index.html").write_text("\n".join(body))
     return str(report_dir / "index.html")
 
@@ -192,6 +236,11 @@ def quality_report(metadata_list, records, split, output, failures=None):
         for key in ("split", "group_id", "original_episode_id", "lineage_id"):
             assert record[key] == entry[key], f"window/split manifest disagreement: {key}"
         by_ep[record["episode_id"]].append(record)
+    vocabularies = [vocabulary_for(read_json(Path(path).parent / "annotation.json")) for path in metadata_list]
+    if len({vocabulary_hash(v) for v in vocabularies}) > 1:
+        raise ValueError("Quality report cannot merge distinct vocabularies")
+    vocabulary = vocabularies[0] if vocabularies else vocabulary_for({})
+    words = vocabulary["words"]
     tasks = defaultdict(
         lambda: {
             "episodes": 0,
@@ -255,7 +304,7 @@ def quality_report(metadata_list, records, split, output, failures=None):
             task["stage_durations_s"][stage["action"]] += stage["end_time"] - stage["start_time"]
         for frame in frames:
             label, valid, reason = label_at(annotation, frame["source_elapsed_s"], config)
-            task["unique_frame_words"][ATOMIC_ACTIONS[label]] += int(valid)
+            task["unique_frame_words"][words[label]] += int(valid)
             if not valid:
                 task["unique_frame_mask_reasons"][reason] += 1
         task.setdefault("arms", {})
@@ -263,6 +312,14 @@ def quality_report(metadata_list, records, split, output, failures=None):
             arm_stats = task["arms"].setdefault(
                 arm, {"targets": 0, "valid_targets": 0, "words": Counter(), "mask_reasons": Counter()}
             )
+            arm_stats.setdefault("unique_frame_words", Counter())
+            arm_stats.setdefault("unique_frame_mask_reasons", Counter())
+            for frame in frames:
+                label, valid, reason = label_at(annotation, frame["source_elapsed_s"], config, effector=arm)
+                if valid:
+                    arm_stats["unique_frame_words"][words[label]] += 1
+                else:
+                    arm_stats["unique_frame_mask_reasons"][reason] += 1
             for record in ep_records:
                 arm_index = record["pw_effectors"].index(arm)
                 for label, valid, reason in zip(
@@ -273,7 +330,7 @@ def quality_report(metadata_list, records, split, output, failures=None):
                     arm_stats["targets"] += 1
                     arm_stats["valid_targets"] += int(valid)
                     if valid:
-                        arm_stats["words"][ATOMIC_ACTIONS[label]] += 1
+                        arm_stats["words"][words[label]] += 1
                     else:
                         arm_stats["mask_reasons"][reason] += 1
         for record in ep_records:
@@ -286,7 +343,7 @@ def quality_report(metadata_list, records, split, output, failures=None):
             ):
                 task["valid_targets"] += int(valid)
                 if valid:
-                    task["words"][ATOMIC_ACTIONS[label]] += 1
+                    task["words"][words[label]] += 1
                 else:
                     task["mask_reasons"][reason] += 1
         episodes.append(
@@ -305,17 +362,22 @@ def quality_report(metadata_list, records, split, output, failures=None):
     for task in tasks.values():
         for stats in task.get("arms", {}).values():
             stats["missing_rate"] = 1 - stats["valid_targets"] / stats["targets"] if stats["targets"] else None
-            stats["words"] = {word: stats["words"][word] for word in ATOMIC_ACTIONS}
+            stats["words"] = {word: stats["words"][word] for word in words}
+            stats["unique_frame_words"] = {word: stats["unique_frame_words"][word] for word in words}
         task["missing_rate"] = 1 - task["valid_targets"] / task["targets"] if task["targets"] else None
-        task["words"] = {word: task["words"][word] for word in ATOMIC_ACTIONS}
-        task["unique_frame_words"] = {word: task["unique_frame_words"][word] for word in ATOMIC_ACTIONS}
+        task["words"] = {word: task["words"][word] for word in words}
+        task["unique_frame_words"] = {word: task["unique_frame_words"][word] for word in words}
     report = {
         "status": "passed_integrity_checks" if not failures else "partial_with_failures",
         "seed": split["seed"],
+        "vocabulary": vocabulary,
+        "vocabulary_hash": vocabulary_hash(vocabulary),
         "episodes_processed": len(episodes),
         "frames_processed": sum(e["frames"] for e in episodes),
         "windows": len(records),
         "windows_with_valid_pw": sum(any(r["pw_valid_mask"]) for r in records),
+        "windows_with_valid_arm_pw": sum(any(any(arm) for arm in r["pw_arm_valid_mask"]) for r in records),
+        "windows_with_all_arm_pw": sum(all(all(arm) for arm in r["pw_arm_valid_mask"]) for r in records),
         "split_episode_counts": dict(Counter(e["split"] for e in split["episodes"])),
         "split_window_counts": dict(Counter(r["split"] for r in records)),
         "tasks": dict(tasks),

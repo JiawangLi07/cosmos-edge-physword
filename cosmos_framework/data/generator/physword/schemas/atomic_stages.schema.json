@@ -159,6 +159,43 @@
         "robot_anatomical",
         "single_effector"
       ]
+    },
+    "vocabulary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "words",
+        "definitions"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]*$"
+        },
+        "words": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^[a-z]+$",
+            "not": {
+              "enum": [
+                "idle",
+                "unknown"
+              ]
+            }
+          }
+        },
+        "definitions": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
     }
   },
   "dependentRequired": {

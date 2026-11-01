@@ -1,3 +1,5 @@
+> 历史 v1 报告。按用户最新要求重新标注的场景词表版本，请看 [scene_v2_report.md](scene_v2_report.md)。
+
 # PhysWord 数据 Pipeline Pilot 报告
 
 日期：2026-11-01。分支：`physword/data-pipeline`；Worktree：`/aifs/lijiawang/physword/cosmos-framework-data`；基于 `f2a1e1d`。本轮最终范围只含 **badminton**，top 不进入最终 Manifest、标注或训练窗口。预处理代码仍保留通用 LIBERO/视频/HDF5 接口。

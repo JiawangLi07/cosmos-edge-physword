@@ -9,6 +9,12 @@ from typing import Callable
 import numpy as np
 from PIL import Image
 
+from cosmos_framework.data.generator.physword.vocabulary import (
+    require_legacy_model_vocabulary,
+    vocabulary_for,
+    vocabulary_hash,
+)
+
 
 def read_rgb(paths):
     images = []
@@ -22,10 +28,22 @@ def read_rgb(paths):
 
 
 class TrainingWindowDataset:
-    def __init__(self, manifest, split="train", require_valid_pw=False):
+    def __init__(self, manifest, split="train", require_valid_pw=False, require_valid_arm_pw=False):
         self.manifest = Path(manifest).resolve()
         records = [json.loads(line) for line in self.manifest.read_text().splitlines() if line.strip()]
+        legacy = vocabulary_for({})
+        for record in records:
+            record.setdefault("pw_vocabulary_id", legacy["id"])
+            record.setdefault("pw_vocabulary", legacy["words"])
+            record.setdefault("pw_vocabulary_hash", vocabulary_hash(legacy))
+            actual_hash = vocabulary_hash({"id": record["pw_vocabulary_id"], "words": record["pw_vocabulary"]})
+            if actual_hash != record["pw_vocabulary_hash"]:
+                raise ValueError("Vocabulary ID mapping fingerprint mismatch")
+        if len({record["pw_vocabulary_hash"] for record in records}) > 1:
+            raise ValueError("Cannot mix vocabularies in a training manifest")
         self.records = [r for r in records if r["split"] == split and (not require_valid_pw or any(r["pw_valid_mask"]))]
+        if require_valid_arm_pw:
+            self.records = [r for r in self.records if any(any(arm) for arm in r["pw_arm_valid_mask"])]
         self.base = self.manifest.parent
 
     def __len__(self):
@@ -65,6 +83,9 @@ class TrainingWindowDataset:
                 "video_path",
                 "feature_cache_key",
                 "annotation_status",
+                "pw_vocabulary_id",
+                "pw_vocabulary",
+                "pw_vocabulary_hash",
             )
         }
         result["history_rgb"] = read_rgb([self.base / p for p in r["history_frame_paths"]])
@@ -90,6 +111,8 @@ def collate_windows(samples):
         "pw_arm_class_targets",
         "pw_arm_valid_mask",
     }
+    if any(sample["pw_vocabulary_hash"] != samples[0]["pw_vocabulary_hash"] for sample in samples):
+        raise ValueError("Batch vocabulary mappings disagree")
     if any(sample["pw_effectors"] != samples[0]["pw_effectors"] for sample in samples):
         raise ValueError("Batch effectors/order disagree; use separate loaders for different embodiments")
     return {
@@ -98,11 +121,15 @@ def collate_windows(samples):
     }
 
 
-def make_dataloader(manifest, split="train", batch_size=1, seed=42, num_workers=0, require_valid_pw=False):
+def make_dataloader(
+    manifest, split="train", batch_size=1, seed=42, num_workers=0, require_valid_pw=False, require_valid_arm_pw=False
+):
     import torch
     from torch.utils.data import DataLoader
 
-    dataset = TrainingWindowDataset(manifest, split=split, require_valid_pw=require_valid_pw)
+    dataset = TrainingWindowDataset(
+        manifest, split=split, require_valid_pw=require_valid_pw, require_valid_arm_pw=require_valid_arm_pw
+    )
     return DataLoader(
         dataset,
         batch_size=batch_size,
@@ -165,6 +192,7 @@ def m3_target_payload(sample):
     Instantiate model-side types via an explicit factory to avoid importing M3's
     work-in-progress training modules into the standalone CPU pipeline.
     """
+    require_legacy_model_vocabulary(sample)
     import torch
 
     future = torch.as_tensor(sample["future_rgb"])
@@ -206,6 +234,7 @@ def to_m3_batch(sample, batch_type=None):
     M3 currently names this type PhysWordBatch, rather than PhysWordTargets. The
     optional factory allows integration before the independent M3 branch is merged.
     """
+    require_legacy_model_vocabulary(sample)
     import torch
 
     if batch_type is None:

@@ -1,0 +1,25 @@
+{
+  "status": "passed",
+  "checks": [
+    {
+      "episode_id": "badminton__episode_0001",
+      "new_and_archived_pages": true,
+      "media_and_captions": true,
+      "both_arms_single_word_labels": true
+    },
+    {
+      "episode_id": "badminton__episode_0017",
+      "new_and_archived_pages": true,
+      "media_and_captions": true,
+      "both_arms_single_word_labels": true
+    },
+    {
+      "episode_id": "badminton__episode_0038",
+      "new_and_archived_pages": true,
+      "media_and_captions": true,
+      "both_arms_single_word_labels": true
+    }
+  ],
+  "javascript_syntax_checked": false,
+  "temporary_loopback_server_stopped": true
+}

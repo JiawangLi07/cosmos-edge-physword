@@ -37,8 +37,9 @@ def load_config(path):
             if source.get(key):
                 source[key] = str((path.parent / source[key]).resolve())
     adapter = raw.get("annotation", {})
-    if adapter.get("directory"):
-        adapter["directory"] = str((path.parent / adapter["directory"]).resolve())
+    for key in ("directory", "vocabulary_file", "prompt_file"):
+        if adapter.get(key):
+            adapter[key] = str((path.parent / adapter[key]).resolve())
     return PipelineConfig(**raw.get("pipeline", {})), raw
 
 

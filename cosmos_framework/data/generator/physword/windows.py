@@ -6,10 +6,12 @@ from pathlib import Path
 
 from cosmos_framework.data.generator.physword.annotation import label_at, validate_annotation
 from cosmos_framework.data.generator.physword.common import VERSION, digest
+from cosmos_framework.data.generator.physword.vocabulary import vocabulary_for, vocabulary_hash
 
 
 def generate_windows(metadata, annotation, split_entry, episode_dir, config):
     validate_annotation(annotation, metadata)
+    vocabulary = vocabulary_for(annotation)
     ep = metadata["episode"]
     if ep["episode_id"] != split_entry["episode_id"]:
         raise ValueError("Episode/split mismatch")
@@ -58,6 +60,9 @@ def generate_windows(metadata, annotation, split_entry, episode_dir, config):
             "annotation_path": str(episode_dir / "annotation.json"),
             "media_fingerprint": metadata["fingerprint"],
             "annotation_hash": digest(annotation),
+            "pw_vocabulary_id": vocabulary["id"],
+            "pw_vocabulary": vocabulary["words"],
+            "pw_vocabulary_hash": vocabulary_hash(vocabulary),
             "history_frame_indices": history,
             "future_frame_indices": future,
             "pw_target_frame_indices": targets,
