@@ -1,0 +1,80 @@
+{
+  "test": "external resize protocol guard",
+  "status": "FAIL",
+  "expected": "reject changed preprocessing on strict experiment resume",
+  "observed": "checkpoint load accepted same manifest; both 64x64 and 96x96 batches accepted",
+  "original_hw": [
+    64,
+    64
+  ],
+  "changed_hw": [
+    96,
+    96
+  ],
+  "loss_original": {
+    "total": 3.6237432956695557,
+    "video": 0.0,
+    "video_raw": 0.0,
+    "word": 2.609278917312622,
+    "latent": 1.0144643783569336
+  },
+  "loss_changed": {
+    "total": 3.544651508331299,
+    "video": 0.0,
+    "video_raw": 0.0,
+    "word": 2.6102190017700195,
+    "latent": 0.9344326257705688
+  },
+  "manifest_experiment": {
+    "baseline": "full_pw",
+    "data": {
+      "frozen_source_windows_sha256": "same underlying source"
+    },
+    "missing_feedback": "neutral pw_start; never fabricate a class label",
+    "rf": {
+      "continuous_train_shift": 5,
+      "distribution": "uniform",
+      "resolution": "480",
+      "scheduler": {
+        "_use_default_values": [
+          "use_dynamic_shifting",
+          "use_beta_sigmas",
+          "num_train_timesteps",
+          "base_image_seq_len",
+          "time_shift_type",
+          "use_exponential_sigmas",
+          "stochastic_sampling",
+          "max_shift",
+          "use_karras_sigmas",
+          "max_image_seq_len",
+          "invert_sigmas",
+          "shift_terminal",
+          "base_shift"
+        ],
+        "base_image_seq_len": 256,
+        "base_shift": 0.5,
+        "invert_sigmas": false,
+        "max_image_seq_len": 4096,
+        "max_shift": 1.15,
+        "num_train_timesteps": 1000,
+        "shift": 3,
+        "shift_terminal": null,
+        "stochastic_sampling": false,
+        "time_shift_type": "exponential",
+        "use_beta_sigmas": false,
+        "use_dynamic_shifting": false,
+        "use_exponential_sigmas": false,
+        "use_karras_sigmas": false
+      },
+      "weight": "uniform"
+    },
+    "timing": {
+      "fps": 10,
+      "future": 16,
+      "history": 5,
+      "k": 4,
+      "stride": 4
+    }
+  },
+  "scope": "Tiny; external transform not represented by current training_protocol. Does not invalidate same-transform numerical resume PASS."
+}

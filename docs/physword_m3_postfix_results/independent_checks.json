@@ -1,0 +1,303 @@
+{
+  "native_sampler_cases": [
+    {
+      "distribution": "waver",
+      "strategy": "none",
+      "mode": "video",
+      "t_max_abs": 0.0,
+      "sigma_max_abs": 0.0
+    },
+    {
+      "distribution": "waver",
+      "strategy": "none",
+      "mode": "image",
+      "t_max_abs": 0.0,
+      "sigma_max_abs": 0.0
+    },
+    {
+      "distribution": "waver",
+      "strategy": "none",
+      "mode": "mixed",
+      "t_max_abs": 0.0,
+      "sigma_max_abs": 0.0
+    },
+    {
+      "distribution": "waver",
+      "strategy": "none",
+      "mode": "dynamic",
+      "t_max_abs": 0.0,
+      "sigma_max_abs": 0.0
+    },
+    {
+      "distribution": "waver",
+      "strategy": "none",
+      "mode": "lidar_only",
+      "t_max_abs": 0.0,
+      "sigma_max_abs": 0.0
+    },
+    {
+      "distribution": "waver",
+      "strategy": "diffusion_forcing",
+      "mode": "video",
+      "t_max_abs": 0.0,
+      "sigma_max_abs": 0.0
+    },
+    {
+      "distribution": "waver",
+      "strategy": "diffusion_forcing",
+      "mode": "image",
+      "t_max_abs": 0.0,
+      "sigma_max_abs": 0.0
+    },
+    {
+      "distribution": "waver",
+      "strategy": "diffusion_forcing",
+      "mode": "mixed",
+      "t_max_abs": 0.0,
+      "sigma_max_abs": 0.0
+    },
+    {
+      "distribution": "waver",
+      "strategy": "diffusion_forcing",
+      "mode": "dynamic",
+      "t_max_abs": 0.0,
+      "sigma_max_abs": 0.0
+    },
+    {
+      "distribution": "waver",
+      "strategy": "diffusion_forcing",
+      "mode": "lidar_only",
+      "t_max_abs": 0.0,
+      "sigma_max_abs": 0.0
+    },
+    {
+      "distribution": "uniform",
+      "strategy": "none",
+      "mode": "video",
+      "t_max_abs": 0.0,
+      "sigma_max_abs": 0.0
+    },
+    {
+      "distribution": "uniform",
+      "strategy": "none",
+      "mode": "image",
+      "t_max_abs": 0.0,
+      "sigma_max_abs": 0.0
+    },
+    {
+      "distribution": "uniform",
+      "strategy": "none",
+      "mode": "mixed",
+      "t_max_abs": 0.0,
+      "sigma_max_abs": 0.0
+    },
+    {
+      "distribution": "uniform",
+      "strategy": "none",
+      "mode": "dynamic",
+      "t_max_abs": 0.0,
+      "sigma_max_abs": 0.0
+    },
+    {
+      "distribution": "uniform",
+      "strategy": "none",
+      "mode": "lidar_only",
+      "t_max_abs": 0.0,
+      "sigma_max_abs": 0.0
+    },
+    {
+      "distribution": "uniform",
+      "strategy": "diffusion_forcing",
+      "mode": "video",
+      "t_max_abs": 0.0,
+      "sigma_max_abs": 0.0
+    },
+    {
+      "distribution": "uniform",
+      "strategy": "diffusion_forcing",
+      "mode": "image",
+      "t_max_abs": 0.0,
+      "sigma_max_abs": 0.0
+    },
+    {
+      "distribution": "uniform",
+      "strategy": "diffusion_forcing",
+      "mode": "mixed",
+      "t_max_abs": 0.0,
+      "sigma_max_abs": 0.0
+    },
+    {
+      "distribution": "uniform",
+      "strategy": "diffusion_forcing",
+      "mode": "dynamic",
+      "t_max_abs": 0.0,
+      "sigma_max_abs": 0.0
+    },
+    {
+      "distribution": "uniform",
+      "strategy": "diffusion_forcing",
+      "mode": "lidar_only",
+      "t_max_abs": 0.0,
+      "sigma_max_abs": 0.0
+    },
+    {
+      "distribution": "logitnormal",
+      "strategy": "none",
+      "mode": "video",
+      "t_max_abs": 0.0,
+      "sigma_max_abs": 0.0
+    },
+    {
+      "distribution": "logitnormal",
+      "strategy": "none",
+      "mode": "image",
+      "t_max_abs": 0.0,
+      "sigma_max_abs": 0.0
+    },
+    {
+      "distribution": "logitnormal",
+      "strategy": "none",
+      "mode": "mixed",
+      "t_max_abs": 0.0,
+      "sigma_max_abs": 0.0
+    },
+    {
+      "distribution": "logitnormal",
+      "strategy": "none",
+      "mode": "dynamic",
+      "t_max_abs": 0.0,
+      "sigma_max_abs": 0.0
+    },
+    {
+      "distribution": "logitnormal",
+      "strategy": "none",
+      "mode": "lidar_only",
+      "t_max_abs": 0.0,
+      "sigma_max_abs": 0.0
+    },
+    {
+      "distribution": "logitnormal",
+      "strategy": "diffusion_forcing",
+      "mode": "video",
+      "t_max_abs": 0.0,
+      "sigma_max_abs": 0.0
+    },
+    {
+      "distribution": "logitnormal",
+      "strategy": "diffusion_forcing",
+      "mode": "image",
+      "t_max_abs": 0.0,
+      "sigma_max_abs": 0.0
+    },
+    {
+      "distribution": "logitnormal",
+      "strategy": "diffusion_forcing",
+      "mode": "mixed",
+      "t_max_abs": 0.0,
+      "sigma_max_abs": 0.0
+    },
+    {
+      "distribution": "logitnormal",
+      "strategy": "diffusion_forcing",
+      "mode": "dynamic",
+      "t_max_abs": 0.0,
+      "sigma_max_abs": 0.0
+    },
+    {
+      "distribution": "logitnormal",
+      "strategy": "diffusion_forcing",
+      "mode": "lidar_only",
+      "t_max_abs": 0.0,
+      "sigma_max_abs": 0.0
+    },
+    {
+      "distribution": "ltx2",
+      "strategy": "none",
+      "mode": "video",
+      "t_max_abs": 0.0,
+      "sigma_max_abs": 0.0
+    },
+    {
+      "distribution": "ltx2",
+      "strategy": "none",
+      "mode": "image",
+      "t_max_abs": 0.0,
+      "sigma_max_abs": 0.0
+    },
+    {
+      "distribution": "ltx2",
+      "strategy": "none",
+      "mode": "mixed",
+      "t_max_abs": 0.0,
+      "sigma_max_abs": 0.0
+    },
+    {
+      "distribution": "ltx2",
+      "strategy": "none",
+      "mode": "dynamic",
+      "t_max_abs": 0.0,
+      "sigma_max_abs": 0.0
+    },
+    {
+      "distribution": "ltx2",
+      "strategy": "none",
+      "mode": "lidar_only",
+      "t_max_abs": 0.0,
+      "sigma_max_abs": 0.0
+    },
+    {
+      "distribution": "ltx2",
+      "strategy": "diffusion_forcing",
+      "mode": "video",
+      "t_max_abs": 0.0,
+      "sigma_max_abs": 0.0
+    },
+    {
+      "distribution": "ltx2",
+      "strategy": "diffusion_forcing",
+      "mode": "image",
+      "t_max_abs": 0.0,
+      "sigma_max_abs": 0.0
+    },
+    {
+      "distribution": "ltx2",
+      "strategy": "diffusion_forcing",
+      "mode": "mixed",
+      "t_max_abs": 0.0,
+      "sigma_max_abs": 0.0
+    },
+    {
+      "distribution": "ltx2",
+      "strategy": "diffusion_forcing",
+      "mode": "dynamic",
+      "t_max_abs": 0.0,
+      "sigma_max_abs": 0.0
+    },
+    {
+      "distribution": "ltx2",
+      "strategy": "diffusion_forcing",
+      "mode": "lidar_only",
+      "t_max_abs": 0.0,
+      "sigma_max_abs": 0.0
+    }
+  ],
+  "T04": {
+    "forward_max_abs": 0.007790327072143555,
+    "gradients": {
+      "q": {
+        "max_abs": 0.010706663131713867,
+        "rms": 0.0011015280615538359
+      },
+      "k": {
+        "max_abs": 0.01421356201171875,
+        "rms": 0.0018204501830041409
+      },
+      "v": {
+        "max_abs": 0.024703025817871094,
+        "rms": 0.0026905874256044626
+      }
+    },
+    "atol": 0.02,
+    "rtol": 0.02
+  }
+}
