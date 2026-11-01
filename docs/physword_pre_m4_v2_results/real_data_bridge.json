@@ -1,0 +1,20 @@
+{
+  "windows": 433,
+  "history_shape": [
+    5,
+    3,
+    480,
+    640
+  ],
+  "future_shape": [
+    16,
+    3,
+    480,
+    640
+  ],
+  "vocabulary_id": "badminton_scene_v2",
+  "vocabulary_size": 25,
+  "bridge": "BLOCKED",
+  "exception_type": "ValueError",
+  "message": "Scene vocabulary cannot feed the legacy 16-class M3 Word Head; explicitly adapt model vocabulary and per-arm targets first"
+}

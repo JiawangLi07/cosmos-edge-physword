@@ -1,3 +1,5 @@
+> **PhysWord × Cosmos3-Edge extension:** see [README_PHYSWORD.md](README_PHYSWORD.md) for implementation, validation results, and current limitations. The upstream Cosmos Framework documentation follows below.
+
 <p align="center">
     <img src="https://github.com/user-attachments/assets/28f2d612-bbd6-44a3-8795-833d05e9f05f" width="274" alt="NVIDIA Cosmos"/>
 </p>

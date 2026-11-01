@@ -1,0 +1,74 @@
+{
+  "A": {
+    "weights": "SYNTHETIC random native Tiny; NOT real Edge weights",
+    "data": "real badminton left-arm annotations and decoded real RGB, explicitly resized to 64x64",
+    "source_rgb_shape": [
+      5,
+      3,
+      480,
+      640
+    ],
+    "window_id": "badminton__episode_0001__000001",
+    "vocabulary": [
+      "align",
+      "approach",
+      "grasp",
+      "hold",
+      "lift",
+      "lower",
+      "rotate"
+    ],
+    "losses": {
+      "total": 2.7574362754821777,
+      "video": 0.0,
+      "video_raw": 0.0,
+      "word": 1.7660483121871948,
+      "latent": 0.9913879632949829
+    },
+    "counts": {
+      "word": 3,
+      "latent": 4,
+      "word_samples": 1,
+      "latent_samples": 1,
+      "video_elements": 0,
+      "video_samples": 0
+    },
+    "frozen_parameters_unchanged": true
+  },
+  "B": {
+    "weights": "SYNTHETIC random native Tiny; NOT real Edge weights",
+    "data": "real badminton left-arm annotations and decoded real RGB, explicitly resized to 64x64",
+    "source_rgb_shape": [
+      5,
+      3,
+      480,
+      640
+    ],
+    "window_id": "badminton__episode_0001__000001",
+    "vocabulary": [
+      "align",
+      "approach",
+      "grasp",
+      "hold",
+      "lift",
+      "lower",
+      "rotate"
+    ],
+    "losses": {
+      "total": 15.917075157165527,
+      "video": 13.159638404846191,
+      "video_raw": 1.315963864326477,
+      "word": 1.7660483121871948,
+      "latent": 0.9913879632949829
+    },
+    "counts": {
+      "word": 3,
+      "latent": 4,
+      "word_samples": 1,
+      "latent_samples": 1,
+      "video_elements": 3072,
+      "video_samples": 1
+    },
+    "frozen_parameters_unchanged": true
+  }
+}

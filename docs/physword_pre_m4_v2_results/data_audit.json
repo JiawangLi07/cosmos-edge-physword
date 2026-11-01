@@ -1,0 +1,160 @@
+{
+  "windows_sha256": "a870319f565b76c919711cbf4161f6313966f7460da9bbb7ef0e90df92431ca8",
+  "vocabulary_id": "badminton_scene_v2",
+  "vocabulary_count": 25,
+  "words": [
+    "approach",
+    "move",
+    "pick",
+    "place",
+    "flip",
+    "rotate",
+    "toggle",
+    "open",
+    "close",
+    "push",
+    "pull",
+    "insert",
+    "press",
+    "click",
+    "strike",
+    "handover",
+    "rest",
+    "hold",
+    "grasp",
+    "lift",
+    "align",
+    "adjust",
+    "retract",
+    "lower",
+    "release"
+  ],
+  "windows": 433,
+  "split_windows": {
+    "train": 433
+  },
+  "split_episodes": {
+    "train": 186,
+    "test": 20
+  },
+  "arm_targets": 3464,
+  "arm_valid": 3332,
+  "mask_percent": 3.810623556581986,
+  "valid_classes": {
+    "approach": 199,
+    "align": 173,
+    "rest": 412,
+    "grasp": 291,
+    "lift": 124,
+    "rotate": 64,
+    "hold": 1341,
+    "move": 168,
+    "insert": 68,
+    "release": 48,
+    "retract": 176,
+    "adjust": 204,
+    "lower": 64
+  },
+  "all_classes": {
+    "approach": 217,
+    "align": 188,
+    "rest": 420,
+    "grasp": 307,
+    "lift": 136,
+    "rotate": 72,
+    "hold": 1345,
+    "move": 176,
+    "insert": 76,
+    "release": 56,
+    "retract": 192,
+    "adjust": 212,
+    "lower": 67
+  },
+  "legacy_single_valid": 0,
+  "reviewed": {
+    "False": 433
+  },
+  "timing": {
+    "layouts": [
+      "(5, 16, 4, (4, 4, 4, 4))"
+    ],
+    "fps": [
+      10
+    ],
+    "horizon_mismatches": 0
+  },
+  "target_mapping_and_causal_history_errors": [],
+  "first_window": {
+    "history_frame_indices": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "future_frame_indices": [
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20
+    ],
+    "pw_target_frame_indices": [
+      8,
+      12,
+      16,
+      20
+    ],
+    "pw_target_timestamps": [
+      0.7828000000008615,
+      1.1813069999989239,
+      1.5818429999999353,
+      1.9845519999980752
+    ],
+    "pw_target_resampled_timestamps": [
+      0.8,
+      1.2,
+      1.6,
+      2.0
+    ],
+    "pw_arm_class_targets": [
+      [
+        0,
+        20,
+        20,
+        20
+      ],
+      [
+        16,
+        16,
+        16,
+        16
+      ]
+    ],
+    "pw_arm_valid_mask": [
+      [
+        true,
+        true,
+        true,
+        true
+      ],
+      [
+        true,
+        true,
+        true,
+        true
+      ]
+    ]
+  }
+}
