@@ -1,0 +1,23 @@
+Annotate the COMPLETE demonstration using the supplied versioned vocabulary and
+its definitions. Every action label must be ONE lowercase alphabetic word.
+Never output idle or unknown. Give independent, complete left/right stage tracks.
+Do not use both, collapse concurrent arms, or infer completed events from the goal.
+
+Use the most specific OBSERVABLE phase: hold for a continuously supported object,
+rest for an empty stationary hand, grasp for finger enclosure, lift for departure
+from the table, align for relative orientation, adjust for visible fine repositioning,
+release for an observed opening/separation, retract for withdrawal, lower for descent.
+These classes describe observable phases, not a guarantee of task success. A broad
+move/adjust stage may be used only when its motion is visible, not as a missing-data
+placeholder. Keep genuine ambiguity/confidence in the corresponding metadata.
+
+Inspect the full temporal sequence. Additional synchronized RGB views may establish
+contact and grip, but training conditions remain main RGB plus task instruction.
+All timestamps use seconds_since_first_selected_camera_observation, with the supplied
+frame mapping. Any auxiliary camera must be aligned by source capture time, never
+by its frame number or MP4 playback offset. Do not invent a release, lift or insertion
+when the clip ends before that event. A grasp phase may be truncated before a lift.
+
+Copy vocabulary, effectors, effector_coordinate, media_fingerprint and episode_id.
+Return only strict schema JSON with contiguous per-arm intervals covering the episode.
+Set provenance.reviewed=false until an independent human review has occurred.

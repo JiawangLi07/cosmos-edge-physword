@@ -1,0 +1,25 @@
+split_manifest: ../../docs/physword_data/results/split_manifest.json  # Preserve surviving membership after curation.
+pipeline:
+  sampling_fps: 10
+  train_ratio: 0.9
+  test_ratio: 0.1
+  history_frames: 5
+  future_frames: 16
+  pw_num_blocks: 4
+  pw_stride: 4
+  action_conditioning: false
+  proprioception_conditioning: false
+  tactile_conditioning: false
+  seed: 42
+sources:
+  - adapter: real_robot
+    root: /aifs/lijiawang/episode-badminton/episode_badminton
+    collection: badminton
+    instruction:
+      text: "Pick up the shuttlecock and insert it into the tube."
+      source: visual_inference
+      evidence: "User authorized instruction inference. Viewed full episodes 0001 and 0017 at 1Hz: tube lifted, shuttlecock grasped and brought into tube opening; additional setup clips 0037/0038/0042 inspected. Source task text in tasks.parquet is only badminton. This is task context, never evidence that each event occurred in every clip."
+    camera: main
+    # Top is deliberately outside the final scope per user's latest instruction.
+annotation:
+  kind: pending

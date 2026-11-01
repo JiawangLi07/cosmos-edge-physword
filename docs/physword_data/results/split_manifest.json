@@ -1,0 +1,2079 @@
+{
+  "version": "physword-data-v1",
+  "seed": 42,
+  "requested_train_ratio": 0.9,
+  "requested_test_ratio": 0.1,
+  "validation_fraction_of_train": 0.0,
+  "split_unit": "original_episode_group",
+  "episodes": [
+    {
+      "episode_id": "badminton__episode_0001",
+      "original_episode_id": "capture:15eea103ef35fcc994a6726f508378ec85628b2f29566416f9d24c1c45ad74ff",
+      "lineage_id": "capture:15eea103ef35fcc994a6726f508378ec85628b2f29566416f9d24c1c45ad74ff",
+      "content_sha256": "89953960048b78a68b755628ad85a66889d1e6b84d2c2ad57edbe4b1f54e7f43",
+      "group_id": "badminton__episode_0001",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0001/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0002",
+      "original_episode_id": "capture:89404d0badccc7dac132b605beb8a1ce121faa512c19756725c6187e3b2b582d",
+      "lineage_id": "capture:89404d0badccc7dac132b605beb8a1ce121faa512c19756725c6187e3b2b582d",
+      "content_sha256": "7f2ebc83b338a9cfbbb25838e3c07d0245def616182b24e0b24f3588273b9265",
+      "group_id": "badminton__episode_0002",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0002/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0003",
+      "original_episode_id": "capture:9c9f7e125d638c3a355c43b5e19ed673cdbbd3df758ff4f03088471434932739",
+      "lineage_id": "capture:9c9f7e125d638c3a355c43b5e19ed673cdbbd3df758ff4f03088471434932739",
+      "content_sha256": "247c1856de9b0b208ea03f5d131a59990693046549e3af4f2587b232e1fefbe4",
+      "group_id": "badminton__episode_0003",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0003/manifest.json",
+      "split": "test"
+    },
+    {
+      "episode_id": "badminton__episode_0004",
+      "original_episode_id": "capture:45952da69cc3d69ee38990e4051b702bcf44c575c0ebf0f392a656cd8b30fc81",
+      "lineage_id": "capture:45952da69cc3d69ee38990e4051b702bcf44c575c0ebf0f392a656cd8b30fc81",
+      "content_sha256": "4f02b3a6de0fa0159c5491d2ba7e8cc64659ea73b0b33d8ef992d82f41e29dd0",
+      "group_id": "badminton__episode_0004",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0004/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0005",
+      "original_episode_id": "capture:98310d0828c097e01e7568b3ac9c0ea978cf2f4b78f77b94bf4cd602955b10ee",
+      "lineage_id": "capture:98310d0828c097e01e7568b3ac9c0ea978cf2f4b78f77b94bf4cd602955b10ee",
+      "content_sha256": "e447393adc4957922ed93c3b7d775102e0a53c1a24115cc3861ed53499578158",
+      "group_id": "badminton__episode_0005",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0005/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0006",
+      "original_episode_id": "capture:25c1661d72a5aa02748a02c95e2a9ba85f0d764e2cb853a68a42c6ef6feb3125",
+      "lineage_id": "capture:25c1661d72a5aa02748a02c95e2a9ba85f0d764e2cb853a68a42c6ef6feb3125",
+      "content_sha256": "3f379833b1f7460173fe26677529ec41301c28840a6b4c746b4eac3a92fe7ab6",
+      "group_id": "badminton__episode_0006",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0006/manifest.json",
+      "split": "test"
+    },
+    {
+      "episode_id": "badminton__episode_0007",
+      "original_episode_id": "capture:71df5aa0b94311e586d20f784037a782388aad50a9d6102034e6fa30e28ec3fe",
+      "lineage_id": "capture:71df5aa0b94311e586d20f784037a782388aad50a9d6102034e6fa30e28ec3fe",
+      "content_sha256": "924dc430adce55b7b6e6d1327b208f04de5a29e110cfad42e0bf89c6faacccc1",
+      "group_id": "badminton__episode_0007",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0007/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0008",
+      "original_episode_id": "capture:52ae258d811e4f75e1d8396e05e8ebf04841733e1ad62efd33745c386b1032f4",
+      "lineage_id": "capture:52ae258d811e4f75e1d8396e05e8ebf04841733e1ad62efd33745c386b1032f4",
+      "content_sha256": "c5074e666d5f8dfdfce6525bb65194837f97cd037df8024b1f7675a670cbee7e",
+      "group_id": "badminton__episode_0008",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0008/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0009",
+      "original_episode_id": "capture:816130d98371bc6db8280a53c8f35385056b8ab576d5a3b1ee3e11d93e5a1c13",
+      "lineage_id": "capture:816130d98371bc6db8280a53c8f35385056b8ab576d5a3b1ee3e11d93e5a1c13",
+      "content_sha256": "0be0cfefa3c00930a27652a1edc34a3ddc8a36c6e5fbc4d7a434131f9992a6b3",
+      "group_id": "badminton__episode_0009",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0009/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0010",
+      "original_episode_id": "capture:b628c42e0b8f2233357ced463486c614eac502644da87666963e73573c1d3421",
+      "lineage_id": "capture:b628c42e0b8f2233357ced463486c614eac502644da87666963e73573c1d3421",
+      "content_sha256": "d8b5c4885e7be9f5bd88483e569cdbaca686962ed3cbdb58ff3997d79da42edf",
+      "group_id": "badminton__episode_0010",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0010/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0011",
+      "original_episode_id": "capture:9b962879d0c1878921faa8f704d7ca0cdb0267fc78c54932e1430ede3eb39166",
+      "lineage_id": "capture:9b962879d0c1878921faa8f704d7ca0cdb0267fc78c54932e1430ede3eb39166",
+      "content_sha256": "031072ecf5f1af3125fbc0f6106c9f4a539a2673e92ece964f5ecf55f4e40716",
+      "group_id": "badminton__episode_0011",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0011/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0012",
+      "original_episode_id": "capture:ad400cd06fa0e470ebf7556262d075b996e1f7c93aa199550ba04cfe0b125625",
+      "lineage_id": "capture:ad400cd06fa0e470ebf7556262d075b996e1f7c93aa199550ba04cfe0b125625",
+      "content_sha256": "5ca69764979cf0d55e24eea38f4c14dd1fec85c2251b2a0d97a0d37b1f993d11",
+      "group_id": "badminton__episode_0012",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0012/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0013",
+      "original_episode_id": "capture:3d8de8192196381737ac4311ad80b1073aa98f1d0ffccbebf2170f513e5e3a45",
+      "lineage_id": "capture:3d8de8192196381737ac4311ad80b1073aa98f1d0ffccbebf2170f513e5e3a45",
+      "content_sha256": "aedcfca4f1bee9dd73025b867341f217012d5507de5f533f404d102b42dc795a",
+      "group_id": "badminton__episode_0013",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0013/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0014",
+      "original_episode_id": "capture:e6b0b2da0dc4e45b53e0697661793bf677e945d9ae37ff0c43dd84c6802ce83f",
+      "lineage_id": "capture:e6b0b2da0dc4e45b53e0697661793bf677e945d9ae37ff0c43dd84c6802ce83f",
+      "content_sha256": "13193cffdca7dbe01612c57e06cbd34809e43e0d0aa8a452df797302022247e7",
+      "group_id": "badminton__episode_0014",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0014/manifest.json",
+      "split": "test"
+    },
+    {
+      "episode_id": "badminton__episode_0015",
+      "original_episode_id": "capture:b83a92e1a6a1ebbbba508ab25325c9cb0f401b92c6af20dbaa60817f4911be16",
+      "lineage_id": "capture:b83a92e1a6a1ebbbba508ab25325c9cb0f401b92c6af20dbaa60817f4911be16",
+      "content_sha256": "6e959ced25117f3a41539e0d0e9dbefe3211a153009f728af6a7fbefa323791b",
+      "group_id": "badminton__episode_0015",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0015/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0016",
+      "original_episode_id": "capture:7909cdec3c63a09eefbc7f1d7bd64ad87f5a0f095b6671fdba3b33fbb7dbc4f5",
+      "lineage_id": "capture:7909cdec3c63a09eefbc7f1d7bd64ad87f5a0f095b6671fdba3b33fbb7dbc4f5",
+      "content_sha256": "a2086e0231ddde0927cf61978c4604eac9d99b411fb5ac50733f6a57b3612884",
+      "group_id": "badminton__episode_0016",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0016/manifest.json",
+      "split": "test"
+    },
+    {
+      "episode_id": "badminton__episode_0017",
+      "original_episode_id": "capture:a5a0682e504fff27d31305b969503cfcea48d20972fb3e0e7fb9154f0d29d7e5",
+      "lineage_id": "capture:a5a0682e504fff27d31305b969503cfcea48d20972fb3e0e7fb9154f0d29d7e5",
+      "content_sha256": "aadec417e4ddb6e6b5cb5395c90ba8d3d759b23e9848558424bbfa58374bc4d4",
+      "group_id": "badminton__episode_0017",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0017/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0018",
+      "original_episode_id": "capture:bf19bde6607ac0fb338ea5903eb18f78bb38143999f4d86dd48f3a3b07ad86af",
+      "lineage_id": "capture:bf19bde6607ac0fb338ea5903eb18f78bb38143999f4d86dd48f3a3b07ad86af",
+      "content_sha256": "34e27143d4f90ecd72e150a19a21cec64da059062dfb158a6590ac3f1846c739",
+      "group_id": "badminton__episode_0018",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0018/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0019",
+      "original_episode_id": "capture:da266496793baf17a8ba0259aeafac25f62a31b3e94ceb1e5e09aa2b0c78bb48",
+      "lineage_id": "capture:da266496793baf17a8ba0259aeafac25f62a31b3e94ceb1e5e09aa2b0c78bb48",
+      "content_sha256": "0422ee452e5aa66ecdd745c4484fb67ddbcfbab0f98b300fff73a05a056440d7",
+      "group_id": "badminton__episode_0019",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0019/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0020",
+      "original_episode_id": "capture:12efccc002388b5c088a06c0b8a16af38a4d3537a8720a95788c1942f3d96d49",
+      "lineage_id": "capture:12efccc002388b5c088a06c0b8a16af38a4d3537a8720a95788c1942f3d96d49",
+      "content_sha256": "3d4d740a70dcc78017b6217f5d610f8843b9f10c1a774ec811783e44aad37d3e",
+      "group_id": "badminton__episode_0020",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0020/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0021",
+      "original_episode_id": "capture:0e5f601d67ce33d82a598ccd9a44399dad650c6492b3a8b5c5d305de78139df4",
+      "lineage_id": "capture:0e5f601d67ce33d82a598ccd9a44399dad650c6492b3a8b5c5d305de78139df4",
+      "content_sha256": "5ad428916616db7a928dbb18078dbec60626487bdf6203a722a75d691cddef90",
+      "group_id": "badminton__episode_0021",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0021/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0022",
+      "original_episode_id": "capture:255edda86be7c2bc8d6aaa13c34bca3e3bf746e5c35e7ede4d91a7ccd636c51e",
+      "lineage_id": "capture:255edda86be7c2bc8d6aaa13c34bca3e3bf746e5c35e7ede4d91a7ccd636c51e",
+      "content_sha256": "cda7749f0ca82705cf7a449a63c859c84ceb11b9b95411ef3dfe01bdb5a7f34c",
+      "group_id": "badminton__episode_0022",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0022/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0023",
+      "original_episode_id": "capture:854dbbad910dcab6bd9c6e7881d55c51fba40a955e13d7c0e1f4e2c842c787af",
+      "lineage_id": "capture:854dbbad910dcab6bd9c6e7881d55c51fba40a955e13d7c0e1f4e2c842c787af",
+      "content_sha256": "a6a09238501ef23e91a30db9faca7d403a30ad84060b054b97a1eeffa246c139",
+      "group_id": "badminton__episode_0023",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0023/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0024",
+      "original_episode_id": "capture:179a2ba5df4f6518b0fdf1286284f7a82dfb1f34e7ea0f5041f5262d30d7b6cb",
+      "lineage_id": "capture:179a2ba5df4f6518b0fdf1286284f7a82dfb1f34e7ea0f5041f5262d30d7b6cb",
+      "content_sha256": "634094ebf3673edda7d1a8463524a81bfbd1dc63f3ea67f6ad7e0ed45cfeea79",
+      "group_id": "badminton__episode_0024",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0024/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0025",
+      "original_episode_id": "capture:3ff601ff100ff0aaeb92cb98c7dcb6599b1308faedf95dcb5affd69d1ee1cfc9",
+      "lineage_id": "capture:3ff601ff100ff0aaeb92cb98c7dcb6599b1308faedf95dcb5affd69d1ee1cfc9",
+      "content_sha256": "27c28abe2be6a8baa30a75705f8c3a2c3d0a21ada3a95e7497eefb7c61266ae6",
+      "group_id": "badminton__episode_0025",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0025/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0026",
+      "original_episode_id": "capture:356f38360a6a69f425b0cb748c252a2092b1802558da165e122d46049304ceaf",
+      "lineage_id": "capture:356f38360a6a69f425b0cb748c252a2092b1802558da165e122d46049304ceaf",
+      "content_sha256": "7e7847f00cb5d6adf60a70d8155f86687ab2885b0def1a534bc872aeaf183583",
+      "group_id": "badminton__episode_0026",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0026/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0027",
+      "original_episode_id": "capture:bdd5ded4c460495b82e5999e947866b40c85ae5702a0f44ce2fa18ab8617a479",
+      "lineage_id": "capture:bdd5ded4c460495b82e5999e947866b40c85ae5702a0f44ce2fa18ab8617a479",
+      "content_sha256": "8fc43b1044324a78b7f11b482540e001386842881b155f669daee7d21a71a569",
+      "group_id": "badminton__episode_0027",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0027/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0028",
+      "original_episode_id": "capture:e72334c88495740d47bab7ebefe666cf2041836ebc5ee0691f91bc719e69d5bb",
+      "lineage_id": "capture:e72334c88495740d47bab7ebefe666cf2041836ebc5ee0691f91bc719e69d5bb",
+      "content_sha256": "e292dac9bc242dce06fe949bc38817de2b836c97872fbfd22b5423fb9867f52a",
+      "group_id": "badminton__episode_0028",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0028/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0029",
+      "original_episode_id": "capture:f3e6ac269ba25a9259744386c5e8e2bf2c7a9c2a12ddc8cab338f068e503cbfa",
+      "lineage_id": "capture:f3e6ac269ba25a9259744386c5e8e2bf2c7a9c2a12ddc8cab338f068e503cbfa",
+      "content_sha256": "39c7e25d7fd988b46529cb1d8200c48d8750e7e3571d363aa2c3c4e609c74f0c",
+      "group_id": "badminton__episode_0029",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0029/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0030",
+      "original_episode_id": "capture:d9422d2641d5468cc214e6403d107e19e27e30c81456f683c3530233347b48d9",
+      "lineage_id": "capture:d9422d2641d5468cc214e6403d107e19e27e30c81456f683c3530233347b48d9",
+      "content_sha256": "1ebba616bcf2c0b1756e41da239aa46bc65650490995005498139b357266c8dd",
+      "group_id": "badminton__episode_0030",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0030/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0031",
+      "original_episode_id": "capture:df57c09c76abe5f293231e310254a38fdde8782a8b871c6d188a9d814ab2b948",
+      "lineage_id": "capture:df57c09c76abe5f293231e310254a38fdde8782a8b871c6d188a9d814ab2b948",
+      "content_sha256": "f86c6998ffc1750f05ab0c2b4c00eef424f7da93e33d32636bff7d581bc51f68",
+      "group_id": "badminton__episode_0031",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0031/manifest.json",
+      "split": "test"
+    },
+    {
+      "episode_id": "badminton__episode_0032",
+      "original_episode_id": "capture:525512581fc1b4eaae501ba51b5e22966d9d0f259544a03096cbf77364ac97b5",
+      "lineage_id": "capture:525512581fc1b4eaae501ba51b5e22966d9d0f259544a03096cbf77364ac97b5",
+      "content_sha256": "2ed1eab90e0ef0df078376d74340dc92154fa0de5713b42d228b66197da612a9",
+      "group_id": "badminton__episode_0032",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0032/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0033",
+      "original_episode_id": "capture:e1f45432830c76fc2ec25d08f9a9a25e7feb764e1c0a78adfbb0a6428e98be69",
+      "lineage_id": "capture:e1f45432830c76fc2ec25d08f9a9a25e7feb764e1c0a78adfbb0a6428e98be69",
+      "content_sha256": "cec67c159c5744250ef1456ef9b6a4154aab851361ac7e4bc759c383a54b28c2",
+      "group_id": "badminton__episode_0033",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0033/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0034",
+      "original_episode_id": "capture:833ef9866e1d0be749fc9bc5ba9ed841b419a9f265340b5a67ab68f02f46fa9f",
+      "lineage_id": "capture:833ef9866e1d0be749fc9bc5ba9ed841b419a9f265340b5a67ab68f02f46fa9f",
+      "content_sha256": "cb6b6058bbe1740ce4e17f63ab1f025fd93e784a71a7ec0377497174d21405b7",
+      "group_id": "badminton__episode_0034",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0034/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0035",
+      "original_episode_id": "capture:f8d801ccb2757cc0bb1a3a5a9a20085034dde6cc80d4e40d8aa4ada99b57be0b",
+      "lineage_id": "capture:f8d801ccb2757cc0bb1a3a5a9a20085034dde6cc80d4e40d8aa4ada99b57be0b",
+      "content_sha256": "93d3d7374480b1347ceaed69b4fbded04518aa40fc7df9084c8e46a63f57ddd4",
+      "group_id": "badminton__episode_0035",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0035/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0036",
+      "original_episode_id": "capture:b7b18b982d2c081174903939997f87067648d4b5e39101c8fae416bdf3067d1d",
+      "lineage_id": "capture:b7b18b982d2c081174903939997f87067648d4b5e39101c8fae416bdf3067d1d",
+      "content_sha256": "c771e263466f359a2e98fa4351c74034494d052c0fad320c1f4a4e35084cbb25",
+      "group_id": "badminton__episode_0036",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0036/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0037",
+      "original_episode_id": "capture:62cd126de187bfbb02d94cbbf29e120c9f90194363c49510cccf3ee45bda7bc2",
+      "lineage_id": "capture:62cd126de187bfbb02d94cbbf29e120c9f90194363c49510cccf3ee45bda7bc2",
+      "content_sha256": "6ce4b195df77b466857c87b2a7501f3d503463aaf3d28b5e2f286c1e2f98c719",
+      "group_id": "badminton__episode_0037",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0037/manifest.json",
+      "split": "test"
+    },
+    {
+      "episode_id": "badminton__episode_0039",
+      "original_episode_id": "capture:2ccab1e0424bc97ae8afd6808b7862da327d69e84fc3f934028ba621ae50a14e",
+      "lineage_id": "capture:2ccab1e0424bc97ae8afd6808b7862da327d69e84fc3f934028ba621ae50a14e",
+      "content_sha256": "ce8f361b10f6f2bad1bf8a878b22a8894707f7b7be7c24e1e4cccc3a1b466cfa",
+      "group_id": "badminton__episode_0039",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0039/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0040",
+      "original_episode_id": "capture:da1d6fefc56f385e4898607e98554eca15cf9ec4126fa3b0c2021da57618767d",
+      "lineage_id": "capture:da1d6fefc56f385e4898607e98554eca15cf9ec4126fa3b0c2021da57618767d",
+      "content_sha256": "deb5ed98686454d91534029566ff0bbb3674fa10fd100065ac8558482d17c816",
+      "group_id": "badminton__episode_0040",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0040/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0041",
+      "original_episode_id": "capture:08e86779f38c694bfa735dc35daa130d720e4623dd019244c5987f6a19c8c65c",
+      "lineage_id": "capture:08e86779f38c694bfa735dc35daa130d720e4623dd019244c5987f6a19c8c65c",
+      "content_sha256": "b753ca42dd9049243025970716a405b9ccf7635c8bdacef17ac56d118f973ae2",
+      "group_id": "badminton__episode_0041",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0041/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0042",
+      "original_episode_id": "capture:3e7c155d95d3c5e73c9bd102a73f6ca079c6bf9f101bf3efac41d83adaad4737",
+      "lineage_id": "capture:3e7c155d95d3c5e73c9bd102a73f6ca079c6bf9f101bf3efac41d83adaad4737",
+      "content_sha256": "6fe39b10c83061ffd2a90cd7d8a38e66346855c9fd9d4a0ebd3ed49a168ab8da",
+      "group_id": "badminton__episode_0042",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0042/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0043",
+      "original_episode_id": "capture:bc8a3d296fdeccc7c3ecbcf97d03a3193ca05cd7262f58b7dff08fc78a20a93a",
+      "lineage_id": "capture:bc8a3d296fdeccc7c3ecbcf97d03a3193ca05cd7262f58b7dff08fc78a20a93a",
+      "content_sha256": "3ad3402fccf1a12999b81b8e4cc0de165b8870377a36ddf2eec77924bcf97da0",
+      "group_id": "badminton__episode_0043",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0043/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0044",
+      "original_episode_id": "capture:6fda57a2b5643d57ff71ffde5278dd91b0f686630ffd59e70371dbb60db95cad",
+      "lineage_id": "capture:6fda57a2b5643d57ff71ffde5278dd91b0f686630ffd59e70371dbb60db95cad",
+      "content_sha256": "b6f5772ddc6719aa10c2c4300e979965d29af2db7a4f20965ced8d8af6a3bde7",
+      "group_id": "badminton__episode_0044",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0044/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0045",
+      "original_episode_id": "capture:bc735a66f1886ad9001dec7bc7bc2fdf2e2621ba65704bc83eb2f24dcff60b9c",
+      "lineage_id": "capture:bc735a66f1886ad9001dec7bc7bc2fdf2e2621ba65704bc83eb2f24dcff60b9c",
+      "content_sha256": "8deaaffe3c7e5aaf263b6ee2e3aeb34438ddb9f0adf3796dd79ad13361944143",
+      "group_id": "badminton__episode_0045",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0045/manifest.json",
+      "split": "test"
+    },
+    {
+      "episode_id": "badminton__episode_0046",
+      "original_episode_id": "capture:e9116dfd8b2d5112a44e7ce0fd5df11c33d1bb7d1807bfb3127be82091a0a2bf",
+      "lineage_id": "capture:e9116dfd8b2d5112a44e7ce0fd5df11c33d1bb7d1807bfb3127be82091a0a2bf",
+      "content_sha256": "b0df7c394057dbc2d568f54ecc107e409d006897ff3092a0dca47f025ab1e1ca",
+      "group_id": "badminton__episode_0046",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0046/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0047",
+      "original_episode_id": "capture:b0a4348a44828a37d69340a3e20af6af11c65ee5f24f118f13d95e111f8cf4f5",
+      "lineage_id": "capture:b0a4348a44828a37d69340a3e20af6af11c65ee5f24f118f13d95e111f8cf4f5",
+      "content_sha256": "bc289666054954010a65bbc1d72259c15d4d1a6226aed7a9afb7b471e1233803",
+      "group_id": "badminton__episode_0047",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0047/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0048",
+      "original_episode_id": "capture:5d558cf4d3c9d67ca80a9212d84e27011399d196e482c4a06e88c843f5fd00d7",
+      "lineage_id": "capture:5d558cf4d3c9d67ca80a9212d84e27011399d196e482c4a06e88c843f5fd00d7",
+      "content_sha256": "115a0f510754abca18d35153bd32aaab65ea5350f9b2a6552fb7c33a8afc7760",
+      "group_id": "badminton__episode_0048",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0048/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0049",
+      "original_episode_id": "capture:85d2759124600dc483c22ffd7322b911375c6e81337c58eae89e66ec85428015",
+      "lineage_id": "capture:85d2759124600dc483c22ffd7322b911375c6e81337c58eae89e66ec85428015",
+      "content_sha256": "6a436895ae1e8b45db0ea8f6ca92283ecec51f5b8472557c88723cf1adcb771d",
+      "group_id": "badminton__episode_0049",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0049/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0050",
+      "original_episode_id": "capture:23ae4951af91b310e67e626a5d549b7aef6934a55b91791564ecb01cc9914eea",
+      "lineage_id": "capture:23ae4951af91b310e67e626a5d549b7aef6934a55b91791564ecb01cc9914eea",
+      "content_sha256": "f68e8fe0b562b2065820cd0954df44aa26e55733f31aa37e09f58b8ff814a748",
+      "group_id": "badminton__episode_0050",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0050/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0051",
+      "original_episode_id": "capture:96a93dc655c1d6598c75c08376423cf319bad48b9008efb570b8a3b647e82db1",
+      "lineage_id": "capture:96a93dc655c1d6598c75c08376423cf319bad48b9008efb570b8a3b647e82db1",
+      "content_sha256": "2aa4aff52bdadc2702f6eceb3e5c00e0d1c6c0190bfae609f4aa37a40c4cf5da",
+      "group_id": "badminton__episode_0051",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0051/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0052",
+      "original_episode_id": "capture:dc2a9c9c95dcfe55b35c397484ba2abc552680a33711c6cdfefa76b33b0f3112",
+      "lineage_id": "capture:dc2a9c9c95dcfe55b35c397484ba2abc552680a33711c6cdfefa76b33b0f3112",
+      "content_sha256": "8c99c30d27d5e95035e032ca03fa757961fa09b35def2fa8032bf8f9838898d2",
+      "group_id": "badminton__episode_0052",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0052/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0053",
+      "original_episode_id": "capture:8b5f8e4843f409555771fbc09ec3183c25dd445bba721a9ed4d63284f9213951",
+      "lineage_id": "capture:8b5f8e4843f409555771fbc09ec3183c25dd445bba721a9ed4d63284f9213951",
+      "content_sha256": "e55963c2c87ed9ebc7e3c876d2728cee47b4eb47c2c9fca8b02e067208e96dcb",
+      "group_id": "badminton__episode_0053",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0053/manifest.json",
+      "split": "test"
+    },
+    {
+      "episode_id": "badminton__episode_0054",
+      "original_episode_id": "capture:c9906474dd5e9353008b162eebe9a1770610858ff30fb16b96d398ebf7f3bbea",
+      "lineage_id": "capture:c9906474dd5e9353008b162eebe9a1770610858ff30fb16b96d398ebf7f3bbea",
+      "content_sha256": "cedd08ba104f768d3d6d40268c534a12b4d77643299f315ffc92e27ef0f2241c",
+      "group_id": "badminton__episode_0054",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0054/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0055",
+      "original_episode_id": "capture:c6c0fa0ce93f63c48b93b3e3933c5c9736685ff7a87ad9d690726e4d696e76d9",
+      "lineage_id": "capture:c6c0fa0ce93f63c48b93b3e3933c5c9736685ff7a87ad9d690726e4d696e76d9",
+      "content_sha256": "d1c8f26d9da896e778c946c4e17abdb41fcebf71992a00dfa842f2795b149022",
+      "group_id": "badminton__episode_0055",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0055/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0056",
+      "original_episode_id": "capture:8dbed32a1be0562a3bc443b046aefca77936e0d5a3165ec9297140fb928c0334",
+      "lineage_id": "capture:8dbed32a1be0562a3bc443b046aefca77936e0d5a3165ec9297140fb928c0334",
+      "content_sha256": "16eabe8c0bf04165c8d33ad46f1e24893ac484adcceb6092120bbbb22434fbea",
+      "group_id": "badminton__episode_0056",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0056/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0057",
+      "original_episode_id": "capture:de84fe481a7089a83f6d628154857a2a217648b628a3139f8aa7b92d5ffd051d",
+      "lineage_id": "capture:de84fe481a7089a83f6d628154857a2a217648b628a3139f8aa7b92d5ffd051d",
+      "content_sha256": "8a1b11b2aabe9e5df5030981f706c995391cbdaf516d013314e56f04805c28e8",
+      "group_id": "badminton__episode_0057",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0057/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0058",
+      "original_episode_id": "capture:284f31d8c4b4d14493467806705d3df039e2dd0ab0c60118d6830d7955c73d92",
+      "lineage_id": "capture:284f31d8c4b4d14493467806705d3df039e2dd0ab0c60118d6830d7955c73d92",
+      "content_sha256": "e4abe1c5446c3b3fe090caf8de8ee45437c6c4088d4f8410822df31f820e6abd",
+      "group_id": "badminton__episode_0058",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0058/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0059",
+      "original_episode_id": "capture:f4f8ffdb42b00677339c95a0caff7333fee7c30a1a3da924de24224cb1ac29c7",
+      "lineage_id": "capture:f4f8ffdb42b00677339c95a0caff7333fee7c30a1a3da924de24224cb1ac29c7",
+      "content_sha256": "d6a0f05090f6a477539ee779c14de2405f705bbc72342789d0809a7a25da483e",
+      "group_id": "badminton__episode_0059",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0059/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0060",
+      "original_episode_id": "capture:621c584993384af77a9f350c58cea47ba6c0de0b3b4b511fdd9f368addf23d8f",
+      "lineage_id": "capture:621c584993384af77a9f350c58cea47ba6c0de0b3b4b511fdd9f368addf23d8f",
+      "content_sha256": "68624b76b0bfbd2473e795c06f11b5edc6ed525c05b99e6e204c5372217bfad4",
+      "group_id": "badminton__episode_0060",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0060/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0061",
+      "original_episode_id": "capture:682c802f402af39eaba6abde8335b5b360bbdff583f8fc892999c2cce04f783d",
+      "lineage_id": "capture:682c802f402af39eaba6abde8335b5b360bbdff583f8fc892999c2cce04f783d",
+      "content_sha256": "fdd8f24da8463632b7396001c2d511d6105ba55513d31d5ca20b721cfcdca445",
+      "group_id": "badminton__episode_0061",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0061/manifest.json",
+      "split": "test"
+    },
+    {
+      "episode_id": "badminton__episode_0062",
+      "original_episode_id": "capture:f2ae0b26d33bdd2efa7a81acec5f9066c6a456040cb3eba945219a6702bae52e",
+      "lineage_id": "capture:f2ae0b26d33bdd2efa7a81acec5f9066c6a456040cb3eba945219a6702bae52e",
+      "content_sha256": "03f6e751f25b8679acc93ed057254494a1ac038aa8ce1678be679c6003f078e2",
+      "group_id": "badminton__episode_0062",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0062/manifest.json",
+      "split": "test"
+    },
+    {
+      "episode_id": "badminton__episode_0063",
+      "original_episode_id": "capture:820d6b13efee2105499ee0991918a33b207b6b30e66397860b5c722a2b9537d5",
+      "lineage_id": "capture:820d6b13efee2105499ee0991918a33b207b6b30e66397860b5c722a2b9537d5",
+      "content_sha256": "2d24b0735499e0c48a30da10a57729346b164cca137954989b212a1c8178ff68",
+      "group_id": "badminton__episode_0063",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0063/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0064",
+      "original_episode_id": "capture:5f7d4e934cee3a7f9d84a2e5ab9c4d53e138763c9b24d6ee3fbabf3f1e86d157",
+      "lineage_id": "capture:5f7d4e934cee3a7f9d84a2e5ab9c4d53e138763c9b24d6ee3fbabf3f1e86d157",
+      "content_sha256": "91dcfc5a1879fb075a3647ff0c1bb0f264dbc183c4d3d285729bfde88dae0583",
+      "group_id": "badminton__episode_0064",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0064/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0065",
+      "original_episode_id": "capture:ae48629fd9eacf16a3f285070f96ab6cbd17a908036d2c25144e932f0398d8d8",
+      "lineage_id": "capture:ae48629fd9eacf16a3f285070f96ab6cbd17a908036d2c25144e932f0398d8d8",
+      "content_sha256": "eeb96e7b692094fda51bd985503ac4b201dc35de5769b0194a10cfa9d73c9d80",
+      "group_id": "badminton__episode_0065",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0065/manifest.json",
+      "split": "test"
+    },
+    {
+      "episode_id": "badminton__episode_0066",
+      "original_episode_id": "capture:12b64a0ff5fd7c89b6dda7482abcd62fd0793dd0cb1419c1fcfbb4183d1a2f4c",
+      "lineage_id": "capture:12b64a0ff5fd7c89b6dda7482abcd62fd0793dd0cb1419c1fcfbb4183d1a2f4c",
+      "content_sha256": "3301367739ca990899426974db6baa4ecab78988a5f41150d53eb0d64fb3ac94",
+      "group_id": "badminton__episode_0066",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0066/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0067",
+      "original_episode_id": "capture:be858b4aa8a4d46d06f0d74dd53dcbd94aa9c4e6c800f66a025bd56728e46853",
+      "lineage_id": "capture:be858b4aa8a4d46d06f0d74dd53dcbd94aa9c4e6c800f66a025bd56728e46853",
+      "content_sha256": "632ac149261102790d5252fe51828c3cd1604a15a57de5433301aef4c3dcf264",
+      "group_id": "badminton__episode_0067",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0067/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0068",
+      "original_episode_id": "capture:ac9efcb3a160b97bacc74bb3b69babd49eaa2567be38edff1ea6e2d25287c2f6",
+      "lineage_id": "capture:ac9efcb3a160b97bacc74bb3b69babd49eaa2567be38edff1ea6e2d25287c2f6",
+      "content_sha256": "81276508e0872b8074d2db4c79fddd84d1bfd2a3f2948a2cc64257e9d4f54cf2",
+      "group_id": "badminton__episode_0068",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0068/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0069",
+      "original_episode_id": "capture:e9e9fe094f7d4a5e79eb4a7b02e29a83d7d7fa8cb2f3cf15acdbda12c109738f",
+      "lineage_id": "capture:e9e9fe094f7d4a5e79eb4a7b02e29a83d7d7fa8cb2f3cf15acdbda12c109738f",
+      "content_sha256": "bd94d82cdc73c3f0e258ad6c6faa04865a3b4925069de8ce23538ed881bba804",
+      "group_id": "badminton__episode_0069",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0069/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0070",
+      "original_episode_id": "capture:d3c3bb8ada3d5dcf28e7f319eed32d1e486e037118c12670eafd05599c78d7a8",
+      "lineage_id": "capture:d3c3bb8ada3d5dcf28e7f319eed32d1e486e037118c12670eafd05599c78d7a8",
+      "content_sha256": "a59dac510815df404e8506f03f26a3006a3ac738a0f20136868abe3274ed86f2",
+      "group_id": "badminton__episode_0070",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0070/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0071",
+      "original_episode_id": "capture:05de9c9b1535c3a57a13f6541fc5d1d4e7d19662aca1cbdd697bda3b195c6a36",
+      "lineage_id": "capture:05de9c9b1535c3a57a13f6541fc5d1d4e7d19662aca1cbdd697bda3b195c6a36",
+      "content_sha256": "f47ed6ec7d55e0ccb97eb2ff2a8c50055c7ae245ac073949e70e7778a86d02da",
+      "group_id": "badminton__episode_0071",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0071/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0072",
+      "original_episode_id": "capture:b05b6a00e60ca4ed6f81d52ac49e0c5e0cd31873c9137acbfa7f2ff2472d4f4d",
+      "lineage_id": "capture:b05b6a00e60ca4ed6f81d52ac49e0c5e0cd31873c9137acbfa7f2ff2472d4f4d",
+      "content_sha256": "159295e46f253a444630d0408e0d403315355f930003e48bfbb89255a7db14cb",
+      "group_id": "badminton__episode_0072",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0072/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0073",
+      "original_episode_id": "capture:2a9b9f0b50d9880bde6715e74b4bab759a6a42846c793634fa862d41ff323303",
+      "lineage_id": "capture:2a9b9f0b50d9880bde6715e74b4bab759a6a42846c793634fa862d41ff323303",
+      "content_sha256": "65521c220317ad323d1dc640a0486bbc829326eeaa8b28c630c8305e5c97622f",
+      "group_id": "badminton__episode_0073",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0073/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0074",
+      "original_episode_id": "capture:2ed87a796eec0026e300f5c24f12065884614fa8e9d444225d093c64abe6e0b3",
+      "lineage_id": "capture:2ed87a796eec0026e300f5c24f12065884614fa8e9d444225d093c64abe6e0b3",
+      "content_sha256": "d30168f171a9ab031dbb5e02bf08aec2c6f24d5cbc5c1a558e4231039f5fa440",
+      "group_id": "badminton__episode_0074",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0074/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0075",
+      "original_episode_id": "capture:824427995c4123f6ed9be11464422d6d54743d8881eef9ea5eec4e3b0fc58847",
+      "lineage_id": "capture:824427995c4123f6ed9be11464422d6d54743d8881eef9ea5eec4e3b0fc58847",
+      "content_sha256": "d2851a38c919c5df7891cdc579bc39d76e4f68c996afa290f08bbcd9fa484627",
+      "group_id": "badminton__episode_0075",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0075/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0076",
+      "original_episode_id": "capture:52fca6dda2ac3dbdaa4ee80e1f1ee23d2e83f2955777fcc620c3b9d2aed5b4ab",
+      "lineage_id": "capture:52fca6dda2ac3dbdaa4ee80e1f1ee23d2e83f2955777fcc620c3b9d2aed5b4ab",
+      "content_sha256": "52067fd3cb32f352f6fdaf4c66c7780ffefb4c7b96a1359acdda5fa27b2feee0",
+      "group_id": "badminton__episode_0076",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0076/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0077",
+      "original_episode_id": "capture:58d983be9a4ecd9a475c9d99b28afbc46d6b6d720d9c33e3b37b6bbeccb6b724",
+      "lineage_id": "capture:58d983be9a4ecd9a475c9d99b28afbc46d6b6d720d9c33e3b37b6bbeccb6b724",
+      "content_sha256": "a9d32207430655e71710aae124dd00529a741878a3eec7f818db2dccfa6b0e6a",
+      "group_id": "badminton__episode_0077",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0077/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0078",
+      "original_episode_id": "capture:4031c3d6fad4ddd920104100c5b097241da38b5af6c90ccd8193db4bb11eb47a",
+      "lineage_id": "capture:4031c3d6fad4ddd920104100c5b097241da38b5af6c90ccd8193db4bb11eb47a",
+      "content_sha256": "e79a50c7715900e78d6b5f33d422ab1b1f0a107b80be1bc8ff7b9b0d65a53775",
+      "group_id": "badminton__episode_0078",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0078/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0079",
+      "original_episode_id": "capture:979e92559ee7c82b706bb7bc8033e7610dd36e1053143d27433f393d15adb9cb",
+      "lineage_id": "capture:979e92559ee7c82b706bb7bc8033e7610dd36e1053143d27433f393d15adb9cb",
+      "content_sha256": "10246f9bbcd7e6bf44a3f223c472b9d27ae824958b796eced82253377412f6c2",
+      "group_id": "badminton__episode_0079",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0079/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0080",
+      "original_episode_id": "capture:6b1f033acc9801c2ef9e65d941b6c6e859c428dcb7a733dfd5859128595203f4",
+      "lineage_id": "capture:6b1f033acc9801c2ef9e65d941b6c6e859c428dcb7a733dfd5859128595203f4",
+      "content_sha256": "000e4caaa822420126831d787fad63377b64c67156abebd173e6fef03ff01f8a",
+      "group_id": "badminton__episode_0080",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0080/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0081",
+      "original_episode_id": "capture:1024b02e3c4045dd90bdd38afa59b5af9ad5660dbff80381de27ad7286e212b4",
+      "lineage_id": "capture:1024b02e3c4045dd90bdd38afa59b5af9ad5660dbff80381de27ad7286e212b4",
+      "content_sha256": "74a7e113e88ec43adc697755f8e842383bee7f0b21abd627cc0381a548f61a53",
+      "group_id": "badminton__episode_0081",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0081/manifest.json",
+      "split": "test"
+    },
+    {
+      "episode_id": "badminton__episode_0082",
+      "original_episode_id": "capture:12e17b184d9a3119c01c80944b31f735426b37d6ee7f8ef39505535d1b5697ad",
+      "lineage_id": "capture:12e17b184d9a3119c01c80944b31f735426b37d6ee7f8ef39505535d1b5697ad",
+      "content_sha256": "e4300f5e36e8118def92430373317e0c63a4159e77f2391121af8259a7dd7e1a",
+      "group_id": "badminton__episode_0082",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0082/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0083",
+      "original_episode_id": "capture:462c807cbcdd09219a0b075c35722c4a5b134e407f83d8740530a0aa5dfd9627",
+      "lineage_id": "capture:462c807cbcdd09219a0b075c35722c4a5b134e407f83d8740530a0aa5dfd9627",
+      "content_sha256": "95635f504358f34702b82757c1625ea2ce9307df50a0e89f2eeb883119bda80c",
+      "group_id": "badminton__episode_0083",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0083/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0084",
+      "original_episode_id": "capture:daa6b6defe6c98979510a664a7791202255405c02530fbf0dc8ca0e89b6a0210",
+      "lineage_id": "capture:daa6b6defe6c98979510a664a7791202255405c02530fbf0dc8ca0e89b6a0210",
+      "content_sha256": "14c84c5860142418ba4e4e25246d01cdd880ced844a8d4c042a6d5f46391a263",
+      "group_id": "badminton__episode_0084",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0084/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0085",
+      "original_episode_id": "capture:0602081fb80412c771ff3e6d01c52af0f6bbc36487beb902521aef69d1457a06",
+      "lineage_id": "capture:0602081fb80412c771ff3e6d01c52af0f6bbc36487beb902521aef69d1457a06",
+      "content_sha256": "e4e5f6b1bfdab35d02808fb3e9072ab98736fd645c161ba0c990cb2b0bccc08d",
+      "group_id": "badminton__episode_0085",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0085/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0086",
+      "original_episode_id": "capture:08ec1c122a877be44d9223c6431bc15924aa70d702e76d505c2d739dbafcd6ac",
+      "lineage_id": "capture:08ec1c122a877be44d9223c6431bc15924aa70d702e76d505c2d739dbafcd6ac",
+      "content_sha256": "280bee50cf7bf3210efbe0be2e5f7b92b7c582d78b2cb21e1b3c1a41cd2847a5",
+      "group_id": "badminton__episode_0086",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0086/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0087",
+      "original_episode_id": "capture:114951abb900326336849c28e90cf42c5a92509fa93dfb5a588a8c447bc7ba7f",
+      "lineage_id": "capture:114951abb900326336849c28e90cf42c5a92509fa93dfb5a588a8c447bc7ba7f",
+      "content_sha256": "e06defdb4b15cdf20f0a2d5f79c06a4c4bf0dafd0ed7f60aef80aef037b71304",
+      "group_id": "badminton__episode_0087",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0087/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0088",
+      "original_episode_id": "capture:ffee7c4eadbeb8eda7c5bded8fad5d220b106ff17fe9b8c2900dd374c1f16d29",
+      "lineage_id": "capture:ffee7c4eadbeb8eda7c5bded8fad5d220b106ff17fe9b8c2900dd374c1f16d29",
+      "content_sha256": "8c2d46a218dd59e1045cb980425689b740a5f78264406027cf6698426bcb2619",
+      "group_id": "badminton__episode_0088",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0088/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0089",
+      "original_episode_id": "capture:8be2b289ff1b8ea3ec4fb95e55ea72d457f6263136441f56244f59b950093059",
+      "lineage_id": "capture:8be2b289ff1b8ea3ec4fb95e55ea72d457f6263136441f56244f59b950093059",
+      "content_sha256": "ec9857db80fa3c617fcd846b3a3ee0500706dca3c124d575f5a98874d5c5a66c",
+      "group_id": "badminton__episode_0089",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0089/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0090",
+      "original_episode_id": "capture:f831114aa794576753e6aeb5bfd27b3c6151de449dc9f2e29936ffae4a2f4f0f",
+      "lineage_id": "capture:f831114aa794576753e6aeb5bfd27b3c6151de449dc9f2e29936ffae4a2f4f0f",
+      "content_sha256": "bb7363d69839942c38a93d7af496ccd3ff819145ccb0045a4814f178ba062972",
+      "group_id": "badminton__episode_0090",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0090/manifest.json",
+      "split": "test"
+    },
+    {
+      "episode_id": "badminton__episode_0091",
+      "original_episode_id": "capture:2ab712295777a36ec592a334430ef112a90732b7059d4b709880ad81bd7b7dbe",
+      "lineage_id": "capture:2ab712295777a36ec592a334430ef112a90732b7059d4b709880ad81bd7b7dbe",
+      "content_sha256": "5cad84e2b4c00cae698c8c216d5987c74bd61ff380e12ccb6b3d5f9dec32a727",
+      "group_id": "badminton__episode_0091",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0091/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0092",
+      "original_episode_id": "capture:0200ec96443bf1224fcfa406eb97e380dcf5eb3309af9762b71d68f758fb21d7",
+      "lineage_id": "capture:0200ec96443bf1224fcfa406eb97e380dcf5eb3309af9762b71d68f758fb21d7",
+      "content_sha256": "a0959553b90e2f1f3a67ddaa7921f3d5c693b7971f97174634913ecc725d09a8",
+      "group_id": "badminton__episode_0092",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0092/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0093",
+      "original_episode_id": "capture:f46f8d2d7bd1aeac74e56b9b5f111c7ac17d9ba0f7f23abc1a6a650b79c1cc73",
+      "lineage_id": "capture:f46f8d2d7bd1aeac74e56b9b5f111c7ac17d9ba0f7f23abc1a6a650b79c1cc73",
+      "content_sha256": "524719220e57830d30adec3f4ebe90bb9a2dec9c1eb6db5fb0409e77f9f1d090",
+      "group_id": "badminton__episode_0093",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0093/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0094",
+      "original_episode_id": "capture:e7e23b4fe701d4c0fc37b01b4c2b4967332353acbb2e0a0ced2d182aee9ec6ab",
+      "lineage_id": "capture:e7e23b4fe701d4c0fc37b01b4c2b4967332353acbb2e0a0ced2d182aee9ec6ab",
+      "content_sha256": "9ecc9bb3dc24ccd4e18b821075fc60ea1b469ad3f937b68d1fb0b8a5bb407c11",
+      "group_id": "badminton__episode_0094",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0094/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0095",
+      "original_episode_id": "capture:e22e45bd737f58cae073bff59b05bc6ece12ec80ad1a4c9419128b8e88b2d6bd",
+      "lineage_id": "capture:e22e45bd737f58cae073bff59b05bc6ece12ec80ad1a4c9419128b8e88b2d6bd",
+      "content_sha256": "62c24acf808fe0f7dd2e32da6f070ca8b3cc073659bdc21b511139a689881058",
+      "group_id": "badminton__episode_0095",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0095/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0096",
+      "original_episode_id": "capture:98ed64eaed6972164c1c1bba16ce3bdec493c6c80ff59eeb84768e64972a42a1",
+      "lineage_id": "capture:98ed64eaed6972164c1c1bba16ce3bdec493c6c80ff59eeb84768e64972a42a1",
+      "content_sha256": "44bea730680637a6107b74eb55ef4c6891467958b1861453e2b74d3adc579c11",
+      "group_id": "badminton__episode_0096",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0096/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0097",
+      "original_episode_id": "capture:9897fca7500c59a370ced2263ea70741dbe6ec7d75e41886dd88d36e9e60b505",
+      "lineage_id": "capture:9897fca7500c59a370ced2263ea70741dbe6ec7d75e41886dd88d36e9e60b505",
+      "content_sha256": "446fc2a530948958a365392aedcfe4e8655f354073182cc871740c6543351aef",
+      "group_id": "badminton__episode_0097",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0097/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0098",
+      "original_episode_id": "capture:982743186c43aeba4f4f29dcb7ba3015fffde7d61db8c0c04772a02b739711fb",
+      "lineage_id": "capture:982743186c43aeba4f4f29dcb7ba3015fffde7d61db8c0c04772a02b739711fb",
+      "content_sha256": "f66e41cfc4790cfa4e8b2bcdf6b7d28c98a3bff2ea6c32528653b28728dd5734",
+      "group_id": "badminton__episode_0098",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0098/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0099",
+      "original_episode_id": "capture:cb268fa3cd76874caf9944893ec1bfba775d8424c4a8fe4e0fac25bca7c3917a",
+      "lineage_id": "capture:cb268fa3cd76874caf9944893ec1bfba775d8424c4a8fe4e0fac25bca7c3917a",
+      "content_sha256": "22a7624fa50b80212e8d9beaf3573db935de9e3406e0b0413897a641578eff13",
+      "group_id": "badminton__episode_0099",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0099/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0100",
+      "original_episode_id": "capture:d24ff861f9e9aaa694936564532333ecd1ebc8e33f3512e5cb50e4d07e81deb7",
+      "lineage_id": "capture:d24ff861f9e9aaa694936564532333ecd1ebc8e33f3512e5cb50e4d07e81deb7",
+      "content_sha256": "92619abe59fb760df0f848a4e3f89d3f5662b20b1fc8f6d5f362cc15767d9ef4",
+      "group_id": "badminton__episode_0100",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0100/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0101",
+      "original_episode_id": "capture:ad6adbccb07d6bedbd842e8f16f0879c325d6917d35122d1c2a1558849f24d61",
+      "lineage_id": "capture:ad6adbccb07d6bedbd842e8f16f0879c325d6917d35122d1c2a1558849f24d61",
+      "content_sha256": "0792e0dfd15b4c01dbe4aa43a66014e9b5831955a269f43a3c1bbd59076b9127",
+      "group_id": "badminton__episode_0101",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0101/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0102",
+      "original_episode_id": "capture:00bedcd6c1ecd0c322294422ee9b286c5f07c911f9f5046ed993e3c95dcb1bed",
+      "lineage_id": "capture:00bedcd6c1ecd0c322294422ee9b286c5f07c911f9f5046ed993e3c95dcb1bed",
+      "content_sha256": "de0a2e0100ed424f23f4685faf3c1255655c39e522c9b1f4e245d6e073edb3de",
+      "group_id": "badminton__episode_0102",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0102/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0103",
+      "original_episode_id": "capture:5cf1a9fb29dd7e41d7c545d6e159f00cca39df5d1c4d9be56dfe81fe606ef7cd",
+      "lineage_id": "capture:5cf1a9fb29dd7e41d7c545d6e159f00cca39df5d1c4d9be56dfe81fe606ef7cd",
+      "content_sha256": "35326de1ad44956293491d499b5f6289a1107f2668d8eee32a7d2ec411ca5089",
+      "group_id": "badminton__episode_0103",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0103/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0104",
+      "original_episode_id": "capture:180c9814f0f7b4a9d6893cb9ac7793d534917a1f6611f836ba9f3e8693abe8bc",
+      "lineage_id": "capture:180c9814f0f7b4a9d6893cb9ac7793d534917a1f6611f836ba9f3e8693abe8bc",
+      "content_sha256": "4ed441c2d08f0dc7f5e3eb69fcb8569241154c869ae91a03e7d3e6992d7fede8",
+      "group_id": "badminton__episode_0104",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0104/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0105",
+      "original_episode_id": "capture:74a4e878cf2270ee44d75eeafb8567af013de8e88a19119df644ad5dd7eebeb3",
+      "lineage_id": "capture:74a4e878cf2270ee44d75eeafb8567af013de8e88a19119df644ad5dd7eebeb3",
+      "content_sha256": "ac0b90fac28fcdddc2ebcd9bedb50ae38c2e03e47c4aef815bd3913427ede4c0",
+      "group_id": "badminton__episode_0105",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0105/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0106",
+      "original_episode_id": "capture:799279501c8b44d89036c28a8b055dc2dcc72a9066d561cea06efb937cffa7a3",
+      "lineage_id": "capture:799279501c8b44d89036c28a8b055dc2dcc72a9066d561cea06efb937cffa7a3",
+      "content_sha256": "0a2e58a2dec1e2600454fa94407aa656a9db224a3e85d08d0b2b46b3e7b09252",
+      "group_id": "badminton__episode_0106",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0106/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0107",
+      "original_episode_id": "capture:7d674d19160d79c9d508fc833c5a0fc6e25a651ba487dc431f6db020e090f513",
+      "lineage_id": "capture:7d674d19160d79c9d508fc833c5a0fc6e25a651ba487dc431f6db020e090f513",
+      "content_sha256": "b3d4a41edadc51fb10a2b8a99e3925fb17922d298e929d63bec88c9842981311",
+      "group_id": "badminton__episode_0107",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0107/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0108",
+      "original_episode_id": "capture:24006d26aa845a8febbb90e798942c32cbfac1ff81d4ad45625356bbc2a4500e",
+      "lineage_id": "capture:24006d26aa845a8febbb90e798942c32cbfac1ff81d4ad45625356bbc2a4500e",
+      "content_sha256": "2d20ac9062911616cc359c4dd9dcc00e11c33799b88a213605c701eda2117d46",
+      "group_id": "badminton__episode_0108",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0108/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0109",
+      "original_episode_id": "capture:de30a9ebb5a0b09fce51a7096ec5c8c283769d4c13ac136290dcb6418f6225d4",
+      "lineage_id": "capture:de30a9ebb5a0b09fce51a7096ec5c8c283769d4c13ac136290dcb6418f6225d4",
+      "content_sha256": "19066e7c65cf6bbbec9eb1808716653638d5cdf1cf0a978a6fd5c3b0384b75ec",
+      "group_id": "badminton__episode_0109",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0109/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0110",
+      "original_episode_id": "capture:f5c0ff1d91f044011560e31d86878aaa61cc16313735f037c96294a56eab0ad6",
+      "lineage_id": "capture:f5c0ff1d91f044011560e31d86878aaa61cc16313735f037c96294a56eab0ad6",
+      "content_sha256": "99f0a2c84e3bf73080e098b3d943d20f4fb8a2b183dfd99beb6f6f942254f599",
+      "group_id": "badminton__episode_0110",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0110/manifest.json",
+      "split": "test"
+    },
+    {
+      "episode_id": "badminton__episode_0111",
+      "original_episode_id": "capture:c988a7b388e9ac2489c483a24d1e7f92f3c4c54a7c72fd391517613edf9ddd45",
+      "lineage_id": "capture:c988a7b388e9ac2489c483a24d1e7f92f3c4c54a7c72fd391517613edf9ddd45",
+      "content_sha256": "91040464028613e40b9745e88d3d2abb011abf95bc6acf71462aa9efec2ce27a",
+      "group_id": "badminton__episode_0111",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0111/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0112",
+      "original_episode_id": "capture:53cfab671dfe0e7fe976bf69a9937b3e449cf05f9473f34570a415743004d498",
+      "lineage_id": "capture:53cfab671dfe0e7fe976bf69a9937b3e449cf05f9473f34570a415743004d498",
+      "content_sha256": "a2bff2ccb1b95953d7b7823602706f56c7813371bd0ca06b91428a8091edf16c",
+      "group_id": "badminton__episode_0112",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0112/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0113",
+      "original_episode_id": "capture:b3641ae02aa3d1c9804fa832b1613e56dcacb6f78b5404c86572c6a0e0451b4c",
+      "lineage_id": "capture:b3641ae02aa3d1c9804fa832b1613e56dcacb6f78b5404c86572c6a0e0451b4c",
+      "content_sha256": "c7ecf24fd52542cdac0d1229d3c317e4a022bed539fb98599c47064a747ba518",
+      "group_id": "badminton__episode_0113",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0113/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0114",
+      "original_episode_id": "capture:fadac576d85085fc01b18c0aeae596ec65f5a59275d14ef3770458b1af8de269",
+      "lineage_id": "capture:fadac576d85085fc01b18c0aeae596ec65f5a59275d14ef3770458b1af8de269",
+      "content_sha256": "e7a52105c75182068d1f09dd12e7cab7edc868f532b3f84faf333433709ff3f8",
+      "group_id": "badminton__episode_0114",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0114/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0115",
+      "original_episode_id": "capture:3b5a8b75d4522ce51fa6d1756d0876197fb4037c5e349f18eb02dd0969f4e6cf",
+      "lineage_id": "capture:3b5a8b75d4522ce51fa6d1756d0876197fb4037c5e349f18eb02dd0969f4e6cf",
+      "content_sha256": "ae79500969604be7c2e616f0a46082351dc85b5ed0822a070f626d5019718da4",
+      "group_id": "badminton__episode_0115",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0115/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0116",
+      "original_episode_id": "capture:e6cdd6e6c700fc2bd1893ab617d2f76b547e76ccd40d9e71cc4587c313f8d3ef",
+      "lineage_id": "capture:e6cdd6e6c700fc2bd1893ab617d2f76b547e76ccd40d9e71cc4587c313f8d3ef",
+      "content_sha256": "a172cc10cf09eaf0e5d86f8ccb23cc4d0cf2ed5196570c492ce860ea4857cdca",
+      "group_id": "badminton__episode_0116",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0116/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0117",
+      "original_episode_id": "capture:2620d6e05952b5024caef46c607829e2d13830c55576c06b660228ea2490c22f",
+      "lineage_id": "capture:2620d6e05952b5024caef46c607829e2d13830c55576c06b660228ea2490c22f",
+      "content_sha256": "d49e35a77c887e27dea3b4d0e001eaa2daa41dcbb6f42046bb273429b55ff6f6",
+      "group_id": "badminton__episode_0117",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0117/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0118",
+      "original_episode_id": "capture:7a62c7c3ca80fc80945863be8788282c2e477da30fe52d7ceb02638ed05435af",
+      "lineage_id": "capture:7a62c7c3ca80fc80945863be8788282c2e477da30fe52d7ceb02638ed05435af",
+      "content_sha256": "60594aa78c9f9444334a013b62c173962b9718854b5bcef986330250d28f2364",
+      "group_id": "badminton__episode_0118",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0118/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0119",
+      "original_episode_id": "capture:0d183bd70469943db411a0d21a0cb51bc79a2b58b5eb3b02e86eeb52e21202c8",
+      "lineage_id": "capture:0d183bd70469943db411a0d21a0cb51bc79a2b58b5eb3b02e86eeb52e21202c8",
+      "content_sha256": "e2a09ddc5a32e8814df8893333ccd06579047b4ce8a0bcacb3e77387603d6704",
+      "group_id": "badminton__episode_0119",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0119/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0120",
+      "original_episode_id": "capture:c35612053678da202be5cc85921d3d348c0789f62f559bde89651aacb745f693",
+      "lineage_id": "capture:c35612053678da202be5cc85921d3d348c0789f62f559bde89651aacb745f693",
+      "content_sha256": "e0c5504544d4b0f05461a3c3cdb2bf8343c9873734115ed7308ad363c589b305",
+      "group_id": "badminton__episode_0120",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0120/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0121",
+      "original_episode_id": "capture:827091e8f2f4eb275644db44af42791f438b54e8a278edd0ca5f49f3d8587974",
+      "lineage_id": "capture:827091e8f2f4eb275644db44af42791f438b54e8a278edd0ca5f49f3d8587974",
+      "content_sha256": "f259ee760955ce960878286840980d4857bb907d47b36de108f438d175729042",
+      "group_id": "badminton__episode_0121",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0121/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0122",
+      "original_episode_id": "capture:d078c0297f3c73f1612b47d3a606142daa4f4b8e208b39fdf8cdd93a214d2437",
+      "lineage_id": "capture:d078c0297f3c73f1612b47d3a606142daa4f4b8e208b39fdf8cdd93a214d2437",
+      "content_sha256": "adcd488dc7b859e396d6e79a9106a6db176e5daa11c28f0ce686eea63f06f978",
+      "group_id": "badminton__episode_0122",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0122/manifest.json",
+      "split": "test"
+    },
+    {
+      "episode_id": "badminton__episode_0123",
+      "original_episode_id": "capture:32b18b2084bab3dbf6ea4424b1237f3c898f772628ade1a05b16d740f23f0faa",
+      "lineage_id": "capture:32b18b2084bab3dbf6ea4424b1237f3c898f772628ade1a05b16d740f23f0faa",
+      "content_sha256": "d41827549fbe41a7a06d8808ee1a99d5884e4b6f0923259d2f9c67e9abe6a213",
+      "group_id": "badminton__episode_0123",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0123/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0124",
+      "original_episode_id": "capture:31a391141a28ee9f908e79ce86ff934b0cb7e9799f0ba52213ced449325a75d2",
+      "lineage_id": "capture:31a391141a28ee9f908e79ce86ff934b0cb7e9799f0ba52213ced449325a75d2",
+      "content_sha256": "f3c63bad8c003d2bc0083437c04a08636476cb47bb9a8aa82739ad200734de7d",
+      "group_id": "badminton__episode_0124",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0124/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0125",
+      "original_episode_id": "capture:2d5b7ef8fa97a98a1a81731e95dd81af4ef18f0b0d5cb454ecddf268d886ae9c",
+      "lineage_id": "capture:2d5b7ef8fa97a98a1a81731e95dd81af4ef18f0b0d5cb454ecddf268d886ae9c",
+      "content_sha256": "76e8f6f3dce0587f8ea1f0b7b7ddf2c72c836f83a5d5571979f617d7ffbeac34",
+      "group_id": "badminton__episode_0125",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0125/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0126",
+      "original_episode_id": "capture:27d0024b5679f0e5086c45093383fa5e4333ac9f89de05690a36c898cc745343",
+      "lineage_id": "capture:27d0024b5679f0e5086c45093383fa5e4333ac9f89de05690a36c898cc745343",
+      "content_sha256": "2222934f53a992e551fda5dab9f8d0dd8417f0608ce6e94d5feba423effc2c64",
+      "group_id": "badminton__episode_0126",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0126/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0127",
+      "original_episode_id": "capture:93c64c1af04e109524f0a0ca2fdc325eb0f7a6ace2fe952b138002ecb9732883",
+      "lineage_id": "capture:93c64c1af04e109524f0a0ca2fdc325eb0f7a6ace2fe952b138002ecb9732883",
+      "content_sha256": "f4cafe6356dcb155f8751be3d307cdb4207e13ee73498af32aa72b58fd02b5a6",
+      "group_id": "badminton__episode_0127",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0127/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0128",
+      "original_episode_id": "capture:a463bd84200a5c7859169a5ce42722a212201e635ecf3ffe4e7a28da4569c575",
+      "lineage_id": "capture:a463bd84200a5c7859169a5ce42722a212201e635ecf3ffe4e7a28da4569c575",
+      "content_sha256": "5ccf81d456c3c7107fbecefec8940f791eb8379e22d14287838dfe09e8b541f5",
+      "group_id": "badminton__episode_0128",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0128/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0129",
+      "original_episode_id": "capture:1118da0392fe20bba731842d15126920ae8eaf3164a00737606b70e73b946030",
+      "lineage_id": "capture:1118da0392fe20bba731842d15126920ae8eaf3164a00737606b70e73b946030",
+      "content_sha256": "163a62017d8ac98747eb0962d90885eea218bd1f2cf30ef694385184a6ffc7d3",
+      "group_id": "badminton__episode_0129",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0129/manifest.json",
+      "split": "test"
+    },
+    {
+      "episode_id": "badminton__episode_0130",
+      "original_episode_id": "capture:765c52126f7e361b99d157621d3f0c8d35c9b3a8feeca253984289e5b4422105",
+      "lineage_id": "capture:765c52126f7e361b99d157621d3f0c8d35c9b3a8feeca253984289e5b4422105",
+      "content_sha256": "194c1e122e3fbb5d703b0812b8ac6608364e59c5ceb1107c76e2124b223a123d",
+      "group_id": "badminton__episode_0130",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0130/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0131",
+      "original_episode_id": "capture:7cda02b1eb3f29879f934f4e0f2e2bb9a4b8833bef5c98d29a38d19de35f8317",
+      "lineage_id": "capture:7cda02b1eb3f29879f934f4e0f2e2bb9a4b8833bef5c98d29a38d19de35f8317",
+      "content_sha256": "a217cc785c909ab7313919f4c7b645b766244f87731b5b7883a00ec066fe0efe",
+      "group_id": "badminton__episode_0131",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0131/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0132",
+      "original_episode_id": "capture:8605bd29903d057afbca035bbe7c6f3595922032dfb4f340b82f0d0091f4b4a5",
+      "lineage_id": "capture:8605bd29903d057afbca035bbe7c6f3595922032dfb4f340b82f0d0091f4b4a5",
+      "content_sha256": "67fad56f22fe3316f1c481c1c914482e379a94a2956832c1de089726a13620f7",
+      "group_id": "badminton__episode_0132",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0132/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0133",
+      "original_episode_id": "capture:e0ae81e3c293c1388401b62287cdbb521c91c2d024e997badfe88eff4ec58a26",
+      "lineage_id": "capture:e0ae81e3c293c1388401b62287cdbb521c91c2d024e997badfe88eff4ec58a26",
+      "content_sha256": "ab7adaebc7d43b193bc842f6a08c63aae3494a3e3afb4c5328b3b2a639208e5b",
+      "group_id": "badminton__episode_0133",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0133/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0134",
+      "original_episode_id": "capture:5829c979df6fdf4abfc5d822ffb8450ba4c82b963f9a5d596db38a26a58cfe83",
+      "lineage_id": "capture:5829c979df6fdf4abfc5d822ffb8450ba4c82b963f9a5d596db38a26a58cfe83",
+      "content_sha256": "c7a9ae81cee49070fcba46f594ae057d69b491195ea20aede497a9a5adaa5930",
+      "group_id": "badminton__episode_0134",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0134/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0135",
+      "original_episode_id": "capture:e499a78a4e8e860c7d637459d51460b764fb8ee13cfcf142212e6b6ab553bae4",
+      "lineage_id": "capture:e499a78a4e8e860c7d637459d51460b764fb8ee13cfcf142212e6b6ab553bae4",
+      "content_sha256": "5a08bf019ff2ae77f4149c1aa37963e00847fb6b89f6f5000d3fc18e9d57c213",
+      "group_id": "badminton__episode_0135",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0135/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0136",
+      "original_episode_id": "capture:2274acefe04ab5c86989a70d79869efba427ae7b3e2a0bae9209e3c5a7782800",
+      "lineage_id": "capture:2274acefe04ab5c86989a70d79869efba427ae7b3e2a0bae9209e3c5a7782800",
+      "content_sha256": "2b4ec4fb5f964104504884e98b49d4012c4460632997c0eb4c4a932fc4c759c9",
+      "group_id": "badminton__episode_0136",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0136/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0137",
+      "original_episode_id": "capture:6259e6e3181dae81f5d16fc92eff2b5a6b962bf7fae2e952ae6f35f059f32b6d",
+      "lineage_id": "capture:6259e6e3181dae81f5d16fc92eff2b5a6b962bf7fae2e952ae6f35f059f32b6d",
+      "content_sha256": "71228209a25c70b093eca9e535242b1f2801f6c3b5c7286e98756c1218ac3675",
+      "group_id": "badminton__episode_0137",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0137/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0138",
+      "original_episode_id": "capture:130b52d48f9af3727847066878f4c76b9680d887a0da2454567a0a5c2889d229",
+      "lineage_id": "capture:130b52d48f9af3727847066878f4c76b9680d887a0da2454567a0a5c2889d229",
+      "content_sha256": "907817ec29ac210942e1b9aae015a8240550fc0318ec3e33eff67979ea3176d6",
+      "group_id": "badminton__episode_0138",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0138/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0139",
+      "original_episode_id": "capture:f98910fea7cf6d46baf55e6e1b823212499521e1f01824b017f4f31296c02add",
+      "lineage_id": "capture:f98910fea7cf6d46baf55e6e1b823212499521e1f01824b017f4f31296c02add",
+      "content_sha256": "6486d49bcd186bbc457e571938f6c69f3f0042b1b9eb32a5d5ca60a87e795fb3",
+      "group_id": "badminton__episode_0139",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0139/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0140",
+      "original_episode_id": "capture:2eb935f014276c7142817c891a4d6d1e3cee8b2288d606b65b00536c48b2e840",
+      "lineage_id": "capture:2eb935f014276c7142817c891a4d6d1e3cee8b2288d606b65b00536c48b2e840",
+      "content_sha256": "c5b0d38044014dfb6cb9d61cb4ac268f2fd2bacdcb67aba430912efc36f4abac",
+      "group_id": "badminton__episode_0140",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0140/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0141",
+      "original_episode_id": "capture:44d7444031e0a99cccb93c63e5cf4c409c240137e006b2c430fdb748fb66ecde",
+      "lineage_id": "capture:44d7444031e0a99cccb93c63e5cf4c409c240137e006b2c430fdb748fb66ecde",
+      "content_sha256": "1218a246cbd0d7c54cb6ba8a737290161e79d0c869e3f0f72460391e6bf30165",
+      "group_id": "badminton__episode_0141",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0141/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0142",
+      "original_episode_id": "capture:4608672cc05ac53dad626358d35afe184d4e7132734ee19e58df310b612bf177",
+      "lineage_id": "capture:4608672cc05ac53dad626358d35afe184d4e7132734ee19e58df310b612bf177",
+      "content_sha256": "ba6300fde7d404558211e8020b7e385067190b36c339864d62ca03067d4658ff",
+      "group_id": "badminton__episode_0142",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0142/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0143",
+      "original_episode_id": "capture:73d691d9ed18c263b4630ad9a8634168575274760306607569f0fa05b9ff1d19",
+      "lineage_id": "capture:73d691d9ed18c263b4630ad9a8634168575274760306607569f0fa05b9ff1d19",
+      "content_sha256": "765152e4e6b3712ef9f72326ccc1fa58ba51b09abef08bbad38974949688a5f8",
+      "group_id": "badminton__episode_0143",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0143/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0144",
+      "original_episode_id": "capture:ca1e550b60a85bdf6f15641bb8aa67d3ff34106a376782c28dbec88b88c5e2fc",
+      "lineage_id": "capture:ca1e550b60a85bdf6f15641bb8aa67d3ff34106a376782c28dbec88b88c5e2fc",
+      "content_sha256": "be0a6b33243892537c9cb0c7b2a49b38c424ddfbed5d8dfe1e10989d2283315a",
+      "group_id": "badminton__episode_0144",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0144/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0145",
+      "original_episode_id": "capture:61b3f8c8c7d85e21f1f3f78f2a9b63ddc8bacc84e63e89fea57e014e963c8fe7",
+      "lineage_id": "capture:61b3f8c8c7d85e21f1f3f78f2a9b63ddc8bacc84e63e89fea57e014e963c8fe7",
+      "content_sha256": "a6085037dc7b022cc0a65d0eef80a449a6454a49a8de4ccad76f31d81d5265a0",
+      "group_id": "badminton__episode_0145",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0145/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0146",
+      "original_episode_id": "capture:30e68264d500b7110496c2a428812d7b217ed7a667bd664c6024f25e14e7094f",
+      "lineage_id": "capture:30e68264d500b7110496c2a428812d7b217ed7a667bd664c6024f25e14e7094f",
+      "content_sha256": "224e0f9882061cc0db44b485dcbf3fd90b72d9fea516c01cde9ee245ce99f072",
+      "group_id": "badminton__episode_0146",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0146/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0147",
+      "original_episode_id": "capture:b08e7fb20ea89c44d83e331f292472a7b9d8f1428cfa7c1f130d3c2f0dada6a2",
+      "lineage_id": "capture:b08e7fb20ea89c44d83e331f292472a7b9d8f1428cfa7c1f130d3c2f0dada6a2",
+      "content_sha256": "774623899aa42a64d5903619d25de20ff64faf85a6a4865d8a9de408d05556f5",
+      "group_id": "badminton__episode_0147",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0147/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0148",
+      "original_episode_id": "capture:617cbdf3dbfcdc77b2aa56fb5d6235e83c06ca0ca00b1d0a16ec88a28534a818",
+      "lineage_id": "capture:617cbdf3dbfcdc77b2aa56fb5d6235e83c06ca0ca00b1d0a16ec88a28534a818",
+      "content_sha256": "b795fc2b63de462005654e088f9616c0c34e69efdd83569603691e777090ca37",
+      "group_id": "badminton__episode_0148",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0148/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0149",
+      "original_episode_id": "capture:fabd34ab635267c450be296a02385a175f48d25ba131b224298b92d1d5175706",
+      "lineage_id": "capture:fabd34ab635267c450be296a02385a175f48d25ba131b224298b92d1d5175706",
+      "content_sha256": "331a6dcc4c6294b874988629eb92e0a8ff79ef3b9005b6aeb5ecab10a77182e6",
+      "group_id": "badminton__episode_0149",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0149/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0150",
+      "original_episode_id": "capture:9c555f17a0edc6d29d1fe98859e011582a15c18049d277f34ce80489dd5b20d7",
+      "lineage_id": "capture:9c555f17a0edc6d29d1fe98859e011582a15c18049d277f34ce80489dd5b20d7",
+      "content_sha256": "5f6560600ab862c03dfebc5cac987e569ed5d61eefa5a0065ab0be7fe6b179a4",
+      "group_id": "badminton__episode_0150",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0150/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0151",
+      "original_episode_id": "capture:2b76f31458a4e8a406f79a343d2e8952a6da444b54f601e1aec83e5cbc3fe6b7",
+      "lineage_id": "capture:2b76f31458a4e8a406f79a343d2e8952a6da444b54f601e1aec83e5cbc3fe6b7",
+      "content_sha256": "50b976bc1e555f73bf112b1b8f668c74a1b60e960dc1c2bdf4322b2bd8e8c154",
+      "group_id": "badminton__episode_0151",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0151/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0152",
+      "original_episode_id": "capture:1a4447fb1fdfd8d16d3b883ffde6e976c8114f93286e3c95d2b26e0aae945038",
+      "lineage_id": "capture:1a4447fb1fdfd8d16d3b883ffde6e976c8114f93286e3c95d2b26e0aae945038",
+      "content_sha256": "ffaf98e20e7a0c5b47a08c05b21782468cc35e1f164567742e5f40435bf85203",
+      "group_id": "badminton__episode_0152",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0152/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0153",
+      "original_episode_id": "capture:2c8962ebb9700eef9610f88df7b6b7b304152f34909094c90544266dc2814cf9",
+      "lineage_id": "capture:2c8962ebb9700eef9610f88df7b6b7b304152f34909094c90544266dc2814cf9",
+      "content_sha256": "4a9d6462d93394903ddd6f76cf4eb648567b49f3e05792b70a5da61f20e39af6",
+      "group_id": "badminton__episode_0153",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0153/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0154",
+      "original_episode_id": "capture:f0f33a0b2edb10dece387cb40468a9adf7fa821b30913334bfdfd457ca9f1abd",
+      "lineage_id": "capture:f0f33a0b2edb10dece387cb40468a9adf7fa821b30913334bfdfd457ca9f1abd",
+      "content_sha256": "3bf8eac1226fa9555b8d869f24c1a9a0973ceb2af152be87deb79cafd6e7cd20",
+      "group_id": "badminton__episode_0154",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0154/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0155",
+      "original_episode_id": "capture:697c48641c8e6ddde12743b3be7408837aae0ce87b6abd39c28786ff72af7827",
+      "lineage_id": "capture:697c48641c8e6ddde12743b3be7408837aae0ce87b6abd39c28786ff72af7827",
+      "content_sha256": "e6012ec80fc4d7ccc78e57ff9eb3a44c1d1dcfa16efd8041233c0c99d0182267",
+      "group_id": "badminton__episode_0155",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0155/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0156",
+      "original_episode_id": "capture:9a614549cdbf8c4b6b7d71820767d422785b6f59b0ae26897283ea0081fa6fbf",
+      "lineage_id": "capture:9a614549cdbf8c4b6b7d71820767d422785b6f59b0ae26897283ea0081fa6fbf",
+      "content_sha256": "4c77e897dc87c1af3de8c5a016bb03ccba3353b52d98d22da8446fdad47b925e",
+      "group_id": "badminton__episode_0156",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0156/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0157",
+      "original_episode_id": "capture:65964d106303ae7dab1e3cef92ce8505b34b8bf62d30e57a263668912f0594a4",
+      "lineage_id": "capture:65964d106303ae7dab1e3cef92ce8505b34b8bf62d30e57a263668912f0594a4",
+      "content_sha256": "f49cffa037411f735450a971eca547aa33d2771dd42d40bb5213ba0bffff9211",
+      "group_id": "badminton__episode_0157",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0157/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0158",
+      "original_episode_id": "capture:a67b7321ef6697122d9169fa48d28dd1553f15466c31c6fde23ad9314c5ffe12",
+      "lineage_id": "capture:a67b7321ef6697122d9169fa48d28dd1553f15466c31c6fde23ad9314c5ffe12",
+      "content_sha256": "6de5759c7604a9539669f6f0f742dca2a3c8f790e62478210a221e7858bbd67c",
+      "group_id": "badminton__episode_0158",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0158/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0159",
+      "original_episode_id": "capture:b6f4965bc4bced6aa7d80a1e56cec8121e41def6c3b7823efed42ced60607e2c",
+      "lineage_id": "capture:b6f4965bc4bced6aa7d80a1e56cec8121e41def6c3b7823efed42ced60607e2c",
+      "content_sha256": "a1159f491c2a20b219b5a6798483c35282356cdb7d1821c2fdeb1d5375b6a128",
+      "group_id": "badminton__episode_0159",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0159/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0160",
+      "original_episode_id": "capture:aee069052946b8fe6781fa5ce101519dacfaf7ad4fe1943339ccd58adbc62ee2",
+      "lineage_id": "capture:aee069052946b8fe6781fa5ce101519dacfaf7ad4fe1943339ccd58adbc62ee2",
+      "content_sha256": "294e084e077f8a43cfd20126bdae37f55842f766f417c3e1776aff7d3c6083e9",
+      "group_id": "badminton__episode_0160",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0160/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0161",
+      "original_episode_id": "capture:cca79c57c3ee1c1411dc697f307a1fdf39e23c6db733eb90e0ba11369ce5a4fa",
+      "lineage_id": "capture:cca79c57c3ee1c1411dc697f307a1fdf39e23c6db733eb90e0ba11369ce5a4fa",
+      "content_sha256": "60f9b8b3bb493a7df14347d6031dfc8c385f81c75bb2c65747871ba4bda44cb7",
+      "group_id": "badminton__episode_0161",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0161/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0162",
+      "original_episode_id": "capture:be9d4984a521ba4bbe123f8a4c4df3aaa75ef1b8ec9ea0a92185500851554f21",
+      "lineage_id": "capture:be9d4984a521ba4bbe123f8a4c4df3aaa75ef1b8ec9ea0a92185500851554f21",
+      "content_sha256": "d5035aebeeba3743702fccdf7ae088e2caea9ae66a342f030e0d28b204f9811f",
+      "group_id": "badminton__episode_0162",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0162/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0163",
+      "original_episode_id": "capture:6263b1689402771d4254199636bc279658f07c1ee687685653c2cc28ad7ac000",
+      "lineage_id": "capture:6263b1689402771d4254199636bc279658f07c1ee687685653c2cc28ad7ac000",
+      "content_sha256": "63d6c6a1233a9ea9c992b0ff804237c5f5f86458ed4694384c6d7f6c8e0145ca",
+      "group_id": "badminton__episode_0163",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0163/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0164",
+      "original_episode_id": "capture:debbcde488e22fe37a678d216ccef2d17d6b547f037b3d45eed41d5526a46e1b",
+      "lineage_id": "capture:debbcde488e22fe37a678d216ccef2d17d6b547f037b3d45eed41d5526a46e1b",
+      "content_sha256": "3488d1a62ad01434bb6d64508f88f97fd426671e92314f04bd5496c4f088295e",
+      "group_id": "badminton__episode_0164",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0164/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0165",
+      "original_episode_id": "capture:1421d8178feb82acd946bbc5e08c536552ff85a1247d5b8427923eab0bdfe012",
+      "lineage_id": "capture:1421d8178feb82acd946bbc5e08c536552ff85a1247d5b8427923eab0bdfe012",
+      "content_sha256": "83056c420e092b31f0896123c486987ca0b3c9779a0b3baf121cfeb872e55178",
+      "group_id": "badminton__episode_0165",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0165/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0166",
+      "original_episode_id": "capture:2f597be62d50da0d59d823b7790fd84b662bb47fb536b54211caf660d763878f",
+      "lineage_id": "capture:2f597be62d50da0d59d823b7790fd84b662bb47fb536b54211caf660d763878f",
+      "content_sha256": "359e6ab38709ab11f12bf4e6bbcbd815615bf27652c0edc2369c58d9b161350a",
+      "group_id": "badminton__episode_0166",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0166/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0167",
+      "original_episode_id": "capture:01abfd3018be973b40f5da60b30fed24ba671328970f6889e83889d45016c514",
+      "lineage_id": "capture:01abfd3018be973b40f5da60b30fed24ba671328970f6889e83889d45016c514",
+      "content_sha256": "6d4eeecb95a72791600b294e23c46ee89fa1402999460ffff54eb323450897fd",
+      "group_id": "badminton__episode_0167",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0167/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0168",
+      "original_episode_id": "capture:79e2e4cc77d778c468faa2bdc25097942aabdf5f16dcf053f18efa2322caa112",
+      "lineage_id": "capture:79e2e4cc77d778c468faa2bdc25097942aabdf5f16dcf053f18efa2322caa112",
+      "content_sha256": "53e624b33ee79573eaf6103537934a8d996d108725a5c7f94c097ed0fd2cf267",
+      "group_id": "badminton__episode_0168",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0168/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0169",
+      "original_episode_id": "capture:a1ca7156b5a4d60d23932070d6688793ffd4ff0732348212dc0ca6b4f8456003",
+      "lineage_id": "capture:a1ca7156b5a4d60d23932070d6688793ffd4ff0732348212dc0ca6b4f8456003",
+      "content_sha256": "fcb4872a40993b80c641fd88367d5e7429fb4809a6e895123c789ab298d15e72",
+      "group_id": "badminton__episode_0169",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0169/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0170",
+      "original_episode_id": "capture:f7b4e7d61bf578f9675a480cda2e39225a7715b3186037a6b2d130cfd5da9af9",
+      "lineage_id": "capture:f7b4e7d61bf578f9675a480cda2e39225a7715b3186037a6b2d130cfd5da9af9",
+      "content_sha256": "514fba7e7e5251ad17bd2f3590fce72b136db5c79a753e7da68685ce88d036ae",
+      "group_id": "badminton__episode_0170",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0170/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0171",
+      "original_episode_id": "capture:a51b802a6056cc9e201ce3c558139ff2f9962705a2f51cadfdc721556d8be9b0",
+      "lineage_id": "capture:a51b802a6056cc9e201ce3c558139ff2f9962705a2f51cadfdc721556d8be9b0",
+      "content_sha256": "b276043a75fd85b218dc8d5ac05fe6e32ab892750d67858d162971f67a8e35f9",
+      "group_id": "badminton__episode_0171",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0171/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0172",
+      "original_episode_id": "capture:4a423a89cf6fd91af27e6109048db023a685cbc35dba2851aa7a9bfda88eb69e",
+      "lineage_id": "capture:4a423a89cf6fd91af27e6109048db023a685cbc35dba2851aa7a9bfda88eb69e",
+      "content_sha256": "aa0a872746ce5cb70464c3a3f30ef1bc4a179947838da5c16cc47bdc7351014f",
+      "group_id": "badminton__episode_0172",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0172/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0173",
+      "original_episode_id": "capture:459042baeab1176a023f8e322ad3e846a2491e452642f852f63048cf1d5aa10f",
+      "lineage_id": "capture:459042baeab1176a023f8e322ad3e846a2491e452642f852f63048cf1d5aa10f",
+      "content_sha256": "89bcb7baef3641d6c5eff5c7080ace46b4bd2e5198fcb86663abd5959d916c23",
+      "group_id": "badminton__episode_0173",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0173/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0174",
+      "original_episode_id": "capture:10b9183f2fc6e169fc93b02cf2b1be64d6e7563e954652d6fa083e6fab5c672e",
+      "lineage_id": "capture:10b9183f2fc6e169fc93b02cf2b1be64d6e7563e954652d6fa083e6fab5c672e",
+      "content_sha256": "7b8c974aba4ed3e1ecb1dab2e5ee78225bd71f3a0d890a9c866b76f122937102",
+      "group_id": "badminton__episode_0174",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0174/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0175",
+      "original_episode_id": "capture:03409bcd8e078e86b8ce6ed20e27a7fa4fc47901f2067c07a60b351c15dcba63",
+      "lineage_id": "capture:03409bcd8e078e86b8ce6ed20e27a7fa4fc47901f2067c07a60b351c15dcba63",
+      "content_sha256": "bd53a1069b24d2120b08923b37e5313c07cfb7c266b0438f08c92b1ee69d0c75",
+      "group_id": "badminton__episode_0175",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0175/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0176",
+      "original_episode_id": "capture:2a258cf2b749437304a180ed1dc421b4c8d148016349a0266cb3e431dd2cde0f",
+      "lineage_id": "capture:2a258cf2b749437304a180ed1dc421b4c8d148016349a0266cb3e431dd2cde0f",
+      "content_sha256": "f5dd11b44441dad444268b0d2a8f77dcf7610784d981b94901fe8b10d526b025",
+      "group_id": "badminton__episode_0176",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0176/manifest.json",
+      "split": "test"
+    },
+    {
+      "episode_id": "badminton__episode_0177",
+      "original_episode_id": "capture:7b1c5114bad15c629a39d9a756e86c5d7e91be0d4fbfaf783245bc92ef232367",
+      "lineage_id": "capture:7b1c5114bad15c629a39d9a756e86c5d7e91be0d4fbfaf783245bc92ef232367",
+      "content_sha256": "a36eb60d83da7787894eb257eac812c1ab277f808e1bec1cd8ea096a47d892e0",
+      "group_id": "badminton__episode_0177",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0177/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0178",
+      "original_episode_id": "capture:28a883f1057e70347c4f1e7c4b10156020ce3cd08f9538ce46fd254228c4da71",
+      "lineage_id": "capture:28a883f1057e70347c4f1e7c4b10156020ce3cd08f9538ce46fd254228c4da71",
+      "content_sha256": "b5c5fc5fadfb5636fef05d17fb997ef24636c6e7d962064befcadbe52e499622",
+      "group_id": "badminton__episode_0178",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0178/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0179",
+      "original_episode_id": "capture:17b60f253648be0d6f641e6bcbca7da8e911e6ee31b1ef5068d2ee9a902d97c3",
+      "lineage_id": "capture:17b60f253648be0d6f641e6bcbca7da8e911e6ee31b1ef5068d2ee9a902d97c3",
+      "content_sha256": "fd4d9a75e4e35b5d0e9150ce63282f139bbb2167aad6c757f2566088d99b3b7f",
+      "group_id": "badminton__episode_0179",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0179/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0180",
+      "original_episode_id": "capture:e37da0185713803e5470a5a473fcb6a0427296b3cb59228e4aa4e9113c268b6c",
+      "lineage_id": "capture:e37da0185713803e5470a5a473fcb6a0427296b3cb59228e4aa4e9113c268b6c",
+      "content_sha256": "019c3112eb2473748c3895ad05fee41223d92367b1c8dcd0e4465bb794d30472",
+      "group_id": "badminton__episode_0180",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0180/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0181",
+      "original_episode_id": "capture:0c67a472032756be829e3856abd7f09123ccd28dc3072f632e3d2e4e4821fb4c",
+      "lineage_id": "capture:0c67a472032756be829e3856abd7f09123ccd28dc3072f632e3d2e4e4821fb4c",
+      "content_sha256": "685ab9c4d7617ad764855231aadc8c66a10f3ec1848878260ba37884da685b52",
+      "group_id": "badminton__episode_0181",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0181/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0182",
+      "original_episode_id": "capture:9d0569a7192fdaf6370ffad5c3f5057164fd83655520e49da2453d2fb7d87d63",
+      "lineage_id": "capture:9d0569a7192fdaf6370ffad5c3f5057164fd83655520e49da2453d2fb7d87d63",
+      "content_sha256": "8cfd385df05ed8e61b17d7ad107369649ac1644291c185145943ea678c2fcdcb",
+      "group_id": "badminton__episode_0182",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0182/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0183",
+      "original_episode_id": "capture:000bb519e49471887c0fa5ce096ff9bea8db7a2de4a82360ac6289124f335b40",
+      "lineage_id": "capture:000bb519e49471887c0fa5ce096ff9bea8db7a2de4a82360ac6289124f335b40",
+      "content_sha256": "03be4a5743418b9c272c80a855a5eebbf82d5509a9d0414f786dfffa9126057f",
+      "group_id": "badminton__episode_0183",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0183/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0184",
+      "original_episode_id": "capture:2e11ca88587a2c8d0b2e8f660bae3a386a66519d4997a9e336c3cffbce1adf53",
+      "lineage_id": "capture:2e11ca88587a2c8d0b2e8f660bae3a386a66519d4997a9e336c3cffbce1adf53",
+      "content_sha256": "239212a9d97c33f3886995d3d64b081af675754a404f8aaecbf3a90946cec748",
+      "group_id": "badminton__episode_0184",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0184/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0185",
+      "original_episode_id": "capture:5550a428426501be3e2114e1ed5d35dbe72ac828af66a6001a9ae78d2a4c06eb",
+      "lineage_id": "capture:5550a428426501be3e2114e1ed5d35dbe72ac828af66a6001a9ae78d2a4c06eb",
+      "content_sha256": "6b5f5b91a75bc57df7fc106a9d0dd209afc7ef4ad0915c523d4579ac0fd986c0",
+      "group_id": "badminton__episode_0185",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0185/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0186",
+      "original_episode_id": "capture:a00fe3a31814706feedc6f6512fbef1f12731c93b830033f1158fbb3e7d1662b",
+      "lineage_id": "capture:a00fe3a31814706feedc6f6512fbef1f12731c93b830033f1158fbb3e7d1662b",
+      "content_sha256": "1b4081ed4251eb44f00ecf53453e5389950da24db4747944f6e50f0cb363192a",
+      "group_id": "badminton__episode_0186",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0186/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0187",
+      "original_episode_id": "capture:92258a7f4611ac191cbb37a7b11ee9bbb22fdf36bda28b1afec8aac566a8b090",
+      "lineage_id": "capture:92258a7f4611ac191cbb37a7b11ee9bbb22fdf36bda28b1afec8aac566a8b090",
+      "content_sha256": "85738474da6c43ec27bc7a5555f273bb2199c9a6138f6ae37443d2adb86f5e4d",
+      "group_id": "badminton__episode_0187",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0187/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0188",
+      "original_episode_id": "capture:f5442f5042fe4128709f86beb32b0c66322523bc0d4db35e98932ea80e1bb4ad",
+      "lineage_id": "capture:f5442f5042fe4128709f86beb32b0c66322523bc0d4db35e98932ea80e1bb4ad",
+      "content_sha256": "aaa9ce0f63d7b659279d3b08a1630524a359d732c37191777181fa5638b670f3",
+      "group_id": "badminton__episode_0188",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0188/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0189",
+      "original_episode_id": "capture:8ca6df740d1a6716d8cb791d5e4315ec15b0ab4ca7d083aa9afaeb86acfa64fe",
+      "lineage_id": "capture:8ca6df740d1a6716d8cb791d5e4315ec15b0ab4ca7d083aa9afaeb86acfa64fe",
+      "content_sha256": "aa441cb7a09e3f3ebcb93fa7302b34e5a9a03410c7d63300fe43fe891b788f4e",
+      "group_id": "badminton__episode_0189",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0189/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0190",
+      "original_episode_id": "capture:7920603ef393a431b19162f8dd71ca5fa945ff39dd896a6d67b17289ac50c794",
+      "lineage_id": "capture:7920603ef393a431b19162f8dd71ca5fa945ff39dd896a6d67b17289ac50c794",
+      "content_sha256": "3550c682ed94c22c9afeaadd689f92bb822f08bb0af1a67ea0f43ed8866765e0",
+      "group_id": "badminton__episode_0190",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0190/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0191",
+      "original_episode_id": "capture:0342fb7f6c0023c178b0e1902679422a958c5126b40fbd9a4e4a9b3a2541bae3",
+      "lineage_id": "capture:0342fb7f6c0023c178b0e1902679422a958c5126b40fbd9a4e4a9b3a2541bae3",
+      "content_sha256": "0a57bb23a375b08909e144cf8975b23b4cfe0731e715c132fb09aeb9923d0c4d",
+      "group_id": "badminton__episode_0191",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0191/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0192",
+      "original_episode_id": "capture:6785c1ce769ca13f343799448ec4b69d9777d047cfd7326839b9213b4fa4d1db",
+      "lineage_id": "capture:6785c1ce769ca13f343799448ec4b69d9777d047cfd7326839b9213b4fa4d1db",
+      "content_sha256": "81e0a436a627887c981d76e70d6c1239036138fec9eb62c163a8dd9f16822571",
+      "group_id": "badminton__episode_0192",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0192/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0193",
+      "original_episode_id": "capture:18e94c4e3d9027e0c3f905216e823543551cf58277a0f7a363bfd383785bd332",
+      "lineage_id": "capture:18e94c4e3d9027e0c3f905216e823543551cf58277a0f7a363bfd383785bd332",
+      "content_sha256": "4a1e88f33d4bd8535502d9622cc2249b8d421a1203bc7014477f55cfe6e77041",
+      "group_id": "badminton__episode_0193",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0193/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0194",
+      "original_episode_id": "capture:fd369a370b4773a4808ad7335c15c9ba46e56bd6bfc786332cf0c5d08f4d7987",
+      "lineage_id": "capture:fd369a370b4773a4808ad7335c15c9ba46e56bd6bfc786332cf0c5d08f4d7987",
+      "content_sha256": "dfdb5c403de02cb7394a9295b6d653395dac08e1f867bbdb6d8cc9df94be9218",
+      "group_id": "badminton__episode_0194",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0194/manifest.json",
+      "split": "test"
+    },
+    {
+      "episode_id": "badminton__episode_0195",
+      "original_episode_id": "capture:c274ed4eaeb7c5348c6c104c7c641bbff21970e17f1a51edf7435228e2482adc",
+      "lineage_id": "capture:c274ed4eaeb7c5348c6c104c7c641bbff21970e17f1a51edf7435228e2482adc",
+      "content_sha256": "8d993e28179f6ed05d19c341ea30d50c7816f0e2e6bf162a2766ec448dc04ae7",
+      "group_id": "badminton__episode_0195",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0195/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0196",
+      "original_episode_id": "capture:fd316184bdfeaef31f0b8eb006a6d327f23f9aea45785e63d699409787ba2992",
+      "lineage_id": "capture:fd316184bdfeaef31f0b8eb006a6d327f23f9aea45785e63d699409787ba2992",
+      "content_sha256": "a6b4d2418cfe21aa542f0cd63813590010517ab2bd170802167564bd3c195fa6",
+      "group_id": "badminton__episode_0196",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0196/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0197",
+      "original_episode_id": "capture:c620d987084e68475693e8ac179dfe928687c9b97688b21d81f42fb119a2575b",
+      "lineage_id": "capture:c620d987084e68475693e8ac179dfe928687c9b97688b21d81f42fb119a2575b",
+      "content_sha256": "414a9bae2634c810317e744766a1bc7a8424cb3a00955b183cf5d5aac97d48f5",
+      "group_id": "badminton__episode_0197",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0197/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0198",
+      "original_episode_id": "capture:9ef035a105c0fe20eea64b6d92d379f4f4c7c3b2b9242f4546c1577d191e3d52",
+      "lineage_id": "capture:9ef035a105c0fe20eea64b6d92d379f4f4c7c3b2b9242f4546c1577d191e3d52",
+      "content_sha256": "96520398ee1f2ecb8dbd167e5604546a79e72da6f86c2ca376b6e495260f386d",
+      "group_id": "badminton__episode_0198",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0198/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0199",
+      "original_episode_id": "capture:68bc902072abe6c4ee98d56ebe7967e8db77e446fce9f823f3a624bbfe96ae6e",
+      "lineage_id": "capture:68bc902072abe6c4ee98d56ebe7967e8db77e446fce9f823f3a624bbfe96ae6e",
+      "content_sha256": "52aec4085c1e8486329b65bfdaa4564e8daa666a8604100428321e7bd357fa78",
+      "group_id": "badminton__episode_0199",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0199/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0200",
+      "original_episode_id": "capture:a944f9d6911587d7152daebfd76f4e99c5bbc7b897fc6caf69741d1d7edd974e",
+      "lineage_id": "capture:a944f9d6911587d7152daebfd76f4e99c5bbc7b897fc6caf69741d1d7edd974e",
+      "content_sha256": "dbb2f21152f1e759ec6d37b9074e5d6bd57031b534efa9bb4b16fee4b77de372",
+      "group_id": "badminton__episode_0200",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0200/manifest.json",
+      "split": "test"
+    },
+    {
+      "episode_id": "badminton__episode_0201",
+      "original_episode_id": "capture:87c2864950a9ab47a9d658e6823015e074bf78c8b0a3bb772a39e10a44326a40",
+      "lineage_id": "capture:87c2864950a9ab47a9d658e6823015e074bf78c8b0a3bb772a39e10a44326a40",
+      "content_sha256": "b9e27638bac7e99a80a8dc7d111fa47f0630245bb6a017612c7f0cbcf30282d5",
+      "group_id": "badminton__episode_0201",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0201/manifest.json",
+      "split": "test"
+    },
+    {
+      "episode_id": "badminton__episode_0202",
+      "original_episode_id": "capture:0d337232e6d0d8ca561ed9caa6fa0377b044f0f032e9707e299f44b6babedde0",
+      "lineage_id": "capture:0d337232e6d0d8ca561ed9caa6fa0377b044f0f032e9707e299f44b6babedde0",
+      "content_sha256": "39eb069c456986b2e4628e06adc387e52f5d3eb06f0509f492ba969dc4853eed",
+      "group_id": "badminton__episode_0202",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0202/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0203",
+      "original_episode_id": "capture:b8d13f2e5b795b2efd98ba74bfb45c77b2a2d4f1e34228ae37d25e272a773482",
+      "lineage_id": "capture:b8d13f2e5b795b2efd98ba74bfb45c77b2a2d4f1e34228ae37d25e272a773482",
+      "content_sha256": "80ec58533d0e12fe66f66b0e7c1c333a1032afd401b0fdf07500c44f5f9ba01c",
+      "group_id": "badminton__episode_0203",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0203/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0204",
+      "original_episode_id": "capture:936c03f76ddf7229163000d31fbfa3595c8f205bad84a0c9fe194be1c79436fe",
+      "lineage_id": "capture:936c03f76ddf7229163000d31fbfa3595c8f205bad84a0c9fe194be1c79436fe",
+      "content_sha256": "edaec4cfcf350654f4ae66d001d985eedd6b75b2b352bcfb24cd7ee92900a40d",
+      "group_id": "badminton__episode_0204",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0204/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0205",
+      "original_episode_id": "capture:12b1e21d829cae2b921de2e39bf1aa89b22d825950267ec748ee8b2dd226a7f2",
+      "lineage_id": "capture:12b1e21d829cae2b921de2e39bf1aa89b22d825950267ec748ee8b2dd226a7f2",
+      "content_sha256": "f805a5f177b25d5784c2bf15da4545dbd59ee6e784eb80c761fdab3263866d6e",
+      "group_id": "badminton__episode_0205",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0205/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0206",
+      "original_episode_id": "capture:07428601fc53e25cb85e2be167d4c3e3799e1f5fa541913ab234e74c8cae6faf",
+      "lineage_id": "capture:07428601fc53e25cb85e2be167d4c3e3799e1f5fa541913ab234e74c8cae6faf",
+      "content_sha256": "dc452d3d82470bd7f4de71db2e544e9d99e04fa51f379e6608e9c8928224445c",
+      "group_id": "badminton__episode_0206",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0206/manifest.json",
+      "split": "train"
+    },
+    {
+      "episode_id": "badminton__episode_0207",
+      "original_episode_id": "capture:8436e7d772b7987c2dc829adf68f3186de96908c5a5371ca47a1df0f9279962b",
+      "lineage_id": "capture:8436e7d772b7987c2dc829adf68f3186de96908c5a5371ca47a1df0f9279962b",
+      "content_sha256": "dfe477b7ea228ae3f7ba78b020ce30e6541905cb5aef4b8478aa2c05ff086f09",
+      "group_id": "badminton__episode_0207",
+      "task_id": "badminton",
+      "source_ref": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0207/manifest.json",
+      "split": "train"
+    }
+  ],
+  "original_group_count": 206,
+  "notes": [
+    "Task strata too small for a held-out group remain train; quotas use nearest feasible integer.",
+    "Explicit lineage is REQUIRED for unknown transformed copies; content hashes detect byte-identical RGB sources.",
+    "No visual near-duplicate detector; provenance-less crops/re-encodes must supply lineage before inclusion.",
+    "One excluded original episode removed; surviving train/test assignments retained without reshuffling."
+  ],
+  "inventory_hash": "338ba01c976e6fd224fe0d3fb395c04e5c583cded80c218e72fcfb5da51cac3a",
+  "curation_parent_sha256": "70f2717c8c4734c9e9bf6ab0402a9abe52fac2934b1bbce6ee20ddcd8c6f42da"
+}

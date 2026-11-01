@@ -1,0 +1,206 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://physword.local/schemas/atomic-stages-v1",
+  "title": "Atomic action stages v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "episode_id",
+    "media_fingerprint",
+    "time_coordinate",
+    "stages",
+    "provenance"
+  ],
+  "properties": {
+    "episode_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "media_fingerprint": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "time_coordinate": {
+      "const": "seconds_since_first_selected_camera_observation"
+    },
+    "stages": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "start_time",
+          "end_time",
+          "action",
+          "confidence",
+          "effector",
+          "ambiguous",
+          "candidates",
+          "evidence"
+        ],
+        "properties": {
+          "start_time": {
+            "type": "number",
+            "minimum": 0
+          },
+          "end_time": {
+            "type": "number",
+            "exclusiveMinimum": 0
+          },
+          "action": {
+            "enum": [
+              "approach",
+              "move",
+              "pick",
+              "place",
+              "flip",
+              "rotate",
+              "toggle",
+              "open",
+              "close",
+              "push",
+              "pull",
+              "insert",
+              "press",
+              "click",
+              "strike",
+              "handover",
+              "unknown",
+              "idle"
+            ]
+          },
+          "confidence": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "effector": {
+            "enum": [
+              "single",
+              "left",
+              "right",
+              "both",
+              "unspecified"
+            ],
+            "description": "Pilot left/right uses the image-left/image-right hand in the selected main camera. Robot-anatomical identity is not assumed without calibration; both and unspecified preserve uncertainty."
+          },
+          "ambiguous": {
+            "type": "boolean"
+          },
+          "candidates": {
+            "type": "array",
+            "items": {
+              "enum": [
+                "approach",
+                "move",
+                "pick",
+                "place",
+                "flip",
+                "rotate",
+                "toggle",
+                "open",
+                "close",
+                "push",
+                "pull",
+                "insert",
+                "press",
+                "click",
+                "strike",
+                "handover"
+              ]
+            },
+            "uniqueItems": true
+          },
+          "evidence": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "provider",
+        "model",
+        "reviewed"
+      ],
+      "properties": {
+        "provider": {
+          "type": "string",
+          "minLength": 1
+        },
+        "model": {
+          "type": "string",
+          "minLength": 1
+        },
+        "reviewed": {
+          "type": "boolean"
+        }
+      }
+    },
+    "effectors": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "left",
+          "right",
+          "single"
+        ]
+      }
+    },
+    "effector_coordinate": {
+      "enum": [
+        "selected_camera_image_sides",
+        "robot_anatomical",
+        "single_effector"
+      ]
+    },
+    "vocabulary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "words",
+        "definitions"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]*$"
+        },
+        "words": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^[a-z]+$",
+            "not": {
+              "enum": [
+                "idle",
+                "unknown"
+              ]
+            }
+          }
+        },
+        "definitions": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    }
+  },
+  "dependentRequired": {
+    "effectors": [
+      "effector_coordinate"
+    ]
+  }
+}

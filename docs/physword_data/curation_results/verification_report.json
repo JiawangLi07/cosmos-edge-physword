@@ -1,0 +1,141 @@
+{
+  "status": "passed",
+  "excluded_source_name": "episode_0038",
+  "raw_datasets": [
+    {
+      "dataset": "/aifs/lijiawang/episode-badminton/episode_badminton",
+      "excluded_episode_absent": true,
+      "exclusion_policy_present": true
+    },
+    {
+      "dataset": "/aifs/lijiawang/episode-badminton/episode_badminton_91",
+      "excluded_episode_absent": true,
+      "exclusion_policy_present": true
+    }
+  ],
+  "alignment_datasets": [
+    {
+      "dataset": "/aifs/lijiawang/episode-badminton/aligned_native_v2",
+      "episodes": 90,
+      "excluded_episode_absent": true
+    },
+    {
+      "dataset": "/aifs/lijiawang/episode-badminton/aligned_native_v2_146",
+      "episodes": 145,
+      "excluded_episode_absent": true
+    }
+  ],
+  "lerobot_datasets": [
+    {
+      "dataset": "/aifs/lijiawang/episode-badminton/lerobot_next_state_v3",
+      "episodes": 90,
+      "rows": 72361,
+      "videos_verified": 270,
+      "kept_payload_equal_to_original_except_indexes": true,
+      "statistics_population": "train",
+      "statistics_recomputed": true
+    },
+    {
+      "dataset": "/aifs/lijiawang/episode-badminton/lerobot_next_state_v3_146",
+      "episodes": 145,
+      "rows": 125359,
+      "videos_verified": 435,
+      "kept_payload_equal_to_original_except_indexes": true,
+      "statistics_population": "all",
+      "statistics_recomputed": true
+    },
+    {
+      "dataset": "/aifs/lijiawang/episode-badminton/openwam_eef80",
+      "episodes": 145,
+      "rows": 125359,
+      "videos_verified": 435,
+      "kept_payload_equal_to_original_except_indexes": true,
+      "statistics_population": "all",
+      "statistics_recomputed": true
+    },
+    {
+      "dataset": "/aifs/lijiawang/episode-badminton/archive/openwam_eef80_91",
+      "episodes": 90,
+      "rows": 72361,
+      "videos_verified": 270,
+      "kept_payload_equal_to_original_except_indexes": true,
+      "statistics_population": "all",
+      "statistics_recomputed": true
+    }
+  ],
+  "physword_datasets": [
+    {
+      "dataset": "/aifs/lijiawang/physword/data_pilot/badminton",
+      "windows": 433,
+      "excluded_episode_absent": true
+    },
+    {
+      "dataset": "/aifs/lijiawang/physword/data_pilot/badminton/scene_v2",
+      "windows": 433,
+      "excluded_episode_absent": true
+    },
+    {
+      "dataset": "/aifs/lijiawang/physword/data_pilot/real_v1",
+      "windows": 317,
+      "excluded_episode_absent": true
+    },
+    {
+      "dataset": "/aifs/lijiawang/physword/data_pilot/badminton_scene_v2_repro",
+      "windows": 433,
+      "excluded_episode_absent": true
+    },
+    {
+      "dataset": "/aifs/lijiawang/physword/data_pilot/badminton_repro",
+      "windows": 433,
+      "excluded_episode_absent": true
+    },
+    {
+      "dataset": "/aifs/lijiawang/physword/data_pilot/real",
+      "windows": 0,
+      "excluded_episode_absent": true
+    },
+    {
+      "dataset": "/aifs/lijiawang/physword/data_pilot/synthetic",
+      "windows": 130,
+      "excluded_episode_absent": true
+    }
+  ],
+  "remaining_raw_episodes": 206,
+  "remaining_short_episodes": [
+    {
+      "source_name": "episode_0042",
+      "source_path": "/aifs/lijiawang/episode-badminton/episode_badminton/episode_0042",
+      "original_episode_id": "capture:3e7c155d95d3c5e73c9bd102a73f6ca079c6bf9f101bf3efac41d83adaad4737",
+      "capture_number": 53,
+      "recording_duration_s": 3.6571151160023874,
+      "cameras": {
+        "wrist": {
+          "frames": 104,
+          "first_mono": 79670.04816,
+          "last_mono": 79673.681626,
+          "duration_s": 3.6334659999993164
+        },
+        "main": {
+          "frames": 107,
+          "first_mono": 79670.070161,
+          "last_mono": 79673.669809,
+          "duration_s": 3.5996480000030715
+        },
+        "wrist2": {
+          "frames": 94,
+          "first_mono": 79670.097984,
+          "last_mono": 79673.168569,
+          "duration_s": 3.0705849999940256
+        }
+      },
+      "common_camera_duration_s": 3.0705849999940256,
+      "status": "incomplete",
+      "recording_errors": [
+        "wrist2 相机采集超过 0.5 秒没有新帧"
+      ],
+      "short": true
+    }
+  ],
+  "all_surviving_payloads_and_indexes_verified": true,
+  "no_training_started": true
+}
