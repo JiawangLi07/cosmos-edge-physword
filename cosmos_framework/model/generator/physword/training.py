@@ -17,6 +17,7 @@ from cosmos_framework.model.generator.physword.multimodal import (
     build_reasoner_prefix,
     embed_reasoner_condition,
 )
+from cosmos_framework.model.generator.physword.preprocessing import PreprocessingConfig
 from cosmos_framework.model.generator.utils.data_and_condition import GenerationDataClean
 
 
@@ -102,7 +103,7 @@ class PhysWordTrainingStep:
 
     Construct heads on net, select exact phase groups, then call this step. An external
     caller owns backward/optimizer. Only the tiny probe executes optimizer updates here.
-    encode_video adapts the already loaded VAE with its checkpoint normalization.
+    encode_video returns raw posterior-mode VAE latents; preprocessing owns normalization.
     """
 
     def __init__(
@@ -116,6 +117,7 @@ class PhysWordTrainingStep:
         phase,
         losses=LossConfig(),
         *,
+        preprocessing: PreprocessingConfig,
         resolution="480",
     ):
         if phase not in ("A", "B") or network.physword is None or network.parallel_dims is not None:
@@ -127,7 +129,15 @@ class PhysWordTrainingStep:
         if phase == "B" and (vae is None or encode_video is None):
             raise ValueError("Phase B requires the frozen native VAE and its normalization adapter")
         self.vae = None if vae is None else vae.eval().requires_grad_(False)
-        self.encode_video, self.flow = encode_video, rectified_flow
+        if not isinstance(preprocessing, PreprocessingConfig):
+            raise TypeError("Provide the executable frozen RGB/VAE preprocessing contract")
+        self.preprocessing = preprocessing
+        self.encode_video_raw = encode_video
+        # Adapter returns RAW posterior-mode latents. Normalization is owned here.
+        self.encode_video = (
+            None if encode_video is None else lambda x: self.preprocessing.normalize_latents(encode_video(x))
+        )
+        self.flow = rectified_flow
         self.special_tokens, self.phase, self.config = special_tokens, phase, losses
         # Same fixed-resolution shift policy as the native Edge SFT recipe.
         shifts = {"256": 3, "480": 5, "720": 10}
@@ -139,6 +149,7 @@ class PhysWordTrainingStep:
         net, cfg = self.net, self.config
         if net._physword_phase_config != self.phase_config:
             raise ValueError("Phase changed; rebuild the training step and optimizer")
+        batch = self.preprocessing.batch(batch)
         net.train()
         net.language_model.visual.eval().requires_grad_(False)
         if self.vae is not None:
@@ -161,8 +172,8 @@ class PhysWordTrainingStep:
                 with rollout_eval(net):
                     prediction = generate_physical_words(net, prefix)
                 with torch.no_grad():
-                    observed = batch.history.frames.permute(1, 0, 2, 3).unsqueeze(0).float() / 127.5 - 1
-                    future = batch.future_rgb.permute(1, 0, 2, 3).unsqueeze(0).float() / 127.5 - 1
+                    observed = self.preprocessing.video_pixels(batch.history.frames)
+                    future = self.preprocessing.video_pixels(batch.future_rgb)
                     history_latents = self.encode_video(observed).detach().float()
                     full = self.encode_video(torch.cat((observed, future), 2)).detach().float()
                     if history_latents.shape[:3] != (1, 48, 2) or full.shape[:3] != (1, 48, 6):

@@ -3,12 +3,10 @@
 import argparse
 import gc
 import json
-from dataclasses import replace
 from pathlib import Path
 
 import torch
 from diffusers import AutoencoderKLWan
-from torch.nn import functional as F
 
 from cosmos_framework.data.generator.physword.dataset import TrainingWindowDataset, to_m3_batch
 from cosmos_framework.data.generator.physword.task import config_from_manifest
@@ -25,6 +23,7 @@ from cosmos_framework.model.generator.physword.optimization import (
     optimizer_audit,
     snapshot_parameters,
 )
+from cosmos_framework.model.generator.physword.preprocessing import PreprocessingConfig
 from cosmos_framework.model.generator.physword.training import PhysWordTrainingStep, rollout_eval
 from cosmos_framework.model.generator.utils.data_and_condition import GenerationDataClean
 
@@ -37,11 +36,13 @@ def real_checkpoint_roundtrip(
     protocol["inference_scheduler"] = json.loads((args.checkpoint / "scheduler/scheduler_config.json").read_text())
     revisions = {"base": "344d602b128d1bbdacb43b08d0a3626f46343e29", "data": protocol["data"]["windows_sha256"]}
 
+    observed_batch = step.preprocessing.batch(batch)
+
     def inference(network, proc, train_step):
         with torch.no_grad():
             logits = train_step(batch)["teacher"]["logits"].cpu().clone()
             with rollout_eval(network), torch.autocast("cuda", dtype=torch.bfloat16):
-                prefix = build_reasoner_prefix(network, proc, batch.history, batch.instruction)
+                prefix = build_reasoner_prefix(network, proc, observed_batch.history, observed_batch.instruction)
                 prediction = generate_physical_words(network, prefix)
                 p = repack_physical_words(network, prediction.condition, data, torch.tensor([374.6]), special)
                 p.to_cuda()
@@ -76,6 +77,30 @@ def real_checkpoint_roundtrip(
     scheduler.step()
     expected_parameters = {n: p.detach().cpu().clone() for n, p in net.named_parameters() if p.requires_grad}
     expected_lr = scheduler.state_dict()
+    # Small independent-process continuation oracle (PW/head tensors only).
+    torch.save(
+        {
+            "losses": expected_losses,
+            "parameters": expected_parameters,
+            "rng": expected_rng,
+            "scheduler": expected_lr,
+            "logits": expected_logits,
+            "ids": expected_ids,
+            "velocity": expected_velocity,
+            "gen_latents": [x.detach().cpu() for x in data.x0_tokens_vision],
+        },
+        args.output / "uninterrupted.pt",
+    )
+    if args.resume_in_new_process:
+        record(
+            "checkpoint_written",
+            {
+                "status": "PASS",
+                "next_step_oracle": "uninterrupted.pt",
+                "resume_status": "pending independent interpreter validation",
+            },
+        )
+        return
     del expected
     opt.zero_grad(set_to_none=True)
     net.cpu()
@@ -100,7 +125,7 @@ def real_checkpoint_roundtrip(
     actual_rng = (torch.rand(3), torch.rand(3, device="cuda").cpu())
     rng_equal = all(torch.equal(a, b) for a, b in zip(expected_rng, actual_rng, strict=True))
     flow = RectifiedFlow(None, train_time_distribution="waver", shift=5, device="cuda")
-    step2 = PhysWordTrainingStep(restored, proc2, None, None, flow, special, "A")
+    step2 = PhysWordTrainingStep(restored, proc2, None, None, flow, special, "A", preprocessing=step.preprocessing)
     actual_logits, actual_ids, actual_velocity = inference(restored, proc2, step2)
     logits_diff = (actual_logits - expected_logits).abs().max().item()
     velocity_diff = (actual_velocity - expected_velocity).abs().max().item()
@@ -145,9 +170,16 @@ def main():
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--phase-a-step", action="store_true", help="One PW/head-only diagnostic update; no fitting")
     parser.add_argument("--checkpoint-roundtrip", action="store_true")
+    parser.add_argument(
+        "--resume-in-new-process",
+        action="store_true",
+        help="Write continuation oracle, then exit for real_resume_probe",
+    )
     args = parser.parse_args()
     if args.checkpoint_roundtrip and not args.phase_a_step:
         raise ValueError("Real interrupted resume validation requires --phase-a-step")
+    if args.resume_in_new_process and not args.checkpoint_roundtrip:
+        raise ValueError("Separate-process resume needs --checkpoint-roundtrip")
     args.output.mkdir(parents=True, exist_ok=True)
     result = {"weights": "REAL pretrained Edge", "formal_training": False}
 
@@ -164,19 +196,23 @@ def main():
     sample = TrainingWindowDataset(args.task_dir / "windows.jsonl")[0]
     batch = to_m3_batch(sample, pw_config=config)
 
-    # Small diagnostic spatial size is explicit; timestamps and GT labels are unchanged.
-    def resize(x):
-        return F.interpolate(x.float(), size=(64, 64), mode="bilinear", align_corners=False).round().byte()
-
-    batch = replace(
-        batch, history=replace(batch.history, frames=resize(batch.history.frames)), future_rgb=resize(batch.future_rgb)
+    raw_batch = batch
+    vae_config = json.loads((args.checkpoint / "vae/config.json").read_text())
+    preprocessing = PreprocessingConfig(
+        input_size=tuple(batch.history.frames.shape[-2:]),
+        output_size=(64, 64),
+        pixel_device="cuda",
+        latent_mean=tuple(vae_config["latents_mean"]),
+        latent_std=tuple(vae_config["latents_std"]),
     )
+    batch = preprocessing.batch(raw_batch)
     record(
         "input",
         {
             "status": "PASS",
             "data": "REAL RGB and left-arm annotations; explicitly resized 480x640 -> 64x64",
             "window_id": sample["window_id"],
+            "preprocessing": preprocessing.contract(),
             "history": 5,
             "future": 16,
             "fps": 10,
@@ -193,16 +229,13 @@ def main():
     if info.get("missing_keys") or info.get("unexpected_keys") or info.get("mismatched_keys"):
         raise ValueError(f"Wan VAE loading mismatch: {info}")
     vae = vae.eval().requires_grad_(False).cuda()
-    vcfg = vae.config
-    mean = torch.tensor(vcfg.latents_mean, device="cuda", dtype=torch.float32).view(1, -1, 1, 1, 1)
-    std = torch.tensor(vcfg.latents_std, device="cuda", dtype=torch.float32).view(1, -1, 1, 1, 1)
     with torch.no_grad():
-        observed = batch.history.frames.permute(1, 0, 2, 3).unsqueeze(0).cuda().float() / 127.5 - 1
-        future = batch.future_rgb.permute(1, 0, 2, 3).unsqueeze(0).cuda().float() / 127.5 - 1
+        observed = preprocessing.video_pixels(batch.history.frames).cuda()
+        future = preprocessing.video_pixels(batch.future_rgb).cuda()
         h = vae.encode(observed.bfloat16()).latent_dist.mode().float()
         full = vae.encode(torch.cat((observed, future), 2).bfloat16()).latent_dist.mode().float()
         difference = (h - full[:, :, :2]).abs().max().item()
-        clean = torch.cat(((h - mean) / std, (full[:, :, 2:] - mean) / std), 2)
+        clean = preprocessing.normalize_latents(torch.cat((h, full[:, :, 2:]), 2))
     record(
         "vae",
         {
@@ -292,10 +325,10 @@ def main():
         opt = build_phase_optimizer(net, cfg)
         scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(opt, T_max=8) if args.checkpoint_roundtrip else None
         # Phase A needs no VAE on GPU; visual teacher and all base tensors stay frozen.
-        step = PhysWordTrainingStep(net, processor, None, None, flow, special, "A")
+        step = PhysWordTrainingStep(net, processor, None, None, flow, special, "A", preprocessing=preprocessing)
         before = snapshot_parameters(net)
         try:
-            out = step(batch)
+            out = step(raw_batch)
             out["losses"]["total"].backward()
             opt.step()
             audit = optimizer_audit(net, opt, before)
@@ -314,14 +347,21 @@ def main():
                 scheduler.step()
                 dataset = TrainingWindowDataset(args.task_dir / "windows.jsonl")
                 next_batch = to_m3_batch(dataset[1], pw_config=config)
-                next_batch = replace(
-                    next_batch,
-                    history=replace(next_batch.history, frames=resize(next_batch.history.frames)),
-                    future_rgb=resize(next_batch.future_rgb),
-                )
                 del out
                 real_checkpoint_roundtrip(
-                    net, processor, opt, scheduler, cfg, step, batch, next_batch, data, special, args, config, record
+                    net,
+                    processor,
+                    opt,
+                    scheduler,
+                    cfg,
+                    step,
+                    raw_batch,
+                    next_batch,
+                    data,
+                    special,
+                    args,
+                    config,
+                    record,
                 )
         except torch.cuda.OutOfMemoryError:
             record(

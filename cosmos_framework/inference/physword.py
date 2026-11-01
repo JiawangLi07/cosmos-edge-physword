@@ -16,6 +16,7 @@ from cosmos_framework.model.generator.physword.multimodal import (
     build_reasoner_prefix,
     embed_reasoner_condition,
     prepare_history_video_data,
+    replay_physical_words,
 )
 
 
@@ -27,8 +28,9 @@ class PhysWordPrediction:
     token_positions: torch.Tensor  # [4], UND-local
     prediction_hidden_states: torch.Tensor  # [1,4,D]
     condition: ReasonerCondition  # context + start + four predicted tokens, no EOS/BOV yet
-    cache_length: int  # includes the final sampled token (explicit flush)
+    cache_length: int  # Complete diagnostic snapshot length; zero when recompute does not capture one.
     debug_cache: ReasonerKVCache | None = None  # diagnostic only, NEVER passed to GEN
+    decode_mode: str = "cached"
 
 
 @torch.no_grad()
@@ -41,6 +43,37 @@ def generate_physical_words(network, prefix: ReasonerCondition, *, capture_cache
         raise ValueError("M2 PW decoding supports unsharded B=1 only")
     model = network.language_model.model
     device = model.embed_tokens.weight.device
+    if network.physword.config.decode_mode == "recompute":
+        # K=4 correctness path: use the same full causal UND computation as
+        # teacher forcing/joint repacking. No incremental KV reuse.
+        classes, states = [], []
+        for _ in range(4):
+            condition = prefix.with_words(tuple(classes), network.physword.config.token_id_base)
+            hidden = replay_physical_words(network, condition)
+            z = hidden[:, -1:, :]
+            states.append(z)
+            classes.append(int(network.physword.word_head(z[:, 0]).argmax(-1).item()))
+        condition = prefix.with_words(tuple(classes), network.physword.config.token_id_base)
+        # Explicit final flush; optional cache is one full prefill snapshot for
+        # diagnostics only, never reused to decode or handed to GEN.
+        cache = ReasonerKVCache.empty(len(model.layers)) if capture_cache else None
+        model.reasoner_forward(
+            input_ids=None,
+            inputs_embeds=embed_reasoner_condition(network, condition),
+            cache=cache,
+            position_ids=condition.position_ids.unsqueeze(1).to(device),
+        )
+        return PhysWordPrediction(
+            token_ids=condition.input_ids[condition.token_positions],
+            class_ids=torch.tensor(classes),
+            prediction_positions=condition.prediction_positions,
+            token_positions=condition.token_positions,
+            prediction_hidden_states=torch.cat(states, dim=1),
+            condition=condition,
+            cache_length=0 if cache is None else cache.seq_len,
+            debug_cache=cache,
+            decode_mode="recompute",
+        )
     cache = ReasonerKVCache.empty(len(model.layers))
     hidden = model.reasoner_forward(
         input_ids=None,

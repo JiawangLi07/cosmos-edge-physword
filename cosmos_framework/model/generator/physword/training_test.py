@@ -371,7 +371,17 @@ def test_frozen_und_still_propagates_pw_embedding_gradients():
     net, processor, vae, cfg, _, batch, step, kwargs = synthetic_training("A")
     cfg = replace(cfg, reasoner_layers=())
     optimizer = build_phase_optimizer(net, cfg)
-    step = type(step)(net, processor, vae, step.encode_video, step.flow, SPECIAL_TOKENS, "A", step.config)
+    step = type(step)(
+        net,
+        processor,
+        vae,
+        step.encode_video_raw,
+        step.flow,
+        SPECIAL_TOKENS,
+        "A",
+        step.config,
+        preprocessing=step.preprocessing,
+    )
     out = step(batch, **kwargs)
     out["losses"]["total"].backward()
     assert net.physword.embedding.weight.grad.norm() > 0

@@ -33,7 +33,10 @@ def training_protocol(training_step, data_protocol, *, baseline="full_pw"):
             "rf": {
                 "distribution": flow.train_time_sampler.distribution,
                 "weight": flow.train_time_weight.weight,
-                "scheduler": dict(flow.noise_scheduler.config),
+                # Diffusers constructs this internal list from a set. Its order
+                # changes across processes and has no scheduler behavior.
+                "scheduler": {k: v for k, v in flow.noise_scheduler.config.items() if k != "_use_default_values"},
+                "scheduler_class": f"{type(flow.noise_scheduler).__module__}.{type(flow.noise_scheduler).__qualname__}",
                 "resolution": training_step.resolution,
                 "continuous_train_shift": training_step.rf_shift,
             },
@@ -41,6 +44,11 @@ def training_protocol(training_step, data_protocol, *, baseline="full_pw"):
             "baseline": baseline,
             "timing": {"fps": 10, "history": 5, "future": 16, "k": 4, "stride": 4},
             "missing_feedback": "neutral pw_start; never fabricate a class label",
+            "preprocessing": training_step.preprocessing.contract(),
+            "visual_processor": {
+                "image": training_step.processor.image_processor.to_dict(),
+                "video": training_step.processor.video_processor.to_dict(),
+            },
         }
     )
 
@@ -162,7 +170,9 @@ def save_checkpoint(
     ):
         raise ValueError("Global step and accumulation state must agree with the checkpoint boundary")
     if (network.physword.initialization or {}).get("source", {}).get("verified_pretrained"):
-        if not experiment or not {"rf", "data", "timing", "baseline"}.issubset(experiment):
+        if not experiment or not {"rf", "data", "timing", "baseline", "preprocessing", "visual_processor"}.issubset(
+            experiment
+        ):
             raise ValueError("Real pretrained runs require the complete RF/data/experiment protocol")
         if training_state is None or not {"data_cursor", "sampler"}.intersection(training_state):
             raise ValueError("Real pretrained runs require an explicit dataset cursor or sampler state")
@@ -172,7 +182,7 @@ def save_checkpoint(
     processor.video_processor.to_json_file(path / "video_preprocessor_config.json")
     (path / "chat_template.jinja").write_text(processor.chat_template)
     manifest = {
-        "schema": 2,
+        "schema": 3,
         "step": step,
         "mapping": pw_mapping(network),
         "classes": list(network.physword.config.vocabulary),
@@ -232,7 +242,7 @@ def load_checkpoint(
         return json.loads(json.dumps(x))
 
     checks = {
-        "schema": 2,
+        "schema": 3,
         "mapping": pw_mapping(network),
         "classes": list(network.physword.config.vocabulary),
         "vocabulary_hash": network.physword.config.vocabulary_hash,

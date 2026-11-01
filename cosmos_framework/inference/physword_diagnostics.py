@@ -87,11 +87,17 @@ def compare_ar_repack(network, prediction, ar_records, joint_records, joint_outp
     for index, (layer, ar, joint) in enumerate(
         zip(network.language_model.model.layers, ar_records, joint_records, strict=True)
     ):
-        compare(f"layer_{index}.input_hidden", torch.cat(ar["input_hidden"]), torch.cat(joint["input_hidden"])[:size])
-        compare(f"layer_{index}.hidden", torch.cat(ar["hidden"]), torch.cat(joint["hidden"])[:size])
+
+        def ar_rows(name):
+            # Recompute captures full prefixes on each iteration and one final
+            # complete flush. Cached mode captures prefill + singleton steps.
+            return ar[name][-1] if prediction.decode_mode == "recompute" else torch.cat(ar[name])
+
+        compare(f"layer_{index}.input_hidden", ar_rows("input_hidden"), torch.cat(joint["input_hidden"])[:size])
+        compare(f"layer_{index}.hidden", ar_rows("hidden"), torch.cat(joint["hidden"])[:size])
         compare(f"layer_{index}.raw_k", prediction.debug_cache.keys[index][0], joint["raw_k"][:size])
         compare(f"layer_{index}.raw_v", prediction.debug_cache.values[index][0], joint["raw_v"][:size])
-        pre_k = torch.cat(ar["pre_rope_k"]).view(size, layer.self_attn.num_key_value_heads, layer.self_attn.head_dim)
+        pre_k = ar_rows("pre_rope_k").view(size, layer.self_attn.num_key_value_heads, layer.self_attn.head_dim)
         norm_k = layer.self_attn.k_norm_und_for_gen(pre_k)
         cos, sin = network.language_model.model.rotary_emb(
             pre_k, position_ids=condition.position_ids.unsqueeze(1).to(pre_k.device)

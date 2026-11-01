@@ -6,11 +6,10 @@ to 64x64 for the random native Tiny model; the original files are never written.
 
 import argparse
 import json
-from dataclasses import asdict, replace
+from dataclasses import asdict
 from pathlib import Path
 
 import torch
-from torch.nn import functional as F
 
 from cosmos_framework.data.generator.physword.dataset import TrainingWindowDataset, to_m3_batch
 from cosmos_framework.data.generator.physword.task import config_from_manifest
@@ -23,6 +22,7 @@ from cosmos_framework.model.generator.physword.optimization import (
     optimizer_audit,
     snapshot_parameters,
 )
+from cosmos_framework.model.generator.physword.preprocessing import PreprocessingConfig
 from cosmos_framework.model.generator.physword.training import PhysWordTrainingStep
 from cosmos_framework.scripts.physword_m2_probe import tiny_multimodal_fixture, tiny_vae
 from cosmos_framework.scripts.physword_probe import SPECIAL_TOKENS
@@ -43,11 +43,6 @@ def main():
     index = next(i for i, r in enumerate(dataset.records) if not all(r["pw_valid_mask"]))
     sample = dataset[index]
     batch = to_m3_batch(sample, pw_config=config)
-    observed = (
-        F.interpolate(batch.history.frames.float(), size=(64, 64), mode="bilinear", align_corners=False).round().byte()
-    )
-    future = F.interpolate(batch.future_rgb.float(), size=(64, 64), mode="bilinear", align_corners=False).round().byte()
-    batch = replace(batch, history=replace(batch.history, frames=observed), future_rgb=future)
     reports = {}
     for phase in ("A", "B"):
         net, processor, _ = tiny_multimodal_fixture(pw_config=asdict(config))
@@ -64,7 +59,14 @@ def main():
 
         flow = RectifiedFlow(None, train_time_distribution="waver", shift=5, device="cuda")
         step = PhysWordTrainingStep(
-            net, processor, vae, encode if vae is not None else None, flow, SPECIAL_TOKENS, phase
+            net,
+            processor,
+            vae,
+            encode if vae is not None else None,
+            flow,
+            SPECIAL_TOKENS,
+            phase,
+            preprocessing=PreprocessingConfig((480, 640), (64, 64)),
         )
         before = snapshot_parameters(net)
         optimizer.zero_grad(set_to_none=True)

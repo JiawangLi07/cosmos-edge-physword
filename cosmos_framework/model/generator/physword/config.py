@@ -37,10 +37,13 @@ class PhysWordConfig:
     vocabulary_id: str = "physword_atomic_v1"
     definitions: tuple[str, ...] = ()
     effector: str = "scene"
+    decode_mode: str = "recompute"
 
     def __post_init__(self) -> None:
         if not isinstance(self.enabled, bool):
             raise ValueError("physword.enabled must be a boolean")
+        if self.decode_mode not in {"recompute", "cached"}:
+            raise ValueError("PW decode_mode must be recompute or explicit diagnostic cached")
         if isinstance(self.token_id_base, bool) or not isinstance(self.token_id_base, int) or self.token_id_base < 0:
             raise ValueError("physword.token_id_base must be a nonnegative integer")
         self.vocabulary = tuple(self.vocabulary)

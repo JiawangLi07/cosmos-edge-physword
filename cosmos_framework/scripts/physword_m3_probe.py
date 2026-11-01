@@ -17,6 +17,7 @@ from cosmos_framework.model.generator.physword.optimization import (
     optimizer_audit,
     snapshot_parameters,
 )
+from cosmos_framework.model.generator.physword.preprocessing import PreprocessingConfig
 from cosmos_framework.model.generator.physword.training import LossConfig, PhysWordBatch, PhysWordTrainingStep
 from cosmos_framework.scripts.physword_m2_probe import tiny_multimodal_fixture, tiny_vae
 from cosmos_framework.scripts.physword_probe import SPECIAL_TOKENS
@@ -51,7 +52,17 @@ def synthetic_training(phase="B", **overrides):
     def encode(pixels):
         return vae.encode(pixels.cuda(), (torch.zeros(48, device="cuda"), torch.ones(48, device="cuda")))
 
-    step = PhysWordTrainingStep(net, processor, vae, encode, flow, SPECIAL_TOKENS, phase, LossConfig())
+    step = PhysWordTrainingStep(
+        net,
+        processor,
+        vae,
+        encode,
+        flow,
+        SPECIAL_TOKENS,
+        phase,
+        LossConfig(),
+        preprocessing=PreprocessingConfig((64, 64)),
+    )
     kwargs = {
         "timesteps": flow.noise_scheduler.timesteps[500:501],
         "noise": torch.randn((1, 48, 6, 4, 4), generator=torch.Generator().manual_seed(12)),

@@ -16,6 +16,7 @@ from cosmos_framework.model.generator.physword.checkpoint import load_checkpoint
 from cosmos_framework.model.generator.physword.config import PhysWordConfig
 from cosmos_framework.model.generator.physword.initialization import initialize_physical_words
 from cosmos_framework.model.generator.physword.optimization import PhaseConfig, build_phase_optimizer
+from cosmos_framework.model.generator.physword.preprocessing import PreprocessingConfig
 from cosmos_framework.model.generator.physword.training import PhysWordBatch, PhysWordTrainingStep
 from cosmos_framework.scripts.physword_m2_probe import history_video_latents, tiny_multimodal_fixture, tiny_vae
 from cosmos_framework.scripts.physword_m3_probe import SYNTHETIC_REVISIONS, synthetic_training
@@ -68,7 +69,9 @@ def test_dynamic_vocabulary_abc_and_masked_feedback():
     def encode(x):
         return vae.encode(x.cuda(), (torch.zeros(48, device="cuda"), torch.ones(48, device="cuda")))
 
-    step = PhysWordTrainingStep(net, processor, vae, encode, flow, SPECIAL_TOKENS, "B")
+    step = PhysWordTrainingStep(
+        net, processor, vae, encode, flow, SPECIAL_TOKENS, "B", preprocessing=PreprocessingConfig((64, 64))
+    )
     out = step(batch, timesteps=torch.tensor([374.6]))
     assert out["teacher"]["logits"].shape == (1, 4, 3)
     assert out["counts"]["word"] == 3 and out["counts"]["latent"] == 4
