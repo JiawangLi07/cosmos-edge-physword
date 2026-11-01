@@ -11,6 +11,7 @@ passed explicitly instead of being read from ``self``.
 from __future__ import annotations
 
 from dataclasses import dataclass
+from typing import TYPE_CHECKING
 
 import torch
 
@@ -18,7 +19,9 @@ from cosmos_framework.data.generator.action.utils.unified_action_schema import (
     UNIFIED_ACTION_DIM,
     UNIFIED_ACTION_SLOT_GROUPS,
 )
-from cosmos_framework.model.generator.diffusion.rectified_flow import RectifiedFlow
+
+if TYPE_CHECKING:
+    from cosmos_framework.model.generator.diffusion.rectified_flow import RectifiedFlow
 
 ACTION_SLOT_SAMPLE_LOSS_KEY = "_action_slot_sample_loss"
 ACTION_SLOT_SAMPLE_COUNT_KEY = "_action_slot_sample_count"

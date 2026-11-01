@@ -98,7 +98,12 @@ class PhysicalWordEmbedding(nn.Module):
         is_pw = (pw_indexes >= 0) & (pw_indexes < len(PW_TOKENS))
         embeddings = base_embedding(ids.masked_fill(is_pw, 0))
         pw_embeddings = self.embedding(pw_indexes.clamp(0, len(PW_TOKENS) - 1))
-        return torch.where(is_pw.unsqueeze(-1), pw_embeddings, embeddings)
+        result = torch.where(is_pw.unsqueeze(-1), pw_embeddings, embeddings)
+        # FP32 optimizer masters + BF16 compute: native RoPE derives its dtype from
+        # embeddings. Keep Q/K/V dtypes aligned without changing attention math.
+        if result.is_cuda and torch.is_autocast_enabled("cuda"):
+            result = result.to(torch.get_autocast_dtype("cuda"))
+        return result
 
 
 def physical_word_trace(packed: PackedSequence, config: PhysWordConfig) -> list[dict]:

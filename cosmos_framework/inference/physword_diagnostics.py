@@ -7,7 +7,7 @@ from contextlib import contextmanager
 
 import torch
 
-from cosmos_framework.data.generator.sequence_packing.runtime import get_und_seq
+from cosmos_framework.data.generator.sequence_packing.runtime import from_und_gen_splits, get_gen_seq, get_und_seq
 
 
 @contextmanager
@@ -103,3 +103,59 @@ def compare_ar_repack(network, prediction, ar_records, joint_records, joint_outp
     ]
     compare("prediction_hidden_states", prediction.prediction_hidden_states[0], joint_z)
     return metrics
+
+
+@contextmanager
+def mask_physical_word_suffix(network, packed):
+    """B=1 diagnostic only: remove ALL suffix keys from GEN in EVERY layer.
+
+    Keep the native UND causal result, positions, lengths and queries unchanged.
+    Recompute only GEN attention with existing PyTorch SDPA over [context; GEN].
+    Never zero K/V (which would retain softmax mass). No persistent/cache support.
+    """
+    condition = packed.reasoner_condition
+    if condition is None or len(packed.sample_lens) != 1 or not condition.boundaries:
+        raise ValueError("Suffix ablation requires a finalized B=1 PW condition")
+    context = condition.context_length
+    und_length, gen_length = packed.split_lens
+    if und_length - context != 7:
+        raise ValueError("Mask must cover start + four words + EOS/BOV")
+    originals = []
+
+    def make_observer(original):
+        def masked(q, k, v, *args, **kwargs):
+            if kwargs.get("memory_value") is not None:
+                raise ValueError("PW suffix diagnostics forbid cached memory")
+            result, stored = original(q, k, v, *args, **kwargs)
+            keys = kwargs.get("packed_key_states_normalized")
+            keys = k if keys is None else keys
+            q_gen = get_gen_seq(q)[:gen_length]
+            # Prefix C is causally before P and cannot already contain PW information.
+            kk = torch.cat((get_und_seq(keys)[:context], get_gen_seq(keys)[:gen_length]))
+            vv = torch.cat((get_und_seq(v)[:context], get_gen_seq(v)[:gen_length]))
+            repeats = q_gen.shape[1] // kk.shape[1]
+            value = (
+                torch.nn.functional.scaled_dot_product_attention(
+                    q_gen.transpose(0, 1).unsqueeze(0),
+                    kk.repeat_interleave(repeats, dim=1).transpose(0, 1).unsqueeze(0),
+                    vv.repeat_interleave(repeats, dim=1).transpose(0, 1).unsqueeze(0),
+                    dropout_p=0.0,
+                )
+                .squeeze(0)
+                .transpose(0, 1)
+                .flatten(1)
+            )
+            gen_result = torch.cat((value, get_gen_seq(result)[gen_length:]), dim=0)
+            return from_und_gen_splits(get_und_seq(result), gen_result, result), stored
+
+        return masked
+
+    try:
+        for layer in network.language_model.model.layers:
+            attn = layer.self_attn
+            originals.append((attn, attn.dispatch_attention_fn))
+            attn.dispatch_attention_fn = make_observer(attn.dispatch_attention_fn)
+        yield
+    finally:
+        for attn, original in originals:
+            attn.dispatch_attention_fn = original

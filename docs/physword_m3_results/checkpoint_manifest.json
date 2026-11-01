@@ -1,0 +1,143 @@
+{
+  "classes": [
+    "approach",
+    "move",
+    "pick",
+    "place",
+    "flip",
+    "rotate",
+    "toggle",
+    "open",
+    "close",
+    "push",
+    "pull",
+    "insert",
+    "press",
+    "click",
+    "strike",
+    "handover"
+  ],
+  "losses": {
+    "lambda_latent": 1.0,
+    "lambda_word": 1.0,
+    "normalize_loss_by_active": false,
+    "video_loss_scale": 10.0
+  },
+  "mapping": {
+    "<pw_approach_v>": 1073741825,
+    "<pw_click_v>": 1073741838,
+    "<pw_close_v>": 1073741833,
+    "<pw_flip_v>": 1073741829,
+    "<pw_handover_v>": 1073741840,
+    "<pw_insert_v>": 1073741836,
+    "<pw_move_v>": 1073741826,
+    "<pw_open_v>": 1073741832,
+    "<pw_pick_v>": 1073741827,
+    "<pw_place_v>": 1073741828,
+    "<pw_press_v>": 1073741837,
+    "<pw_pull_v>": 1073741835,
+    "<pw_push_v>": 1073741834,
+    "<pw_rotate_v>": 1073741830,
+    "<pw_start>": 1073741824,
+    "<pw_strike_v>": 1073741839,
+    "<pw_toggle_v>": 1073741831
+  },
+  "optimizer_names": [
+    [
+      "physword.embedding.weight"
+    ],
+    [
+      "physword.word_head.weight"
+    ],
+    [
+      "language_model.model.layers.0.input_layernorm.weight",
+      "language_model.model.layers.0.mlp.down_proj.weight",
+      "language_model.model.layers.0.mlp.up_proj.weight",
+      "language_model.model.layers.0.post_attention_layernorm.weight",
+      "language_model.model.layers.0.self_attn.k_proj.weight",
+      "language_model.model.layers.0.self_attn.o_proj.weight",
+      "language_model.model.layers.0.self_attn.q_proj.weight",
+      "language_model.model.layers.0.self_attn.v_proj.weight",
+      "language_model.model.layers.1.input_layernorm.weight",
+      "language_model.model.layers.1.mlp.down_proj.weight",
+      "language_model.model.layers.1.mlp.up_proj.weight",
+      "language_model.model.layers.1.post_attention_layernorm.weight",
+      "language_model.model.layers.1.self_attn.k_proj.weight",
+      "language_model.model.layers.1.self_attn.o_proj.weight",
+      "language_model.model.layers.1.self_attn.q_proj.weight",
+      "language_model.model.layers.1.self_attn.v_proj.weight",
+      "language_model.model.norm.weight"
+    ],
+    [
+      "language_model.model.layers.0.input_layernorm_moe_gen.weight",
+      "language_model.model.layers.0.mlp_moe_gen.down_proj.weight",
+      "language_model.model.layers.0.mlp_moe_gen.up_proj.weight",
+      "language_model.model.layers.0.post_attention_layernorm_moe_gen.weight",
+      "language_model.model.layers.0.self_attn.k_norm_moe_gen.weight",
+      "language_model.model.layers.0.self_attn.k_proj_moe_gen.weight",
+      "language_model.model.layers.0.self_attn.o_proj_moe_gen.weight",
+      "language_model.model.layers.0.self_attn.q_norm_moe_gen.weight",
+      "language_model.model.layers.0.self_attn.q_proj_moe_gen.weight",
+      "language_model.model.layers.0.self_attn.v_proj_moe_gen.weight",
+      "language_model.model.layers.1.input_layernorm_moe_gen.weight",
+      "language_model.model.layers.1.mlp_moe_gen.down_proj.weight",
+      "language_model.model.layers.1.mlp_moe_gen.up_proj.weight",
+      "language_model.model.layers.1.post_attention_layernorm_moe_gen.weight",
+      "language_model.model.layers.1.self_attn.k_norm_moe_gen.weight",
+      "language_model.model.layers.1.self_attn.k_proj_moe_gen.weight",
+      "language_model.model.layers.1.self_attn.o_proj_moe_gen.weight",
+      "language_model.model.layers.1.self_attn.q_norm_moe_gen.weight",
+      "language_model.model.layers.1.self_attn.q_proj_moe_gen.weight",
+      "language_model.model.layers.1.self_attn.v_proj_moe_gen.weight",
+      "language_model.model.norm_moe_gen.weight",
+      "llm2vae.bias",
+      "llm2vae.weight",
+      "time_embedder.mlp.0.bias",
+      "time_embedder.mlp.0.weight",
+      "time_embedder.mlp.2.bias",
+      "time_embedder.mlp.2.weight",
+      "vae2llm.bias",
+      "vae2llm.weight"
+    ],
+    [
+      "language_model.model.layers.0.self_attn.k_norm_und_for_gen.weight",
+      "language_model.model.layers.1.self_attn.k_norm_und_for_gen.weight"
+    ]
+  ],
+  "phase": {
+    "lr_gen": 1e-05,
+    "lr_pw": 0.0001,
+    "lr_und": 1e-06,
+    "phase": "B",
+    "reasoner_layers": [
+      0,
+      1
+    ],
+    "train_final_und_norm": true,
+    "train_pw_embeddings": true,
+    "train_word_head": true,
+    "weight_decay": 0.01
+  },
+  "physword": {
+    "embedding_seed": 1729,
+    "enabled": true,
+    "token_id_base": 1073741824
+  },
+  "processor_hashes": {
+    "chat_template.jinja": "7120ee6666468d4e9b2dc11e133ac5c2fa765fa5907706bf0f906270aa5510c8",
+    "preprocessor_config.json": "e38f0246a7480273a750393200eb6306e114476386f0127a709501943c114eb1",
+    "special_tokens_map.json": "445e22e11ae07acd9ac3aaf52f9f41ced72e1a0318344985c32924e3d00cbf12",
+    "tokenizer.json": "a7ac846b9877855c0661b835631197f05cac211d476ffeece0b8ae53c5461863",
+    "tokenizer_config.json": "f759a92bc0a6b9d598b029a1997b930cd01cf78733d41a3bebaa12e8308529a5",
+    "video_preprocessor_config.json": "364bd38b46bf61f78ea80c10dba2c54f69636470ecc1a2e3482a659539372d6a"
+  },
+  "revisions": {
+    "base": "random tiny seed20261101",
+    "data": "SYNTHETIC uint8 seed20261108",
+    "vae": "random tiny seed20261105 identity normalization",
+    "vision": "random tiny seed20261103"
+  },
+  "schema": 1,
+  "state_sha256": "ec6a55b5df8ba0cc7d54b6558924c34b32c2121c2ab90841b52f0044324aa9a7",
+  "step": 1
+}
