@@ -362,7 +362,7 @@ def test_video_native_reduction_scale_and_clean_history():
     torch.testing.assert_close(manual, out["losses"]["video_raw"], atol=1e-6, rtol=1e-6)
     torch.testing.assert_close(out["losses"]["video"], manual * 10, atol=1e-6, rtol=1e-6)
     torch.testing.assert_close(out["packed"].vision.tokens[0][:, :, :2].float(), history, atol=0, rtol=0)
-    sigma = step.flow.get_sigmas(kwargs["timesteps"].cuda(), {"device": "cuda", "dtype": torch.float32})
+    sigma = kwargs["timesteps"].cuda() / step.flow.noise_scheduler.config.num_train_timesteps
     expected = sigma * kwargs["noise"].to(full) + (1 - sigma) * full
     torch.testing.assert_close(out["packed"].vision.tokens[0][:, :, 2:].float(), expected[:, :, 2:], atol=0, rtol=0)
 

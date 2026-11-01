@@ -115,6 +115,11 @@ def inspect_checkpoint(root: Path) -> dict:
     except subprocess.CalledProcessError:
         revision = None
     missing = [item for entries in components.values() for item in entries if item["status"] != "present"]
+    if not missing:
+        # Availability is not a tensor/tokenizer compatibility claim. The strict
+        # local loader and real forward report provide those runtime checks.
+        compatibility["weight_shape_validation"] = "not_run_by_preflight; use strict local Edge loader"
+        compatibility["tokenizer_id_validation"] = "not_run_by_preflight; use strict local Edge loader"
     metadata_ok = bool(compatibility) and all(
         value is True
         for key, value in compatibility.items()

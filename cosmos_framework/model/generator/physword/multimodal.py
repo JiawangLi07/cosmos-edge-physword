@@ -11,6 +11,7 @@ from dataclasses import dataclass, replace
 
 import torch
 
+from cosmos_framework.model.generator.physword.config import LEGACY_WORDS
 from cosmos_framework.model.generator.reasoner.nemotron_3_dense_vl.reasoner_multimodal_utils import (
     prepare_multimodal_reasoner_inputs,
 )
@@ -83,8 +84,8 @@ class FutureVisualTargets:
             raise ValueError("Future targets require 16 RGB frames and four word labels")
         if self.frames.dtype != torch.uint8 or self.word_class_ids.dtype != torch.long:
             raise ValueError("Future RGB/labels must be uint8/int64")
-        if bool(((self.word_class_ids < 0) | (self.word_class_ids >= 16)).any()):
-            raise ValueError("Future word targets must be in [0,16)")
+        if bool((self.word_class_ids < 0).any()):
+            raise ValueError("Future word targets must be nonnegative class IDs")
 
 
 @dataclass(frozen=True)
@@ -99,6 +100,9 @@ class ReasonerCondition:
     rgb_sha256: str
     word_class_ids: tuple[int, ...] = ()
     boundaries: bool = False
+    vocabulary_size: int = len(LEGACY_WORDS)
+    vocabulary_hash: str = ""
+    rgb_prefix_only: bool = False
 
     def __post_init__(self):
         size = self.input_ids.numel()
@@ -108,7 +112,9 @@ class ReasonerCondition:
             raise ValueError("Packing metadata must remain on CPU")
         if self.input_ids.dtype != torch.long or self.position_ids.dtype != torch.long:
             raise ValueError("Native UND IDs and mRoPE positions must be int64")
-        expected_size = self.context_length + 1 + len(self.word_class_ids) + 2 * self.boundaries
+        expected_size = (
+            self.context_length + (0 if self.rgb_prefix_only else 1 + len(self.word_class_ids)) + 2 * self.boundaries
+        )
         if self.context_length <= 0 or size != expected_size or self.next_position != int(self.position_ids.max()) + 1:
             raise ValueError("Condition length, PW suffix or mRoPE cursor is inconsistent")
         if (
@@ -127,13 +133,19 @@ class ReasonerCondition:
             raise ValueError("Visual features and UND placeholder indexes disagree")
         if self.visual_features.requires_grad:
             raise ValueError("SigLIP2 and projector outputs must be frozen")
-        if self.boundaries and len(self.word_class_ids) != 4:
+        if self.rgb_prefix_only and self.word_class_ids:
+            raise ValueError("RGB-prefix baseline cannot contain Physical Words")
+        if self.boundaries and not self.rgb_prefix_only and len(self.word_class_ids) != 4:
             raise ValueError("Finalized conditions require four predicted words")
-        if not 0 <= len(self.word_class_ids) <= 4 or any(not 0 <= c < 16 for c in self.word_class_ids):
+        if not 0 <= len(self.word_class_ids) <= 4 or any(
+            not 0 <= c < self.vocabulary_size for c in self.word_class_ids
+        ):
             raise ValueError("Expected up to four visual Physical Word classes")
 
     @property
     def prediction_positions(self) -> torch.Tensor:
+        if self.rgb_prefix_only:
+            raise ValueError("RGB-prefix baseline has no PW prediction positions")
         return torch.arange(self.context_length, self.context_length + 4)
 
     @property
@@ -141,7 +153,7 @@ class ReasonerCondition:
         return self.prediction_positions + 1
 
     def with_words(self, class_ids: tuple[int, ...], token_id_base: int) -> ReasonerCondition:
-        if self.boundaries:
+        if self.boundaries or self.rgb_prefix_only:
             raise ValueError("Cannot extend a finalized condition")
         # Always rebuild from the ORIGINAL context + start, never from a partially appended suffix.
         size = self.context_length + 1
@@ -157,7 +169,7 @@ class ReasonerCondition:
         )
 
     def with_boundaries(self, special_tokens: dict[str, int]) -> ReasonerCondition:
-        if self.boundaries or len(self.word_class_ids) != 4:
+        if self.boundaries or (not self.rgb_prefix_only and len(self.word_class_ids) != 4):
             raise ValueError("Repacking requires exactly four predicted words and no existing EOS/BOV")
         ids = torch.tensor([special_tokens["eos_token_id"], special_tokens["start_of_generation"]])
         positions = torch.arange(self.next_position, self.next_position + 2).expand(3, -1).clone()
@@ -167,6 +179,18 @@ class ReasonerCondition:
             position_ids=torch.cat((self.position_ids, positions), dim=1),
             next_position=self.next_position + 2,
             boundaries=True,
+        )
+
+    def without_physical_words(self):
+        if self.boundaries or self.word_class_ids:
+            raise ValueError("Remove PW only from the original history/instruction prefix")
+        positions = self.position_ids[:, : self.context_length].clone()
+        return replace(
+            self,
+            input_ids=self.input_ids[: self.context_length].clone(),
+            position_ids=positions,
+            next_position=int(positions.max()) + 1,
+            rgb_prefix_only=True,
         )
 
 
@@ -236,6 +260,8 @@ def build_reasoner_prefix(network, processor, history: RGBHistory, instruction: 
         next_position=next_position + 1,
         timing=history.timing,
         rgb_sha256=digest,
+        vocabulary_size=len(network.physword.config.vocabulary),
+        vocabulary_hash=network.physword.config.vocabulary_hash,
     )
 
 

@@ -26,11 +26,16 @@ def encode_future_targets(network, processor, future_rgb, valid):
 
 
 def word_ce(logits, labels, valid):
-    if logits.shape != (*labels.shape, 16) or valid.shape != labels.shape or valid.dtype != torch.bool:
-        raise ValueError("PW CE requires [B,4,16] logits and matching label/mask tensors")
+    if (
+        logits.ndim != labels.ndim + 1
+        or logits.shape[:-1] != labels.shape
+        or valid.shape != labels.shape
+        or valid.dtype != torch.bool
+    ):
+        raise ValueError("PW CE requires [B,K,V] logits and matching label/mask tensors")
     labels, valid = labels.to(logits.device), valid.to(logits.device)
-    if bool(((labels[valid] < 0) | (labels[valid] >= 16)).any()):
-        raise ValueError("Valid PW labels must be class IDs in [0,16)")
+    if bool(((labels[valid] < 0) | (labels[valid] >= logits.shape[-1])).any()):
+        raise ValueError("Valid PW labels must be configured class IDs")
     selected = logits.float()[valid]
     if not bool(torch.isfinite(selected).all()):
         raise FloatingPointError("Nonfinite valid word logits")

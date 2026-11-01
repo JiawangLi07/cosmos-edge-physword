@@ -1,0 +1,55 @@
+{
+  "effector": "left",
+  "freeze_before_actual_data_training": true,
+  "fully_word_valid_windows": {
+    "test": 175,
+    "train": 223
+  },
+  "global_split_modified": false,
+  "label_counts": {
+    "test": {
+      "align": 15,
+      "approach": 2,
+      "grasp": 35,
+      "hold": 620,
+      "lift": 28,
+      "rotate": 28
+    },
+    "train": {
+      "align": 34,
+      "approach": 1,
+      "grasp": 72,
+      "hold": 721,
+      "lift": 36,
+      "lower": 64,
+      "rotate": 36
+    }
+  },
+  "model_vocabulary_hash": "3d74b2a6532a95090dc0292b30a8210ba074530188939a7d5d9eacaaf6381b07",
+  "pilot_holdout_from_global_train": [
+    "badminton__episode_0017"
+  ],
+  "schema": 1,
+  "source_windows": "/aifs/lijiawang/physword/data_pilot/badminton/scene_v2/windows.jsonl",
+  "source_windows_sha256": "a870319f565b76c919711cbf4161f6313966f7460da9bbb7ef0e90df92431ca8",
+  "split_by_episode": {
+    "badminton__episode_0001": "train",
+    "badminton__episode_0017": "test"
+  },
+  "task_id": "badminton",
+  "timing": {
+    "fps": 10,
+    "future": 16,
+    "future_seconds": 1.6,
+    "history": 5,
+    "pw_k": 4,
+    "pw_stride": 4
+  },
+  "unknown_eval_labels_masked": {},
+  "validation_split": null,
+  "window_counts": {
+    "test": 186,
+    "train": 247
+  },
+  "windows_sha256": "3f7e2a855f39c49387b64b020b2f2f4fffc6995dcfed732975ec09049b812e49"
+}

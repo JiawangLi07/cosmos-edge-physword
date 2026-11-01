@@ -174,11 +174,7 @@ class Cosmos3VFMNetworkConfig(PretrainedConfig):
         self.timestep_embedding_chunk_size = timestep_embedding_chunk_size
         self.predict_text_tokens = predict_text_tokens
         pw_config = resolve_physword_config(physword)
-        self.physword = dict(
-            enabled=pw_config.enabled,
-            token_id_base=pw_config.token_id_base,
-            embedding_seed=pw_config.embedding_seed,
-        )
+        self.physword = dataclasses.asdict(pw_config)
         if pw_config.enabled and (
             joint_attn_implementation != "two_way"
             or video_temporal_causal
@@ -469,6 +465,8 @@ class Cosmos3VFMNetwork(PreTrainedModel):
             )
 
     def init_weights(self, buffer_device: torch.device | None):
+        if self.physword is not None and self.physword.initialization is not None:
+            raise RuntimeError("Initialize native weights before semantic PW warm-start or resume")
         if self.config.vision_gen or self.config.action_gen or self.config.sound_gen:
             self.time_embedder._init_weights(buffer_device=buffer_device)
 

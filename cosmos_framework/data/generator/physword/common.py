@@ -95,8 +95,8 @@ class PipelineConfig:
             raise ValueError("Invalid boundary tolerance")
         if (self.history_frames - 1) % 4 or (self.history_frames + self.future_frames - 1) % 4:
             raise ValueError("Wan causal history and full clips must each have 1+4m frames")
-        if self.pw_num_blocks * self.pw_stride > self.future_frames:
-            raise ValueError("PW target exceeds future horizon")
+        if self.pw_num_blocks * self.pw_stride != self.future_frames:
+            raise ValueError("PW horizon must equal the video future horizon")
 
     @property
     def total_frames(self):

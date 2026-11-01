@@ -10,29 +10,12 @@ from typing import TYPE_CHECKING
 import torch
 from torch import nn
 
-from cosmos_framework.model.generator.physword.config import PhysWordConfig
+from cosmos_framework.model.generator.physword.config import LEGACY_WORDS, PhysWordConfig
 
 if TYPE_CHECKING:
     from cosmos_framework.data.generator.sequence_packing.sequence import PackedSequence, SequencePlan
 
-ATOMIC_ACTIONS = (
-    "approach",
-    "move",
-    "pick",
-    "place",
-    "flip",
-    "rotate",
-    "toggle",
-    "open",
-    "close",
-    "push",
-    "pull",
-    "insert",
-    "press",
-    "click",
-    "strike",
-    "handover",
-)
+ATOMIC_ACTIONS = LEGACY_WORDS  # Legacy import compatibility; runtime uses config.vocabulary.
 PW_TOKENS = ("<pw_start>",) + tuple(f"<pw_{word}_v>" for word in ATOMIC_ACTIONS)
 
 
@@ -40,9 +23,9 @@ def manual_word_ids(words: list[str], config: PhysWordConfig) -> list[int]:
     if not words:
         raise ValueError("M1 requires a nonempty manual Physical Word sequence")
     try:
-        return [config.token_id_base] + [config.token_id_base + 1 + ATOMIC_ACTIONS.index(word) for word in words]
+        return [config.token_id_base] + [config.token_id_base + 1 + config.vocabulary.index(word) for word in words]
     except ValueError as exc:
-        raise ValueError(f"Expected atomic action names from {ATOMIC_ACTIONS}; got {words}") from exc
+        raise ValueError(f"Expected configured action names from {config.vocabulary}; got {words}") from exc
 
 
 def append_manual_words(
@@ -73,19 +56,22 @@ def append_manual_words(
 
 
 class PhysicalWordEmbedding(nn.Module):
-    """Seventeen rows; no LM-head resizing, extra Transformer or final-z injection."""
+    """V+1 private rows and V-way head, registered before optimizer construction."""
 
     def __init__(self, hidden_size: int, base_vocab_size: int, config: PhysWordConfig):
         super().__init__()
         if config.token_id_base < base_vocab_size:
             raise ValueError("Physical Word IDs must be outside the base embedding vocabulary")
         self.config = config
+        self.initialization = None
         with torch.random.fork_rng(devices=[]):
-            self.embedding = nn.Embedding(len(PW_TOKENS), hidden_size)
-            self.word_head = nn.Linear(hidden_size, len(ATOMIC_ACTIONS), bias=False)
+            self.embedding = nn.Embedding(len(config.tokens), hidden_size)
+            self.word_head = nn.Linear(hidden_size, len(config.vocabulary), bias=False)
         self.reset_parameters()
 
     def reset_parameters(self) -> None:
+        if self.initialization is not None:
+            raise RuntimeError("Refusing to reset initialized or resumed Physical Words")
         if self.embedding.weight.is_meta:
             return
         generator = torch.Generator(device=self.embedding.weight.device).manual_seed(self.config.embedding_seed)
@@ -95,9 +81,11 @@ class PhysicalWordEmbedding(nn.Module):
 
     def forward(self, ids: torch.Tensor, base_embedding: nn.Embedding) -> torch.Tensor:
         pw_indexes = ids - self.config.token_id_base
-        is_pw = (pw_indexes >= 0) & (pw_indexes < len(PW_TOKENS))
+        is_pw = (pw_indexes >= 0) & (pw_indexes < len(self.config.tokens))
+        if bool(((ids >= self.config.token_id_base) & ~is_pw).any()):
+            raise ValueError("Unknown private Physical Word token ID")
         embeddings = base_embedding(ids.masked_fill(is_pw, 0))
-        pw_embeddings = self.embedding(pw_indexes.clamp(0, len(PW_TOKENS) - 1))
+        pw_embeddings = self.embedding(pw_indexes.clamp(0, len(self.config.tokens) - 1))
         result = torch.where(is_pw.unsqueeze(-1), pw_embeddings, embeddings)
         # FP32 optimizer masters + BF16 compute: native RoPE derives its dtype from
         # embeddings. Keep Q/K/V dtypes aligned without changing attention math.
@@ -118,10 +106,10 @@ def physical_word_trace(packed: PackedSequence, config: PhysWordConfig) -> list[
         tokens = []
         for token_id, global_index in zip(ids, positions, strict=True):
             pw_index = token_id - config.token_id_base
-            if start <= global_index < end and 0 <= pw_index < len(PW_TOKENS):
+            if start <= global_index < end and 0 <= pw_index < len(config.tokens):
                 tokens.append(
                     {
-                        "token": PW_TOKENS[pw_index],
+                        "token": config.tokens[pw_index],
                         "token_id": token_id,
                         "global_index": global_index,
                         "sample_local_index": global_index - start,

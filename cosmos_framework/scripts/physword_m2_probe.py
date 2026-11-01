@@ -27,9 +27,9 @@ from cosmos_framework.model.generator.tokenizers.wan2pt2_vae_4x16x16 import WanV
 from cosmos_framework.scripts.physword_probe import SEED, SPECIAL_TOKENS, make_network
 
 
-def tiny_multimodal_fixture():
+def tiny_multimodal_fixture(*, pw_config=None):
     """Random tiny versions of the REAL native classes; only tokenizer vocabulary is synthetic."""
-    net = make_network(physword=True)
+    net = make_network(physword=pw_config if pw_config is not None else True)
     torch.manual_seed(SEED + 2)
     vcfg = Siglip2VisionConfig(
         hidden_size=32, intermediate_size=64, num_hidden_layers=1, num_attention_heads=4, num_patches=16, patch_size=16
@@ -52,6 +52,14 @@ def tiny_multimodal_fixture():
     for token, index in special.items():
         del vocab[f"tok_{index}"]
         vocab[token] = index
+    if pw_config is not None:
+        # Synthetic semantics tests need ordinary word IDs. Legacy fixtures stay unchanged.
+        for offset, word in enumerate(net.physword.config.vocabulary):
+            index = 32 + offset
+            if index >= net.language_model.model.embed_tokens.num_embeddings:
+                raise ValueError("Synthetic tokenizer fixture has insufficient spare rows")
+            del vocab[f"tok_{index}"]
+            vocab[word] = index
     backend = Tokenizer(WordLevel(vocab, unk_token="<unk>"))
     backend.pre_tokenizer = Whitespace()
     tokenizer = PreTrainedTokenizerFast(

@@ -50,14 +50,18 @@ class PhysWordBatch:
             if mask.shape != (1, 4) or mask.dtype != torch.bool:
                 raise ValueError("Validity masks must be [1,4] bool")
         valid_labels = self.word_labels[self.valid_word.to(self.word_labels.device)]
-        if bool(((valid_labels < 0) | (valid_labels >= 16)).any()):
-            raise ValueError("Valid word labels must be in [0,16)")
+        if bool((valid_labels < 0).any()):
+            raise ValueError("Valid word labels must be nonnegative class IDs")
 
 
 def forward_teacher_words(network, prefix, labels, valid_word):
     """A: start,GT(w1),GT(w2),GT(w3); current target never occupies its prediction row."""
     device = network.language_model.model.embed_tokens.weight.device
     base = network.physword.config.token_id_base
+    vocabulary_size = len(network.physword.config.vocabulary)
+    valid_labels = labels[valid_word.to(labels.device)]
+    if bool(((valid_labels < 0) | (valid_labels >= vocabulary_size)).any()):
+        raise ValueError("Teacher labels do not match the configured PW vocabulary")
     previous = labels[0, :3].to(device)
     valid_previous = valid_word[0, :3].to(device)
     # No fabricated GT for missing labels: reuse neutral start embedding as missing feedback.
@@ -102,7 +106,17 @@ class PhysWordTrainingStep:
     """
 
     def __init__(
-        self, network, processor, vae, encode_video, rectified_flow, special_tokens, phase, losses=LossConfig()
+        self,
+        network,
+        processor,
+        vae,
+        encode_video,
+        rectified_flow,
+        special_tokens,
+        phase,
+        losses=LossConfig(),
+        *,
+        resolution="480",
     ):
         if phase not in ("A", "B") or network.physword is None or network.parallel_dims is not None:
             raise ValueError("M3 requires Phase A/B, enabled PW and an unsharded network")
@@ -110,17 +124,25 @@ class PhysWordTrainingStep:
             raise ValueError("Build matching exact phase optimizer groups before the training step")
         self.phase_config = network._physword_phase_config
         self.net, self.processor = network, processor
-        self.vae = vae.eval().requires_grad_(False)
+        if phase == "B" and (vae is None or encode_video is None):
+            raise ValueError("Phase B requires the frozen native VAE and its normalization adapter")
+        self.vae = None if vae is None else vae.eval().requires_grad_(False)
         self.encode_video, self.flow = encode_video, rectified_flow
         self.special_tokens, self.phase, self.config = special_tokens, phase, losses
+        # Same fixed-resolution shift policy as the native Edge SFT recipe.
+        shifts = {"256": 3, "480": 5, "720": 10}
+        if resolution not in shifts:
+            raise ValueError("Select a native Edge RF resolution: 256, 480 or 720")
+        self.resolution, self.rf_shift = resolution, shifts[resolution]
 
-    def __call__(self, batch: PhysWordBatch, *, timesteps=None, noise=None):
+    def __call__(self, batch: PhysWordBatch, *, timesteps=None, sigmas=None, noise=None, iteration=None):
         net, cfg = self.net, self.config
         if net._physword_phase_config != self.phase_config:
             raise ValueError("Phase changed; rebuild the training step and optimizer")
         net.train()
         net.language_model.visual.eval().requires_grad_(False)
-        self.vae.eval()
+        if self.vae is not None:
+            self.vae.eval()
         device = net.language_model.model.embed_tokens.weight.device
         if device.type != "cuda":
             raise ValueError("Native M3 MoT training requires CUDA")
@@ -147,16 +169,37 @@ class PhysWordTrainingStep:
                         raise ValueError("Expected native Wan 5/21-frame -> 2/6-latent encoding")
                     # Even though VAE is causal, supply condition from HISTORY-ONLY encoding.
                     clean = torch.cat((history_latents, full[:, :, 2:]), 2)
-                    if timesteps is None:
-                        u = self.flow.sample_train_time(1)
-                        timesteps = self.flow.get_discrete_timestamp(u, {"device": device, "dtype": torch.float32})
+                    if sigmas is not None:
+                        sigma = sigmas.to(device=device, dtype=torch.float32).reshape(1)
+                        continuous_t = sigma * self.flow.noise_scheduler.config.num_train_timesteps
+                        if timesteps is not None and not torch.equal(
+                            timesteps.to(continuous_t).reshape(1), continuous_t
+                        ):
+                            raise ValueError("Explicit sigma and timestep disagree")
+                        timesteps = continuous_t
+                    elif timesteps is None:
+                        timesteps, sigma = self.flow.sample_continuous_train_time(
+                            1,
+                            torch.tensor([self.rf_shift]),
+                            {"device": device, "dtype": torch.float32},
+                            iteration=iteration,
+                        )
+                    else:
+                        sigma = (
+                            timesteps.to(device=device, dtype=torch.float32).reshape(1)
+                            / self.flow.noise_scheduler.config.num_train_timesteps
+                        )
                     timesteps = timesteps.to(device=device, dtype=torch.float32).reshape(1)
-                    sigma = self.flow.get_sigmas(timesteps, {"device": device, "dtype": torch.float32})
+                    # Preserve the native sampled sigma, without an FP32 sigma*N/N roundtrip.
+                    sigma = sigma.reshape(1)
+                    if not bool(torch.isfinite(sigma).all()) or bool(((sigma < 0) | (sigma > 1)).any()):
+                        raise ValueError("Continuous RF timesteps must be finite and in [0,N]")
                     noise = torch.randn_like(clean) if noise is None else noise.to(clean)
                     if noise.shape != clean.shape or not bool(torch.isfinite(noise).all()):
                         raise ValueError("Noise must be finite and match full clean latent shape")
-                    xt, vt = self.flow.get_interpolation([noise], [clean], [sigma.reshape(1, 1, 1, 1, 1)])
-                    xt = torch.cat((history_latents, xt[0][:, :, 2:]), 2)
+                    mask = torch.tensor([1, 1, 0, 0, 0, 0], device=device).float().reshape(6, 1, 1)
+                    xt, vt = self.flow.noise_vision([noise], [clean], sigma.reshape(1, 1), [mask])
+                    xt = xt[0]
                     gen_data = GenerationDataClean(
                         batch_size=1, is_image_batch=False, x0_tokens_vision=[xt], fps_vision=torch.tensor([10.0])
                     )

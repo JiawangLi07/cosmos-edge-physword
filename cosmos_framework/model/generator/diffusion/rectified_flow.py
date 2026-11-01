@@ -164,6 +164,35 @@ class RectifiedFlow:
         timesteps = self.noise_scheduler.timesteps.to(**tensor_kwargs)[indices]  # [B]
         return timesteps.unsqueeze(0) if timesteps.ndim == 0 else timesteps  # [B]
 
+    def sample_continuous_train_time(self, batch_size, shifts, tensor_kwargs, *, iteration=None, frames=1):
+        """Native Cosmos3 continuous RF protocol, shared by OmniMoT and PW.
+
+        ``shifts`` has one value per sample, resolved by the caller's native
+        resolution/token-count policy. No scheduler-table indexing is involved.
+        """
+        sigmas = (
+            self.sample_train_time(batch_size * frames, iteration=iteration, shifts=shifts.repeat_interleave(frames))
+            .to(**tensor_kwargs)
+            .reshape(batch_size, frames)
+        )
+        return sigmas * self.noise_scheduler.config.num_train_timesteps, sigmas
+
+    @staticmethod
+    def vision_sigmas(clean, sigmas, condition_masks):
+        return [
+            sigma.view(-1, 1, 1)[: item.shape[-3]] * (1.0 - mask)
+            for item, sigma, mask in zip(clean, sigmas, condition_masks, strict=True)
+        ]
+
+    def noise_vision(self, epsilon, clean, sigmas, condition_masks):
+        """Apply the native history mask before linear RF interpolation.
+
+        Each clean/noise item is [C,T,H,W] or [B,C,T,H,W]; masks are [T,1,1].
+        Targets retain epsilon-clean even at conditioned frames (loss masks them).
+        """
+        effective = self.vision_sigmas(clean, sigmas, condition_masks)
+        return self.get_interpolation(epsilon, clean, effective)
+
     def get_sigmas(self, timesteps, tensor_kwargs):  # timesteps: [B], returns [B]
         sigmas = self.noise_scheduler.sigmas.to(**tensor_kwargs)  # [N_timesteps+1]
         schedule_timesteps = self.noise_scheduler.timesteps.to(**tensor_kwargs)  # [N_timesteps]

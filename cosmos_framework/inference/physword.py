@@ -75,15 +75,25 @@ def generate_physical_words(network, prefix: ReasonerCondition, *, capture_cache
 
 
 def repack_physical_words(
-    network, condition: ReasonerCondition, gen_data, timesteps: torch.Tensor, special_tokens: dict[str, int]
+    network,
+    condition: ReasonerCondition,
+    gen_data,
+    timesteps: torch.Tensor,
+    special_tokens: dict[str, int],
+    *,
+    rgb_prefix_only: bool = False,
 ):
     if network.physword is None or network.parallel_dims is not None:
         raise ValueError("M2 requires enabled PW and an unsharded B=1 model")
     base = network.physword.config.token_id_base
-    if int(condition.input_ids[condition.context_length]) != base:
+    if condition.vocabulary_hash and condition.vocabulary_hash != network.physword.config.vocabulary_hash:
+        raise ValueError("Repack vocabulary fingerprint differs from the model")
+    if condition.rgb_prefix_only != rgb_prefix_only:
+        raise ValueError("PW and matched RGB-prefix modes must be explicit and consistent")
+    if not rgb_prefix_only and int(condition.input_ids[condition.context_length]) != base:
         raise ValueError("Prefix and network must share the M1 PW namespace")
     expected = torch.tensor([base + 1 + c for c in condition.word_class_ids])
-    if not torch.equal(condition.input_ids[condition.context_length + 1 :], expected):
+    if not rgb_prefix_only and not torch.equal(condition.input_ids[condition.context_length + 1 :], expected):
         raise ValueError("Repack requires exactly the four predicted private PW IDs, without existing boundaries")
     if gen_data.batch_size != 1 or gen_data.x0_tokens_vision is None or len(gen_data.x0_tokens_vision) != 1:
         raise ValueError("M2 repacking requires B=1 video latents")

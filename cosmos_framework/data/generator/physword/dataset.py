@@ -95,6 +95,11 @@ class TrainingWindowDataset:
         result["pw_arm_class_targets"] = np.array(r["pw_arm_class_targets"], dtype=np.int64)
         result["pw_arm_valid_mask"] = np.array(r["pw_arm_valid_mask"], dtype=np.bool_)
         result["pw_target_timestamps"] = np.array(r["pw_target_timestamps"], dtype=np.float64)
+        for key in ("task_vocabulary_hash", "selected_effector"):
+            if key in r:
+                result[key] = r[key]
+        if "pw_latent_valid_mask" in r:
+            result["pw_latent_valid_mask"] = np.array(r["pw_latent_valid_mask"], dtype=np.bool_)
         return result
 
 
@@ -228,13 +233,19 @@ def feature_cache_identity(sample, teacher_sha256, processor_config, pooling="sp
     )
 
 
-def to_m3_batch(sample, batch_type=None):
+def to_m3_batch(sample, batch_type=None, *, pw_config=None):
     """Exact installed M3 PhysWordBatch contract (B=1); only targets carry future GT.
 
     M3 currently names this type PhysWordBatch, rather than PhysWordTargets. The
     optional factory allows integration before the independent M3 branch is merged.
     """
-    require_legacy_model_vocabulary(sample)
+    if pw_config is None:
+        require_legacy_model_vocabulary(sample)
+    elif (
+        sample.get("task_vocabulary_hash") != pw_config.vocabulary_hash
+        or tuple(sample["pw_vocabulary"]) != pw_config.vocabulary
+    ):
+        raise ValueError("Task sample vocabulary/definitions/effector differs from the model")
     import torch
 
     if batch_type is None:
@@ -248,5 +259,7 @@ def to_m3_batch(sample, batch_type=None):
         future_rgb=torch.as_tensor(sample["future_rgb"]),
         word_labels=torch.as_tensor(sample["pw_class_targets"], dtype=torch.long).unsqueeze(0),
         valid_word=mask,
-        valid_latent=mask.clone(),
+        valid_latent=torch.as_tensor(
+            sample.get("pw_latent_valid_mask", sample["pw_valid_mask"]), dtype=torch.bool
+        ).unsqueeze(0),
     )

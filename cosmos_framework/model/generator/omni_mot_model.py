@@ -21,13 +21,31 @@ from torch.distributed.device_mesh import DeviceMesh
 from torch.distributed.fsdp import MixedPrecisionPolicy
 from torch.nn.modules.module import _IncompatibleKeys
 
-from cosmos_framework.utils.flags import DEVICE, Device
-from cosmos_framework.utils.lazy_config import LazyDict
-from cosmos_framework.utils.lazy_config import instantiate as lazy_instantiate
-from cosmos_framework.utils.lazy_config.registry import locate
+from cosmos_framework.configs.base.defaults.joint_attention import JointAttnImplementation
+from cosmos_framework.configs.base.defaults.model_config import OmniMoTModelConfig
+from cosmos_framework.configs.base.defaults.multiview_attention import upgrade_saved_multiview_attention
+from cosmos_framework.configs.base.defaults.parallelism import PRECISION_TO_TORCH_DTYPE
+from cosmos_framework.data.generator.action.utils.action_processing import (
+    ActionProcessor,
+    get_action_processing_records,
+)
+from cosmos_framework.data.generator.action.utils.unified_action_schema import UNIFIED_ACTION_SLOT_GROUPS
+from cosmos_framework.data.generator.sequence_packing import (
+    PackedSequence,
+    SequencePlan,
+    build_sequence_plans_from_data_batch,
+    pack_input_sequence,
+)
+from cosmos_framework.data.generator.sequence_packing.modality import add_special_tokens
+from cosmos_framework.data.generator.sequence_packing.packers import (
+    is_item_generated,
+    pack_multiview_action_conditioning,
+    replicate_multiview_actions,
+    uses_single_timestep,
+    validate_cross_view_fps,
+)
+from cosmos_framework.data.generator.utils import IMAGE_RES_SIZE_INFO, VIDEO_RES_SIZE_INFO
 from cosmos_framework.model._base import ImaginaireModel
-from cosmos_framework.utils import log, misc
-from cosmos_framework.utils.count_params import count_params
 from cosmos_framework.model.generator.algorithm.loss.flow_matching import (
     ACTION_SLOT_SAMPLE_COUNT_KEY,
     ACTION_SLOT_SAMPLE_LOSS_KEY,
@@ -40,16 +58,6 @@ from cosmos_framework.model.generator.algorithm.loss.modality_reduction import (
     build_modality_loss_items,
     reduce_global_modality_means,
 )
-from cosmos_framework.configs.base.defaults.joint_attention import JointAttnImplementation
-from cosmos_framework.configs.base.defaults.model_config import OmniMoTModelConfig
-from cosmos_framework.configs.base.defaults.multiview_attention import upgrade_saved_multiview_attention
-from cosmos_framework.configs.base.defaults.parallelism import PRECISION_TO_TORCH_DTYPE
-from cosmos_framework.data.generator.action.utils.action_processing import (
-    ActionProcessor,
-    get_action_processing_records,
-)
-from cosmos_framework.data.generator.action.utils.unified_action_schema import UNIFIED_ACTION_SLOT_GROUPS
-from cosmos_framework.data.generator.utils import IMAGE_RES_SIZE_INFO, VIDEO_RES_SIZE_INFO
 from cosmos_framework.model.generator.diffusion.rectified_flow import RectifiedFlow
 from cosmos_framework.model.generator.diffusion.samplers.edm import EDMSampler
 from cosmos_framework.model.generator.diffusion.samplers.fixed_step import FixedStepSampler
@@ -77,6 +85,8 @@ from cosmos_framework.model.generator.sensor_encoder import (
     get_vae_pixel_shapes,
     normalize_uint8_item,
 )
+from cosmos_framework.model.generator.tokenizers.interface import VideoTokenizerInterface
+from cosmos_framework.model.generator.upsampler.prompts import build_messages, clean_response
 from cosmos_framework.model.generator.utils.batch_normalization import normalize_vision_batch_inplace
 from cosmos_framework.model.generator.utils.camera_relative_pose import (
     prepare_camera_relative_poses,
@@ -110,27 +120,17 @@ from cosmos_framework.model.generator.utils.sr_latent_noise import (
     apply_sr_latent_condition_noise,
     sr_sample_mask,
 )
-from cosmos_framework.data.generator.sequence_packing import (
-    PackedSequence,
-    SequencePlan,
-    build_sequence_plans_from_data_batch,
-    pack_input_sequence,
-)
-from cosmos_framework.data.generator.sequence_packing.modality import add_special_tokens
-from cosmos_framework.data.generator.sequence_packing.packers import (
-    is_item_generated,
-    pack_multiview_action_conditioning,
-    replicate_multiview_actions,
-    uses_single_timestep,
-    validate_cross_view_fps,
-)
-from cosmos_framework.model.generator.tokenizers.interface import VideoTokenizerInterface
-from cosmos_framework.model.generator.upsampler.prompts import build_messages, clean_response
+from cosmos_framework.utils import log, misc
+from cosmos_framework.utils.count_params import count_params
+from cosmos_framework.utils.flags import DEVICE, Device
 from cosmos_framework.utils.generator.data_utils import get_vision_data_resolution, read_positive_int_metadata
 from cosmos_framework.utils.generator.dtensor_helper import DTensorFastEmaModelUpdater
 from cosmos_framework.utils.generator.model_weights_stats import WeightTrainingStat
 from cosmos_framework.utils.generator.parallelism import ParallelDims
 from cosmos_framework.utils.generator.quantization import swap_modelopt_fp8_linears_on_meta
+from cosmos_framework.utils.lazy_config import LazyDict
+from cosmos_framework.utils.lazy_config import instantiate as lazy_instantiate
+from cosmos_framework.utils.lazy_config.registry import locate
 
 # "LIDA" in ASCII: fixed domain tag separating joint LiDAR noise from RGB.
 # Changing this value changes all joint LiDAR inference noise.
@@ -2404,7 +2404,6 @@ class OmniMoTModel(ImaginaireModel):
             "Discrete RF is not supported for Cosmos3"
         )
         # Continuous RF implementation
-        max_timestep = rectified_flow.noise_scheduler.config.num_train_timesteps
 
         # Get shift value(s) - images can override the shared/video shift.
         rf_config = self.config.rectified_flow_training_config
@@ -2474,27 +2473,10 @@ class OmniMoTModel(ImaginaireModel):
             # Override before frame expansion while preserving the sampling call and RNG order.
             shifts[lidar_only_indexes] = shift_lidar  # [N_lidar_only]
 
-        # Sample noise times: B×T_max for DF (one per video latent frame), B×1 for base/TF
-        if self.config.causal_training_strategy == "diffusion_forcing":
-            # T_max = max(num_vision_latent_frames) across the batch; trailing entries for shorter
-            # sequences are unused (sliced away in _add_noise_to_input).
-            T_max = max(num_vision_latent_frames)
-            sigmas = (
-                rectified_flow.sample_train_time(
-                    batch_size * T_max, iteration=iteration, shifts=shifts.repeat_interleave(T_max)
-                )
-                .to(**self.tensor_kwargs_fp32)
-                .reshape(batch_size, T_max)
-            )  # [B,T_max]
-        else:
-            sigmas = (
-                rectified_flow.sample_train_time(batch_size, iteration=iteration, shifts=shifts)
-                .to(**self.tensor_kwargs_fp32)
-                .unsqueeze(1)
-            )  # [B,1]
-
-        timesteps = sigmas * max_timestep  # [B,1] or [B,T_max]
-        return timesteps, sigmas
+        frames = max(num_vision_latent_frames) if self.config.causal_training_strategy == "diffusion_forcing" else 1
+        return rectified_flow.sample_continuous_train_time(
+            batch_size, shifts, self.tensor_kwargs_fp32, iteration=iteration, frames=frames
+        )
 
     def _get_train_noise_level_action(
         self, batch_size: int, iteration: int | None = None
@@ -2650,16 +2632,12 @@ class OmniMoTModel(ImaginaireModel):
         # view(-1,1,1)[:T_latent]: for base/TF sigmas[i] is (1,), view gives (1,1,1) and the slice is a no-op;
         # for DF sigmas[i] is (T_max,) — one sigma per video latent frame — view gives (T_max,1,1)
         # and [:T_latent] slices to (T_latent,1,1) matching the per-item latent frame count.
-        num_vision_items = len(condition_mask_vision)
-        noisy_mask_vision = [1.0 - cond_mask for cond_mask in condition_mask_vision]
-        sigmas_vision = [
-            sigmas[i].view(-1, 1, 1)[: x0_vision[i].shape[2]] * noisy_mask_vision[i] for i in range(num_vision_items)
-        ]
         # Image/video interpolation has the same linear equation; modality-specific
         # distributions and weights are selected in scheduling and loss computation.
         rectified_flow_vision = (
             self.rectified_flow_image if gen_data_clean.is_image_batch else self.rectified_flow_video
         )
+        sigmas_vision = rectified_flow_vision.vision_sigmas(x0_vision, sigmas, condition_mask_vision)
         xt_vision, vt_vision = rectified_flow_vision.get_interpolation(
             epsilon_vision, x0_vision, sigmas_vision
         )  # list of [C,T,H,W], list of [C,T,H,W]

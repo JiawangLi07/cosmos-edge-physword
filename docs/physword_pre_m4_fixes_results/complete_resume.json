@@ -1,0 +1,11 @@
+{
+  "loss_max_abs": 0,
+  "next_update_max_abs": 0,
+  "rng_equal": true,
+  "data_order_equal": true,
+  "scheduler_equal": true,
+  "ema_equal": true,
+  "scaler_equal": true,
+  "frozen_vae_restored": true,
+  "weights": "SYNTHETIC random native tiny"
+}

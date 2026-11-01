@@ -1,0 +1,60 @@
+{
+  "definitions": {
+    "align": "Reposition/orient hand, object or aperture to establish relative alignment; does not assert successful contact or insertion.",
+    "approach": "Move the hand toward a visible object before enclosure or manipulation.",
+    "grasp": "Close or conform fingers around a visible object; the phase can end before a successful lift, which must not be presumed.",
+    "hold": "Maintain a continuous grasp and approximately stable support of an already acquired object, including the tube held for the other hand.",
+    "lift": "Raise an enclosed object away from the table/support, with visible upward object motion.",
+    "lower": "Move the held object downward toward the table; does not assert support contact or release.",
+    "rotate": "Change the orientation of a held object through wrist or finger rotation."
+  },
+  "effector": "left",
+  "id": "badminton_left_v1",
+  "mask_by_split": {
+    "test": {
+      "masked": 16,
+      "ratio": 0.021505376344086023,
+      "total": 744
+    },
+    "train": {
+      "masked": 24,
+      "ratio": 0.024291497975708502,
+      "total": 988
+    }
+  },
+  "missing_feedback": "neutral pw_start; never fabricate a class label",
+  "model_vocabulary_hash": "3d74b2a6532a95090dc0292b30a8210ba074530188939a7d5d9eacaaf6381b07",
+  "order": "lexicographic; valid TRAIN labels only",
+  "schema": 1,
+  "source_vocabulary_sha256": "64fb4d19646ed989d7c5b5903df3834ebc63bc7c66173bcd58764c5e4b5de066",
+  "source_windows_sha256": "a870319f565b76c919711cbf4161f6313966f7460da9bbb7ef0e90df92431ca8",
+  "task_id": "badminton",
+  "train_label_counts": {
+    "align": 34,
+    "approach": 1,
+    "grasp": 72,
+    "hold": 721,
+    "lift": 36,
+    "lower": 64,
+    "rotate": 36
+  },
+  "train_label_frequencies": {
+    "align": 0.035269709543568464,
+    "approach": 0.001037344398340249,
+    "grasp": 0.07468879668049792,
+    "hold": 0.7479253112033195,
+    "lift": 0.03734439834024896,
+    "lower": 0.06639004149377593,
+    "rotate": 0.03734439834024896
+  },
+  "unknown_eval_label_policy": "mask CE only; visual target validity remains independent",
+  "words": [
+    "align",
+    "approach",
+    "grasp",
+    "hold",
+    "lift",
+    "lower",
+    "rotate"
+  ]
+}

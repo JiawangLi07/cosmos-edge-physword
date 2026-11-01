@@ -53,7 +53,7 @@ def make_network(*, physword: bool = False, device: str = "cuda") -> Cosmos3VFMN
     language_model = Nemotron3DenseVLTextForCausalLM(config)
     kwargs = {}
     if physword:
-        kwargs["physword"] = {"enabled": True}
+        kwargs["physword"] = physword if isinstance(physword, dict) else {"enabled": True}
     network = Cosmos3VFMNetwork(
         language_model,
         Cosmos3VFMNetworkConfig(
