@@ -6,7 +6,7 @@ from dataclasses import dataclass
 
 @dataclass
 class PhysWordConfig:
-    """Opt-in manual words; private model IDs, never HF tokenizer IDs."""
+    """Opt-in Physical Words; private model IDs, never HF tokenizer IDs."""
 
     enabled: bool = False
     token_id_base: int = 1 << 30

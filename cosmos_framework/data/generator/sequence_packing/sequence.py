@@ -24,6 +24,7 @@ from cosmos_framework.data.generator.sequence_packing.runtime import (
 from cosmos_framework.utils.generator.spatial_patch import normalize_spatial_patch_hw
 
 if TYPE_CHECKING:
+    from cosmos_framework.model.generator.physword.multimodal import ReasonerCondition
     from cosmos_framework.model.generator.utils.data_and_condition import GenerationDataClean
 
 
@@ -1388,6 +1389,8 @@ class PackedSequence:
     # Set by the dedicated packer so attention reads the layout from the batch,
     # without interpreting arbitrary control/target items as separate cameras.
     multiview_action_temporal_factor: int | None = None
+
+    reasoner_condition: ReasonerCondition | None = None
 
     def __post_init__(self) -> None:
         self._sequence_pack_metadata: SequencePackMetadata | None = None

@@ -23,6 +23,7 @@ from cosmos_framework.model.generator.physword.config import PhysWordConfig, res
 
 if TYPE_CHECKING:
     from cosmos_framework.configs.base.defaults.model_config import MultiviewActionConditioningConfig
+    from cosmos_framework.model.generator.physword.multimodal import ReasonerCondition
     from cosmos_framework.model.generator.utils.data_and_condition import GenerationDataClean
 
 
@@ -354,6 +355,7 @@ def pack_input_sequence(
     radar_patch_spatial_hw: int | tuple[int, int] | None = None,
     physword: PhysWordConfig | dict | None = None,
     physical_words: list[list[str]] | None = None,
+    reasoner_condition: ReasonerCondition | None = None,
 ) -> PackedSequence:
     """
     Pack a sequence of input strings and VAE latents into a packed tensor format.
@@ -416,7 +418,32 @@ def pack_input_sequence(
     del max_num_tokens
 
     pw_config = resolve_physword_config(physword)
-    if pw_config.enabled:
+    if reasoner_condition is not None:
+        if (
+            not pw_config.enabled
+            or physical_words is not None
+            or skip_text_tokens
+            or video_temporal_causal
+            or len(sequence_plans) != 1
+            or gen_data_clean.batch_size != 1
+            or len(input_text_indexes) != 1
+            or any(input_text_indexes)
+        ):
+            raise ValueError("M2 requires enabled PW, B=1, an exclusive typed prefix and no caption retokenization")
+        plan = sequence_plans[0]
+        if (
+            not plan.has_text
+            or not plan.has_vision
+            or plan.text_view_ids is not None
+            or plan.has_action
+            or plan.has_sound
+            or plan.has_lidar
+            or plan.has_radar
+        ):
+            raise ValueError("M2 supports RGB-only single-caption conditions")
+        if not reasoner_condition.boundaries:
+            raise ValueError("Finalize four predicted words and EOS/BOV before repacking")
+    elif pw_config.enabled:
         from cosmos_framework.model.generator.physword.conditioning import append_manual_words
 
         if skip_text_tokens or video_temporal_causal:
@@ -552,7 +579,16 @@ def pack_input_sequence(
                 or sequence_plan.has_action
                 or sequence_plan.has_sound
             )
-            if sequence_plan.text_view_ids is None:
+            if reasoner_condition is not None:
+                text_sample_len = reasoner_condition.input_ids.numel()
+                seq_builder.append_text_span(reasoner_condition.input_ids.tolist(), reasoner_condition.position_ids)
+                seq_builder.set_mrope_temporal_offset(reasoner_condition.next_position)
+                seq_builder.attn_modes.append("causal")
+                seq_builder.split_lens.append(text_sample_len)
+                seq_builder.text_caption_lens.append([text_sample_len])
+                seq_builder.text_caption_view_ids.append([-1])
+                idx_text += 1
+            elif sequence_plan.text_view_ids is None:
                 text_ids = input_text_indexes[idx_text]
                 idx_text += 1
                 text_sample_len = seq_builder.pack_text_tokens(
@@ -1079,6 +1115,7 @@ def pack_input_sequence(
             if getattr(plan, f"has_{name}")
             for _ in range(counts[sample_index] if counts is not None else 1)
         ]
+    packed.reasoner_condition = reasoner_condition
     return packed
 
 

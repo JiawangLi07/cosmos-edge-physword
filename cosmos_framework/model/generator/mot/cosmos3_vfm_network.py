@@ -928,6 +928,13 @@ class Cosmos3VFMNetwork(PreTrainedModel):
             packed_text_embedding = self.language_model.model.embed_tokens(packed_seq.text_ids)  # [N_text,hidden_size]
         else:
             packed_text_embedding = self.physword(packed_seq.text_ids, self.language_model.model.embed_tokens)
+        if packed_seq.reasoner_condition is not None:
+            condition = packed_seq.reasoner_condition
+            packed_text_embedding = packed_text_embedding.index_copy(
+                0,
+                condition.visual_indexes.to(packed_text_embedding.device),
+                condition.visual_features.to(device=packed_text_embedding.device, dtype=packed_text_embedding.dtype),
+            )
         packed_sequence = packed_text_embedding.new_zeros(
             size=(packed_seq.sequence_length, self.hidden_size)
         )  # [N_total,hidden_size]

@@ -1,0 +1,34 @@
+{
+  "m1_base_commit": "5450c01973e6f6d80978511607c3d96051a9629d",
+  "branch": "physword/m0-m1-visibility",
+  "tests": {
+    "tests": 93,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "m2_tests": 19,
+  "previous_regression_tests": 74,
+  "baseline_original_equal": true,
+  "baseline_max_abs": 0.0,
+  "unchanged_core_checks": {
+    "cosmos_framework/model/generator/mot/attention.py": {
+      "unchanged": true,
+      "sha256": "ca579d95ccf212e4e53c343d7b13eaa6f2616440a1dcc69b23181bfbd45bbf63"
+    },
+    "cosmos_framework/model/generator/mot/unified_mot.py": {
+      "unchanged": true,
+      "sha256": "e8f734f03ac761eec308b8f43aeb3473319b8e4b9e387b057f580083be853a0b"
+    },
+    "examples/toml/sft_config/vision_sft_edge.toml": {
+      "unchanged": true,
+      "sha256": "38814b830017cfdf1f39dbab6a917ee32feab98b752275d802f7a82c94a953da"
+    }
+  },
+  "real_edge_forward": "blocked: LFS pointers",
+  "training_started": false,
+  "large_model_downloads": false,
+  "weights": "random tiny native components; synthetic tokenizer vocabulary",
+  "artifacts": "/aifs/lijiawang/physword/m2_results",
+  "environment": "/tmp/physword-m01-venv"
+}

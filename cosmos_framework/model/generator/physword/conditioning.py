@@ -82,6 +82,7 @@ class PhysicalWordEmbedding(nn.Module):
         self.config = config
         with torch.random.fork_rng(devices=[]):
             self.embedding = nn.Embedding(len(PW_TOKENS), hidden_size)
+            self.word_head = nn.Linear(hidden_size, len(ATOMIC_ACTIONS), bias=False)
         self.reset_parameters()
 
     def reset_parameters(self) -> None:
@@ -90,6 +91,7 @@ class PhysicalWordEmbedding(nn.Module):
         generator = torch.Generator(device=self.embedding.weight.device).manual_seed(self.config.embedding_seed)
         with torch.no_grad():
             self.embedding.weight.normal_(mean=0.0, std=0.02, generator=generator)
+            self.word_head.weight.copy_(self.embedding.weight[1:])
 
     def forward(self, ids: torch.Tensor, base_embedding: nn.Embedding) -> torch.Tensor:
         pw_indexes = ids - self.config.token_id_base

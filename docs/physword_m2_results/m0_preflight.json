@@ -1,0 +1,183 @@
+{
+  "checkpoint": "/aifs/lijiawang/physword/Cosmos3-Edge",
+  "revision": "344d602b128d1bbdacb43b08d0a3626f46343e29",
+  "components": {
+    "reasoner": [
+      {
+        "status": "present",
+        "path": "/aifs/lijiawang/physword/Cosmos3-Edge/model.safetensors.index.json",
+        "disk_bytes": 68564
+      },
+      {
+        "status": "lfs_pointer",
+        "path": "/aifs/lijiawang/physword/Cosmos3-Edge/transformer/diffusion_pytorch_model-00001-of-00002.safetensors",
+        "disk_bytes": 135,
+        "expected_bytes": 5000040072,
+        "oid": "sha256:116134e5492c514df79a2f07214e577c397aa961387dbe1c5dda488e7994ff6b"
+      },
+      {
+        "status": "lfs_pointer",
+        "path": "/aifs/lijiawang/physword/Cosmos3-Edge/transformer/diffusion_pytorch_model-00002-of-00002.safetensors",
+        "disk_bytes": 135,
+        "expected_bytes": 1739335512,
+        "oid": "sha256:3b4c0aafe2705c900ac7bc743085a8e9e09c906624331bc2baa21e172e5d48e4"
+      },
+      {
+        "status": "lfs_pointer",
+        "path": "/aifs/lijiawang/physword/Cosmos3-Edge/vision_encoder/model.safetensors",
+        "disk_bytes": 134,
+        "expected_bytes": 978739880,
+        "oid": "sha256:2180ad739ecc96b5c1e9386892d3c5c08bfa42b9cdab9aabc53b028671db89b3"
+      }
+    ],
+    "generator": [
+      {
+        "status": "present",
+        "path": "/aifs/lijiawang/physword/Cosmos3-Edge/transformer/diffusion_pytorch_model.safetensors.index.json",
+        "disk_bytes": 53623
+      },
+      {
+        "status": "lfs_pointer",
+        "path": "/aifs/lijiawang/physword/Cosmos3-Edge/transformer/diffusion_pytorch_model-00001-of-00002.safetensors",
+        "disk_bytes": 135,
+        "expected_bytes": 5000040072,
+        "oid": "sha256:116134e5492c514df79a2f07214e577c397aa961387dbe1c5dda488e7994ff6b"
+      },
+      {
+        "status": "lfs_pointer",
+        "path": "/aifs/lijiawang/physword/Cosmos3-Edge/transformer/diffusion_pytorch_model-00002-of-00002.safetensors",
+        "disk_bytes": 135,
+        "expected_bytes": 1739335512,
+        "oid": "sha256:3b4c0aafe2705c900ac7bc743085a8e9e09c906624331bc2baa21e172e5d48e4"
+      }
+    ],
+    "siglip2": [
+      {
+        "status": "lfs_pointer",
+        "path": "/aifs/lijiawang/physword/Cosmos3-Edge/vision_encoder/model.safetensors",
+        "disk_bytes": 134,
+        "expected_bytes": 978739880,
+        "oid": "sha256:2180ad739ecc96b5c1e9386892d3c5c08bfa42b9cdab9aabc53b028671db89b3"
+      }
+    ],
+    "vae": [
+      {
+        "status": "lfs_pointer",
+        "path": "/aifs/lijiawang/physword/Cosmos3-Edge/vae/diffusion_pytorch_model.safetensors",
+        "disk_bytes": 135,
+        "expected_bytes": 1409400600,
+        "oid": "sha256:230496cb59ff85bc9c040487737c4062480cb61c71e697b197b4c30142f2a0da"
+      },
+      {
+        "status": "present",
+        "path": "/aifs/lijiawang/physword/Cosmos3-Edge/vae/config.json",
+        "disk_bytes": 1755
+      }
+    ],
+    "tokenizer": [
+      {
+        "status": "lfs_pointer",
+        "path": "/aifs/lijiawang/physword/Cosmos3-Edge/tokenizer.json",
+        "disk_bytes": 133,
+        "expected_bytes": 17077500,
+        "oid": "sha256:4dc692a99dca6d92a44e9529ffb53541eb79bb260eec7281bc51268c05d7311c"
+      },
+      {
+        "status": "present",
+        "path": "/aifs/lijiawang/physword/Cosmos3-Edge/tokenizer_config.json",
+        "disk_bytes": 177253
+      },
+      {
+        "status": "present",
+        "path": "/aifs/lijiawang/physword/Cosmos3-Edge/special_tokens_map.json",
+        "disk_bytes": 563
+      },
+      {
+        "status": "present",
+        "path": "/aifs/lijiawang/physword/Cosmos3-Edge/processor_config.json",
+        "disk_bytes": 875
+      },
+      {
+        "status": "present",
+        "path": "/aifs/lijiawang/physword/Cosmos3-Edge/preprocessor_config.json",
+        "disk_bytes": 334
+      },
+      {
+        "status": "present",
+        "path": "/aifs/lijiawang/physword/Cosmos3-Edge/video_preprocessor_config.json",
+        "disk_bytes": 367
+      }
+    ]
+  },
+  "compatibility": {
+    "reasoner_generator_dimensions_match": true,
+    "vae_channels_match": true,
+    "vae_time_compression_matches": true,
+    "patch_width_matches": true,
+    "edge_gen_und_k_norm_enabled": true,
+    "weight_shape_validation": "not_run_until_real_shards_present",
+    "tokenizer_id_validation": "not_run_until_real_tokenizer_present"
+  },
+  "files_complete": false,
+  "metadata_compatible": true,
+  "missing_or_invalid": [
+    {
+      "status": "lfs_pointer",
+      "path": "/aifs/lijiawang/physword/Cosmos3-Edge/transformer/diffusion_pytorch_model-00001-of-00002.safetensors",
+      "disk_bytes": 135,
+      "expected_bytes": 5000040072,
+      "oid": "sha256:116134e5492c514df79a2f07214e577c397aa961387dbe1c5dda488e7994ff6b"
+    },
+    {
+      "status": "lfs_pointer",
+      "path": "/aifs/lijiawang/physword/Cosmos3-Edge/transformer/diffusion_pytorch_model-00002-of-00002.safetensors",
+      "disk_bytes": 135,
+      "expected_bytes": 1739335512,
+      "oid": "sha256:3b4c0aafe2705c900ac7bc743085a8e9e09c906624331bc2baa21e172e5d48e4"
+    },
+    {
+      "status": "lfs_pointer",
+      "path": "/aifs/lijiawang/physword/Cosmos3-Edge/vision_encoder/model.safetensors",
+      "disk_bytes": 134,
+      "expected_bytes": 978739880,
+      "oid": "sha256:2180ad739ecc96b5c1e9386892d3c5c08bfa42b9cdab9aabc53b028671db89b3"
+    },
+    {
+      "status": "lfs_pointer",
+      "path": "/aifs/lijiawang/physword/Cosmos3-Edge/transformer/diffusion_pytorch_model-00001-of-00002.safetensors",
+      "disk_bytes": 135,
+      "expected_bytes": 5000040072,
+      "oid": "sha256:116134e5492c514df79a2f07214e577c397aa961387dbe1c5dda488e7994ff6b"
+    },
+    {
+      "status": "lfs_pointer",
+      "path": "/aifs/lijiawang/physword/Cosmos3-Edge/transformer/diffusion_pytorch_model-00002-of-00002.safetensors",
+      "disk_bytes": 135,
+      "expected_bytes": 1739335512,
+      "oid": "sha256:3b4c0aafe2705c900ac7bc743085a8e9e09c906624331bc2baa21e172e5d48e4"
+    },
+    {
+      "status": "lfs_pointer",
+      "path": "/aifs/lijiawang/physword/Cosmos3-Edge/vision_encoder/model.safetensors",
+      "disk_bytes": 134,
+      "expected_bytes": 978739880,
+      "oid": "sha256:2180ad739ecc96b5c1e9386892d3c5c08bfa42b9cdab9aabc53b028671db89b3"
+    },
+    {
+      "status": "lfs_pointer",
+      "path": "/aifs/lijiawang/physword/Cosmos3-Edge/vae/diffusion_pytorch_model.safetensors",
+      "disk_bytes": 135,
+      "expected_bytes": 1409400600,
+      "oid": "sha256:230496cb59ff85bc9c040487737c4062480cb61c71e697b197b4c30142f2a0da"
+    },
+    {
+      "status": "lfs_pointer",
+      "path": "/aifs/lijiawang/physword/Cosmos3-Edge/tokenizer.json",
+      "disk_bytes": 133,
+      "expected_bytes": 17077500,
+      "oid": "sha256:4dc692a99dca6d92a44e9529ffb53541eb79bb260eec7281bc51268c05d7311c"
+    }
+  ],
+  "real_edge_forward_status": "blocked",
+  "downloads_performed": false
+}
