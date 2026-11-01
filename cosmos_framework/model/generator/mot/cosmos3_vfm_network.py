@@ -11,7 +11,6 @@ from torch import nn
 from transformers.configuration_utils import PretrainedConfig
 from transformers.modeling_utils import PreTrainedModel
 
-from cosmos_framework.utils import log
 from cosmos_framework.configs.base.defaults.joint_attention import packing_layout
 from cosmos_framework.configs.base.defaults.multiview_attention import (
     CrossViewTemporalWindowConfig,
@@ -22,6 +21,15 @@ from cosmos_framework.configs.base.defaults.multiview_attention import (
     SameViewTemporalWindowConfig,
     normalize_multiview_temporal_windows,
     upgrade_saved_multiview_attention,
+)
+from cosmos_framework.data.generator.sequence_packing import ModalityData, PackedSequence
+from cosmos_framework.data.generator.sequence_packing.natten import verify_natten_parameter_list
+from cosmos_framework.data.generator.sequence_packing.runtime import (
+    SequencePack,
+    from_all_seq,
+    get_caption_seq_offsets,
+    get_causal_seq,
+    get_full_only_seq,
 )
 from cosmos_framework.model.generator.mot.action_io_projector import (
     ACTION_IO_PROJECTOR_DOMAIN_AWARE,
@@ -57,21 +65,14 @@ from cosmos_framework.model.generator.mot.multiview_maskless_attention import (
     rigrope_local_head_masks,
 )
 from cosmos_framework.model.generator.mot.rigrope import RopeRigPE, resize_rig_features, spread_over_even_pairs
+from cosmos_framework.model.generator.physword.config import resolve_physword_config
 from cosmos_framework.model.generator.utils.camera_relative_pose import (
     invert_affine_transform,
     invert_rigid_transform,
 )
 from cosmos_framework.model.generator.utils.memory import MemoryState
 from cosmos_framework.model.generator.utils.rig_view_embedding import add_view_embeddings
-from cosmos_framework.data.generator.sequence_packing import ModalityData, PackedSequence
-from cosmos_framework.data.generator.sequence_packing.natten import verify_natten_parameter_list
-from cosmos_framework.data.generator.sequence_packing.runtime import (
-    SequencePack,
-    from_all_seq,
-    get_caption_seq_offsets,
-    get_causal_seq,
-    get_full_only_seq,
-)
+from cosmos_framework.utils import log
 from cosmos_framework.utils.generator.spatial_patch import normalize_spatial_patch_hw
 
 
@@ -120,6 +121,7 @@ class Cosmos3VFMNetworkConfig(PretrainedConfig):
         temporal_compression_factor_sound=1,
         sound_latent_fps: int = 25,
         enable_input_bias: bool = True,
+        physword=None,
         lidar_patch_spatial_hw: int | tuple[int, int] | None = None,
         radar_patch_spatial_hw: int | tuple[int, int] | None = None,
         **kwargs,
@@ -171,6 +173,22 @@ class Cosmos3VFMNetworkConfig(PretrainedConfig):
             )
         self.timestep_embedding_chunk_size = timestep_embedding_chunk_size
         self.predict_text_tokens = predict_text_tokens
+        pw_config = resolve_physword_config(physword)
+        self.physword = dict(
+            enabled=pw_config.enabled,
+            token_id_base=pw_config.token_id_base,
+            embedding_seed=pw_config.embedding_seed,
+        )
+        if pw_config.enabled and (
+            joint_attn_implementation != "two_way"
+            or video_temporal_causal
+            or action_gen
+            or sound_gen
+            or predict_text_tokens
+            or lidar_latent_channel_size is not None
+            or radar_latent_channel_size is not None
+        ):
+            raise ValueError("M1 physword requires RGB-only two_way attention without text prediction")
         self.joint_attn_implementation = joint_attn_implementation
         # One object rather than five fields flattened out of it: the mask reads its scope and
         # window, the folds read all of it through ``maskless_unavailable_reason``, and a copy of
@@ -439,6 +457,16 @@ class Cosmos3VFMNetwork(PreTrainedModel):
 
         self.config = config
         self.parallel_dims = None
+        self.physword = None
+        pw_config = resolve_physword_config(config.physword)
+        if pw_config.enabled:
+            from cosmos_framework.model.generator.physword.conditioning import PhysicalWordEmbedding
+
+            self.physword = PhysicalWordEmbedding(
+                self.hidden_size,
+                self.language_model.model.embed_tokens.num_embeddings,
+                pw_config,
+            )
 
     def init_weights(self, buffer_device: torch.device | None):
         if self.config.vision_gen or self.config.action_gen or self.config.sound_gen:
@@ -521,6 +549,8 @@ class Cosmos3VFMNetwork(PreTrainedModel):
                 torch.nn.init.trunc_normal_(self.sound_modality_embed, std=std, a=-3 * std, b=3 * std)
 
         self.language_model.init_weights(buffer_device=buffer_device)
+        if self.physword is not None:
+            self.physword.reset_parameters()
 
     def generate_reasoner_text(
         self,
@@ -894,7 +924,10 @@ class Cosmos3VFMNetwork(PreTrainedModel):
         Returns:
             tuple of (packed_sequence, target_dtype) where packed_sequence has text embeddings filled in.
         """
-        packed_text_embedding = self.language_model.model.embed_tokens(packed_seq.text_ids)  # [N_text,hidden_size]
+        if self.physword is None:
+            packed_text_embedding = self.language_model.model.embed_tokens(packed_seq.text_ids)  # [N_text,hidden_size]
+        else:
+            packed_text_embedding = self.physword(packed_seq.text_ids, self.language_model.model.embed_tokens)
         packed_sequence = packed_text_embedding.new_zeros(
             size=(packed_seq.sequence_length, self.hidden_size)
         )  # [N_total,hidden_size]

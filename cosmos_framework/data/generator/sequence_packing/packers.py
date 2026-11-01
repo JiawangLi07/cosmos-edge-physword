@@ -13,8 +13,13 @@ from typing import TYPE_CHECKING
 import torch
 
 from cosmos_framework.data.generator.sequence_packing.modality import ModalityData
-from cosmos_framework.data.generator.sequence_packing.sequence import PackedSequence, PackedSequenceBuilder, SequencePlan
+from cosmos_framework.data.generator.sequence_packing.sequence import (
+    PackedSequence,
+    PackedSequenceBuilder,
+    SequencePlan,
+)
 from cosmos_framework.data.generator.sequence_packing.temporal_causal import pack_supertokens_temporal_causal
+from cosmos_framework.model.generator.physword.config import PhysWordConfig, resolve_physword_config
 
 if TYPE_CHECKING:
     from cosmos_framework.configs.base.defaults.model_config import MultiviewActionConditioningConfig
@@ -347,6 +352,8 @@ def pack_input_sequence(
     radar_temporal_compression_factor: int | None = None,
     lidar_patch_spatial_hw: int | tuple[int, int] | None = None,
     radar_patch_spatial_hw: int | tuple[int, int] | None = None,
+    physword: PhysWordConfig | dict | None = None,
+    physical_words: list[list[str]] | None = None,
 ) -> PackedSequence:
     """
     Pack a sequence of input strings and VAE latents into a packed tensor format.
@@ -407,6 +414,14 @@ def pack_input_sequence(
         PackedSequence containing all packed tensors and metadata. See PackedSequence for field details.
     """
     del max_num_tokens
+
+    pw_config = resolve_physword_config(physword)
+    if pw_config.enabled:
+        from cosmos_framework.model.generator.physword.conditioning import append_manual_words
+
+        if skip_text_tokens or video_temporal_causal:
+            raise ValueError("M1 Physical Words require a causal UND prefix and bidirectional video")
+        input_text_indexes = append_manual_words(input_text_indexes, sequence_plans, physical_words, pw_config)
 
     assert special_tokens is not None, "Special tokens must be provided"
     assert isinstance(input_timesteps, torch.Tensor), "input_timesteps must be a tensor"

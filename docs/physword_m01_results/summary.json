@@ -1,0 +1,18 @@
+{
+  "base_commit": "55f0554d0bf167603432041c794a8babbac759b9",
+  "branch": "physword/m0-m1-visibility",
+  "tests": 74,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0,
+  "unchanged_core_checks": {
+    "cosmos_framework/model/generator/mot/attention.py": true,
+    "cosmos_framework/model/generator/mot/unified_mot.py": true,
+    "examples/toml/sft_config/vision_sft_edge.toml": true
+  },
+  "large_model_downloads": false,
+  "training_started": false,
+  "environment": "/tmp/physword-m01-venv",
+  "baseline_worktree": "/tmp/physword-m01-baseline",
+  "artifacts": "/aifs/lijiawang/physword/m01_results"
+}

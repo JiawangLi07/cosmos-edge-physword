@@ -1,0 +1,19 @@
+{
+  "seed": 20261101,
+  "sigma": 0.5,
+  "timestep": 500,
+  "torch": "2.10.0+cu128",
+  "device": "cuda",
+  "weights": "random tiny Edge: 2 layers, width128, GQA4:2, UND K norm",
+  "rgb_latent_adapter": "deterministic fixture; real SigLIP2 and VAE not loaded",
+  "rgb_sha256": "b373bb303a71272ccfec178799a4972f464dfa0d3731674d9ec187f2028bd27c",
+  "baseline_sha256": "c114f25d5ec0d6257547b25c001aba1c113f895cd2ad78d6199a68ddb0381b02",
+  "velocity_shape": [
+    1,
+    48,
+    2,
+    4,
+    4
+  ],
+  "baseline_only": true
+}

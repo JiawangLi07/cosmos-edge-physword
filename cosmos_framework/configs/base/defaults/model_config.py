@@ -5,7 +5,6 @@ from typing import Any, Literal
 
 import attrs
 
-from cosmos_framework.utils.lazy_config import LazyDict
 from cosmos_framework.configs.base.defaults.activation_checkpointing import ActivationCheckpointingConfig
 from cosmos_framework.configs.base.defaults.compile import CompileConfig
 from cosmos_framework.configs.base.defaults.ema import EMAConfig
@@ -15,8 +14,10 @@ from cosmos_framework.configs.base.defaults.parallelism import ParallelismConfig
 from cosmos_framework.configs.base.defaults.quantization import QuantizationConfig
 from cosmos_framework.configs.base.defaults.reasoner import VLMConfig
 from cosmos_framework.model.generator.mot.action_io_projector import ACTION_IO_PROJECTOR_TYPES
+from cosmos_framework.model.generator.physword.config import PhysWordConfig
 from cosmos_framework.model.generator.utils.load_balancing_stats import LBLConfig
 from cosmos_framework.model.generator.utils.sr_latent_noise import SRLatentConditionNoiseConfig
+from cosmos_framework.utils.lazy_config import LazyDict
 
 # Keep these layout names compatible with exported checkpoint metadata.
 # Define the type locally so configuration loading needs no separate workspace package.
@@ -198,6 +199,7 @@ class OmniMoTModelConfig:
     Config for Omni MoT model.
     """
 
+    physword: PhysWordConfig = attrs.field(factory=PhysWordConfig)
     tokenizer: LazyDict = None
     load_vision_tokenizer: bool = True
     """Instantiate the vision tokenizer.

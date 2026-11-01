@@ -1,0 +1,103 @@
+{
+  "seed": 20261101,
+  "sigma": 0.5,
+  "timestep": 500,
+  "torch": "2.10.0+cu128",
+  "device": "cuda",
+  "weights": "random tiny Edge: 2 layers, width128, GQA4:2, UND K norm",
+  "rgb_latent_adapter": "deterministic fixture; real SigLIP2 and VAE not loaded",
+  "rgb_sha256": "b373bb303a71272ccfec178799a4972f464dfa0d3731674d9ec187f2028bd27c",
+  "baseline_sha256": "c114f25d5ec0d6257547b25c001aba1c113f895cd2ad78d6199a68ddb0381b02",
+  "velocity_shape": [
+    1,
+    48,
+    2,
+    4,
+    4
+  ],
+  "baseline_only": false,
+  "traces": [
+    [
+      {
+        "sample_id": 0,
+        "sample_start": 0,
+        "sample_end": 18,
+        "tokens": [
+          {
+            "token": "<pw_start>",
+            "token_id": 1073741824,
+            "global_index": 3,
+            "sample_local_index": 3
+          },
+          {
+            "token": "<pw_approach_v>",
+            "token_id": 1073741825,
+            "global_index": 4,
+            "sample_local_index": 4
+          },
+          {
+            "token": "<pw_pick_v>",
+            "token_id": 1073741827,
+            "global_index": 5,
+            "sample_local_index": 5
+          },
+          {
+            "token": "<pw_move_v>",
+            "token_id": 1073741826,
+            "global_index": 6,
+            "sample_local_index": 6
+          },
+          {
+            "token": "<pw_place_v>",
+            "token_id": 1073741828,
+            "global_index": 7,
+            "sample_local_index": 7
+          }
+        ]
+      }
+    ],
+    [
+      {
+        "sample_id": 0,
+        "sample_start": 0,
+        "sample_end": 18,
+        "tokens": [
+          {
+            "token": "<pw_start>",
+            "token_id": 1073741824,
+            "global_index": 3,
+            "sample_local_index": 3
+          },
+          {
+            "token": "<pw_approach_v>",
+            "token_id": 1073741825,
+            "global_index": 4,
+            "sample_local_index": 4
+          },
+          {
+            "token": "<pw_push_v>",
+            "token_id": 1073741834,
+            "global_index": 5,
+            "sample_local_index": 5
+          },
+          {
+            "token": "<pw_move_v>",
+            "token_id": 1073741826,
+            "global_index": 6,
+            "sample_local_index": 6
+          },
+          {
+            "token": "<pw_place_v>",
+            "token_id": 1073741828,
+            "global_index": 7,
+            "sample_local_index": 7
+          }
+        ]
+      }
+    ]
+  ],
+  "intervention_future_rms": 0.013374722562730312,
+  "intervention_future_max": 0.0390625,
+  "pick_sha256": "abce22f981647442e34a7318f45062ca0c0f86c046b9178f47eb058510aab59d",
+  "push_sha256": "50c75f00051bf7d355b903c4151b8b873f6cb78375be33f8018d8b5b4cf95090"
+}

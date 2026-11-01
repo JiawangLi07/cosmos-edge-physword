@@ -489,7 +489,6 @@ class OmniMoTModel(ImaginaireModel):
         else:
             self.tokenizer_sound_gen = None
 
-
     def build_net(
         self,
         dtype: torch.dtype,
@@ -557,6 +556,7 @@ class OmniMoTModel(ImaginaireModel):
             # the configured scheduler resolution.
             num_train_timesteps = self.config.rectified_flow_inference_config.num_train_timesteps
             network_config = Cosmos3VFMNetworkConfig(
+                physword=self.config.physword,
                 vlm_config=language_model.config,
                 latent_patch_size=self.config.diffusion_expert_config.patch_spatial,
                 lidar_patch_spatial_hw=self.config.diffusion_expert_config.lidar_patch_spatial_hw,
@@ -1006,6 +1006,7 @@ class OmniMoTModel(ImaginaireModel):
         include_end_of_generation_token: bool = False,
         skip_text_tokens: bool = False,
         initial_mrope_temporal_offset: int | float = 0,
+        physical_words: list[list[str]] | None = None,
     ) -> PackedSequence:
         """Wrap ``pack_input_sequence`` with all config-derived args pre-filled.
 
@@ -1056,6 +1057,8 @@ class OmniMoTModel(ImaginaireModel):
                 base_fps=float(self.config.diffusion_expert_config.base_fps),
             )
         packed = pack_input_sequence(
+            physword=self.config.physword,
+            physical_words=physical_words,
             sequence_plans=sequence_plans,
             input_text_indexes=input_text_indexes,
             gen_data_clean=gen_data_clean,
