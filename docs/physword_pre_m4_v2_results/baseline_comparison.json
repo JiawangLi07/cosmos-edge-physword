@@ -1,9 +1,0 @@
-{
-  "original_commit": "55f0554d0bf167603432041c794a8babbac759b9",
-  "current_commit": "ee6288f73f1ff3b4b6566bb6192360f029687c8c",
-  "real_weights": false,
-  "seed": 20261101,
-  "max_abs": 0.0,
-  "rms": 0.0,
-  "exact_equal": true
-}

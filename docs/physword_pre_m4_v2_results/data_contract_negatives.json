@@ -1,8 +1,0 @@
-{
-  "shorter_pw_horizon_accepted": {
-    "pw_future_frames": 16,
-    "video_future_frames": 20,
-    "accepted": true
-  },
-  "definition_change_same_fingerprint": true
-}

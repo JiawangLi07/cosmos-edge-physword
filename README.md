@@ -1,171 +1,89 @@
-> **PhysWord × Cosmos3-Edge extension:** see [README_PHYSWORD.md](README_PHYSWORD.md) for implementation, validation results, and current limitations. The upstream Cosmos Framework documentation follows below.
+# PhysWord × Cosmos3-Edge：核心设计审阅
 
-<p align="center">
-    <img src="https://github.com/user-attachments/assets/28f2d612-bbd6-44a3-8795-833d05e9f05f" width="274" alt="NVIDIA Cosmos"/>
-</p>
+本分支只保留 **12个文件**，用于审核 Physical Word → Video Generator 的架构和训练计算图。9个Python文件均从完整实现提交 `49dfb56` 原样摘出，未为展示重写算法。
 
-<p align="center">
-    <a href="https://github.com/NVIDIA/Cosmos">NVIDIA Cosmos</a> |
-    🤗 <a href="https://huggingface.co/collections/nvidia/cosmos3">Cosmos 3 </a>
-</p>
+这是代码审阅快照，依赖原生 Cosmos Framework，不是独立训练发行包。完整实现、测试和历史证据在 [`physword/m3-real-b-queue`](https://github.com/JiawangLi07/cosmos-edge-physword/tree/physword/m3-real-b-queue) 分支。底座为 [NVIDIA Cosmos Framework](https://github.com/NVIDIA/cosmos-framework)，基线提交 `55f0554`。
 
-<p align="center">
-    Part of the <a href="https://github.com/NVIDIA/Cosmos">NVIDIA Cosmos</a> project family — the training and serving framework repository.
-</p>
+## 建议阅读顺序
 
-# Cosmos-Framework
+| 文件 | 审核重点 |
+|---|---|
+| [training.py](core/training.py) | A+B+C调用链、teacher forcing错位、预测PW条件、连续RF与三项loss |
+| [physword.py](core/physword.py) | K=4自回归、完整前缀重算、最后token flush、fresh repacking |
+| [multimodal.py](core/multimodal.py) | 历史RGB进入UND、共享prefix、position IDs与预测位置、时序边界 |
+| [losses.py](core/losses.py) | Word CE、冻结未来视觉target、FP32 cosine与invalid mask |
+| [conditioning.py](core/conditioning.py) | 独立PW embedding/head、安全token映射、原生embedding兼容 |
+| [config.py](core/config.py) | 动态词表、私有ID命名空间、词表指纹、默认recompute |
+| [initialization.py](core/initialization.py) | 从预训练UND input embedding/LM head做可复现的subword均值初始化 |
+| [optimization.py](core/optimization.py) | Phase A/B、完整参数名选组、冻结范围、真实梯度及更新核对 |
+| [preprocessing.py](core/preprocessing.py) | RGB变换、VAE像素与latent归一化的可执行协议 |
+| [native_integration.patch](native_integration.patch) | 对原生packing、网络输入、RF等7个文件的实际改动 |
 
-**Cosmos-Framework** is an end-to-end framework for training and serving world models, including the **Cosmos3** model family. Everything lives in a single top-level [`cosmos_framework/`](./cosmos_framework) Python package:
+`core/physword.py` 原位置为 `cosmos_framework/inference/physword.py`；其余8个Python文件原位置为 `cosmos_framework/model/generator/physword/`。源码中的import路径保留完整工程原样。
 
-- **Training** — distributed FSDP / TP / CP / PP trainer, native DCP checkpoints with HuggingFace `safetensors` import/export, JSONL / WebDataset / LeRobot dataset adapters. Entry point: `cosmos_framework.scripts.train`. See [`docs/training.md`](./docs/training.md).
-- **Inference** — Diffusers / Transformers / vLLM backends with offline batch generation and online serving (Ray + Gradio). Entry point: `cosmos_framework.scripts.inference`. Ecosystem-facing shim libraries (lightweight standalone wrappers for downstream projects) live under [`packages/`](./packages). For Cosmos3-Nano generation on GPUs with limited VRAM, see the standalone [Diffusers CPU-GPU offloading adapter](./packages/diffusers-cpu-offloading/README.md).
-- **Policy serving** — a server-client pipeline for deploying Cosmos3 policies. See [`docs/action_policy_droid_server.md`](./docs/action_policy_droid_server.md).
-- **Post-training and RL** — supervised, preference-based, reinforcement-learning, distillation, diffusion, and embodied-policy optimization under `cosmos_framework.posttrain`. See [`docs/posttrain/`](./docs/posttrain/index.md).
+## 保留的架构
 
-## Cosmos 3
-
-**Cosmos 3** is our newest model family [[Report]](https://research.nvidia.com/labs/cosmos-lab/cosmos3/technical-report.pdf) [[Website]](https://research.nvidia.com/labs/cosmos-lab/cosmos3/). It is a suite of omnimodal world models designed to jointly process and generate language, images, video, audio, and action sequences within a unified Mixture-of-Transformers architecture. By supporting highly flexible input-output configurations, it seamlessly unifies critical modalities for Physical AI — effectively subsuming vision-language models, video generators, world simulators, and world-action models into a single framework. For a guided experience to test out Cosmos3, please visit [[Cosmos]](https://github.com/nvidia/cosmos).
-
-## Framework Documentation
-
-- [Quickstart](#setup)
-- [Setup](./docs/setup.md)
-- [Training (Supervised Fine-Tuning)](./docs/training.md)
-  - [JSONL Dataset](./docs/dataset_jsonl.md)
-- [Inference](./docs/inference.md)
-  - [Evaluation](./docs/evaluation.md)
-- [Policy Server](./docs/action_policy_droid_server.md)
-- [Post-training and RL](./docs/posttrain/index.md)
-  - [Step-by-step container run guide](./docs/posttrain/howto/run-posttrain.md)
-- [Agent Skills](#agent-skills)
-- Reference
-  - [Code Structure](./docs/code_structure.md)
-  - [Environment Variables](./docs/environment_variables.md)
-  - [FAQ](./docs/faq.md)
-  - [AGENTS.md — repo map for coding agents](./AGENTS.md)
-
-## Setup
-
-For more details and alternative installation methods, see [Setup](./docs/setup.md#installation). Before installing, make sure your machine meets the [System Requirements](./docs/setup.md#system-requirements). If you want a curated PyTorch + CUDA environment, start from the [recommended NVIDIA NGC base image](./docs/setup.md#recommended-base-image).
-
-Install system dependencies:
-
-```shell
-sudo apt-get install -y --no-install-recommends curl ffmpeg git-lfs libgl1 libglib2.0-0 libx11-dev tree wget
+```mermaid
+flowchart LR
+    H[历史 RGB] --> V[冻结 SigLIP2 + Projector]
+    V --> P[共享 UND Prefix]
+    I[Language Instruction] --> P
+    P --> AR[原有 UND：K=4 greedy AR]
+    AR --> W[Predicted PW IDs]
+    P --> RP[Token Repacking]
+    W --> RP
+    H --> VAE[冻结 Wan VAE]
+    VAE --> J[原生双 Transformer Joint MoT]
+    RP --> J
+    N[Future Noise + Sigma] --> J
+    J --> Y[Future Video Velocity]
 ```
 
-Install the package with the required `uv` version, `0.11.29` (pick a dependency group supported by your driver — see [CUDA Variants](./docs/setup.md#cuda-variants)):
+只有原 Cosmos3-Edge 的 UND / GEN 两个Transformer分支。两次调用UND复用同一组参数；没有第三个Transformer、Final-z Injection、Action或Tactile Conditioning。
 
-```shell
-# CUDA 13.0 (recommended)
-uv sync --all-extras --group=cu130-train
-# Or, for CUDA 12.8:
-# uv sync --all-extras --group=cu128-train
-source .venv/bin/activate
+同样本内，UND是因果attention，不能读GEN；GEN可以读取整个UND和GEN。PW经过每层UND的contextual计算产生K/V，GEN通过原生MoT读取这些逐层K/V。没有把最后的hidden state直接注入GEN，也没有把AR cache直接交给GEN。
+
+`native_integration.patch` 中，`packers.py`接收统一prefix并保留索引/位置，`cosmos3_vfm_network.py`对PW和RGB features进行embedding/scatter；原生 `mot/attention.py` 和 `mot/unified_mot.py` 没有架构改写。
+
+## A+B+C训练图
+
+```text
+A（有梯度）
+History RGB + Instruction + start + previous GT words
+    → causal UND → prediction hidden states
+    → V类Word Head → masked CE
+    → 对齐冻结视觉编码器提取的独立未来帧target → cosine loss
+
+B（无梯度）
+原始History/Instruction Prefix
+    → K=4 greedy AR → Predicted PW IDs
+
+C（有梯度）
+History/Instruction Prefix + Predicted PW IDs
+    → fresh embedding lookup + Token Repacking
+    → Joint MoT → native Video Flow Matching Loss
+
+L_total = L_video + lambda_word * L_word + lambda_latent * L_latent
 ```
 
-Run the [GPU and media checks](./docs/setup.md#verify-the-gpu-and-media-runtime)
-before downloading weights. Preserve any CUDA compatibility libraries required
-by your driver; do not clear `LD_LIBRARY_PATH` unconditionally.
+Teacher forcing位置为 `C..C+3`，输入分别为start、w1、w2、w3；监督分别为w1、w2、w3、w4。因此预测wk的hidden不能读取当前GT wk。无效前词反馈使用neutral start，不捏造GT类别。C仅使用B预测的词，不使用Oracle条件；离散argmax不求导，但C重新lookup embedding后保留video→UND K/V→PW table的梯度。
 
-If you are starting from the recommended NGC image (`nvcr.io/nvidia/pytorch:26.06-py3`), see the [one-shot quickstart](./docs/setup.md#quickstart-from-the-recommended-base-image).
+实际Edge shapes：历史RGB `[5,3,H,W]`，未来RGB target `[16,3,H,W]`，`Z_TF=[1,4,2048]`，`word_logits=[1,4,V]`，PW embedding为`[V+1,2048]`。V由冻结词表决定，当前左臂pilot为7类，配置中的16类为legacy默认。未来RGB不进入Reasoner条件。
 
-## Training
+10Hz、5帧历史、16帧未来、K=4、stride=4；最后历史帧之后的PW/video horizon都是1.6秒。视觉target对应clip帧8/12/16/20，分别独立编码并spatial mean pooling。Wan VAE的5/21帧得到2/6个latents，视频条件使用history-only编码的前2个latents。
 
-For the full guide (data preparation, base-checkpoint conversion, parallelism strategies, mixed precision, resuming), see [Training](./docs/training.md). The number of GPUs required depends on the recipe; the shipped recipes under [`examples/`](./examples/README.md) are 8-GPU configurations (tested on 8× H100 80 GB) launched via their paired launch shells, e.g.:
+连续RF保持 `t=1000*sigma`、`x_sigma=(1-sigma)*x0+sigma*epsilon`、`target=epsilon-x0`；history mask保持历史干净并排除其loss。复用原生timestep embedder及loss reduction/weighting，原生video scale=10只应用一次。
 
-```shell
-bash examples/launch_sft_vision_nano.sh
-```
+Phase A优化CE+latent，训练PW/head与选定UND层，冻结GEN/vision/projector/VAE。Phase B启用A+B+C，按配置解冻GEN、`k_norm_und_for_gen`及所选UND/PW参数。末层UND K/V可以收到video梯度；其后FFN/final norm/head没有直接video梯度符合计算图，CE/latent提供相应监督。
 
-Users may adjust the GPU count to match their model and underlying hardware architecture — tune `NPROC_PER_NODE` and the parallelism degrees (DP/CP/FSDP shard) in the recipe accordingly.
+## 请重点检查
 
-### Transfer-Auto and Sim-Auto
+1. Shift与mask是否阻止当前GT/未来RGB泄漏。
+2. AR与repack的prefix、RGB features、mRoPE和最后token是否一致。
+3. GEN是否从每层UND K/V使用PW，video梯度是否回到预期参数。
+4. 三项loss的target、有效mask、冻结范围和权重是否正确。
+5. 10Hz的PW时域是否与生成视频未来时域一致。
 
-- **Cosmos3-Nano-Transfer-Auto:** Start from **Cosmos3-Nano** to reproduce the training curriculum, or directly fine-tune the **released Transfer-Auto checkpoint** on your own data. See the [Transfer-Auto training skill](./.agents/skills/cosmos3-nano-transfer-auto/post-training/SKILL.md) for both paths.
-- **Cosmos3-Nano-Sim-Auto:** For domain or sensor adaptation, fine-tune Transfer-Auto first, then distill that adapted checkpoint through **TF → TF-dCM → SF-DMD**. See the [Sim-Auto training skill](./.agents/skills/cosmos3-nano-sim-auto/post-training/SKILL.md) and [training guide](./docs/training_sim_auto.md).
+当前证据：Tiny完整A+B+C及相关回归已通过；真实默认recompute T06的3个窗口/423项比较零差异；真实PW/head-only Phase A更新与跨进程恢复通过。**完整真实Phase B仍待空卡执行；尚无正式拟合或视频质量提升结论。** 完整证据留在开发分支，不在此分支重复堆放。
 
-We recommend completing adaptation before distillation, rather than applying ordinary supervised fine-tuning (SFT) to the released distilled Sim-Auto checkpoint, to preserve its few-step generation behavior. The released Sim-Auto checkpoint can be used directly for [inference](./docs/inference_sim_auto.md).
-
-## Inference
-
-See [Inference](./docs/inference.md) for the full guide — launch commands, supported modes, parallelism presets, and troubleshooting.
-
-Quick single-GPU launch:
-
-```shell
-python -m cosmos_framework.scripts.inference \
-    --parallelism-preset=latency \
-    -i "inputs/omni/t2v.json" \
-    -o outputs/omni_nano \
-    --checkpoint-path Cosmos3-Nano \
-    --seed=0
-```
-
-## Policy Server
-
-See [Policy Server](./docs/action_policy_droid_server.md) for the full guide.
-
-## Post-training and RL
-
-`cosmos_framework.posttrain` provides a common runtime for offline and online post-training, from
-single-host recipes to distributed Ray execution. Start with the
-[Posttrain documentation](./docs/posttrain/index.md) or follow the
-[step-by-step container run guide](./docs/posttrain/howto/run-posttrain.md).
-
-The repository has two SFT paths. Use the main [Training](./docs/training.md) path for Cosmos3
-generator, reasoner, and policy recipes built on the framework's native configuration, checkpoint,
-and distributed-training stack. Use [Posttrain SFT](./docs/posttrain/guides/sft.md) for Hugging
-Face-based models outside the Cosmos3 recipes. It currently supports Qwen text models, dense
-Qwen3.5/3.8 multimodal models, and Qwen3-VL/Qwen3-VL-MoE, with a common Hugging Face foundation for
-extending support to additional compatible models.
-
-| Algorithm    | Description                                                         | Guide                                                                                                                      |
-| ------------ | ------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
-| DPO          | Offline preference optimization                                     | [DPO](./docs/posttrain/guides/dpo.md)                                                                                      |
-| GRPO         | Group-relative online policy optimization                           | [GRPO](./docs/posttrain/guides/grpo.md)                                                                                    |
-| PPO          | Actor-critic policy optimization, including embodied-agent training | [PPO](./docs/posttrain/guides/ppo.md) · [Embodied PPO examples](./docs/posttrain/howto/run-posttrain.md#8-embodied-ppo)    |
-| OPD          | On-policy distillation from a teacher model                         | [OPD](./docs/posttrain/guides/opd.md)                                                                                      |
-| DiffusionNFT | Online reinforcement learning for diffusion generators              | [DiffusionNFT](./docs/posttrain/guides/nft.md)                                                                             |
-| SFT          | Supervised fine-tuning                                              | —                                                                                                                          |
-
-Model integrations include Cosmos3, GR00T-N1.7, π0.5, Alpamayo through AlpaGym, Qwen and
-Qwen-VL families, and general Hugging Face text and vision-language backends. Algorithm support
-is defined by runtime and data contracts rather than a fixed model allowlist; shipped recipes
-demonstrate qualified combinations, while additional compatible models can use the documented
-model, DataPacker, reward, and simulator extension interfaces.
-
-## Agent Skills
-
-Coding agents (Claude Code, Codex CLI, Cursor, and other AGENTS.md-aware
-tools) can load task-specific instructions for this repo from the bundled
-AgentSkills. Each skill is a self-contained `SKILL.md` that the agent
-invokes automatically when the user's request matches its description.
-
-Skills live in [`.agents/skills/`](./.agents/skills) (canonical) and are
-mirrored under [`.claude/skills/`](./.claude/skills) for Claude Code:
-
-| Skill                                                                            | When it activates                                                                                                                        |
-| -------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
-| [`cosmos3-setup`](./.agents/skills/cosmos3-setup/SKILL.md)                       | Installation, environment setup, checkpoint downloads, Docker.                                                                           |
-| [`cosmos3-codebase-nav`](./.agents/skills/cosmos3-codebase-nav/SKILL.md)         | "Where is X" / "where do I change parameter Y" questions across `cosmos_framework/`.                                                     |
-| [`cosmos3-inference`](./.agents/skills/cosmos3-inference/SKILL.md)               | Running offline or online inference, parallelism, sampling parameters.                                                                   |
-| [`cosmos3-post-training`](./.agents/skills/cosmos3-post-training/SKILL.md)       | SFT post-training end-to-end: data prep, DCP conversion, launch, export.                                                                 |
-| [`cosmos-automl`](./.agents/skills/cosmos-automl/SKILL.md)                       | Reasoner hyperparameter search and GEPA prompt optimization; [main/development-branch setup](./docs/automl.md#installation-from-source). |
-| [`cosmos3-env-troubleshoot`](./.agents/skills/cosmos3-env-troubleshoot/SKILL.md) | Diagnosing install/runtime errors (ImportError, CUDA, Docker, checkpoint failures).                                                      |
-
-See [`AGENTS.md`](./AGENTS.md) for the canonical repo map that agents load
-first; the skills above are referenced from there.
-
-## Reference
-
-| Topic                                                        | What it covers                                                                                                                            |
-| ------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------- |
-| [Setup](./docs/setup.md)                                     | Hardware/software prerequisites, `uv` install paths, CUDA variants, Docker base image, and base-checkpoint downloading.                   |
-| [Code Structure](./docs/code_structure.md)                   | Repository layout and a per-subpackage tour of `cosmos_framework/` — where each concern lives and where to add new code.                  |
-| [Training](./docs/training.md)                               | Launching multi-GPU and multi-node runs; parallelism strategies; mixed precision; resuming.                                               |
-| [Inference (from a trained checkpoint)](./docs/inference.md) | Loading a trained checkpoint into one of the inference backends.                                                                          |
-| [Policy Server](./docs/action_policy_droid_server.md)        | Running the server-client pipeline for Cosmos3-Policy-DROID.                                                                              |
-| [Post-training and RL](./docs/posttrain/index.md)            | SFT, preference optimization, online RL, distillation, diffusion RL, embodied policies, and extension guides.                             |
-| [FAQ](./docs/faq.md)                                         | Troubleshooting (OOM, NCCL hangs, slow training), environment variables, and common pitfalls.                                             |
-| [AGENTS.md](./AGENTS.md) + [Agent Skills](#agent-skills)     | Repo map and task-specific `SKILL.md` files loaded automatically by AGENTS.md-aware coding agents (Claude Code, Codex CLI, Cursor, etc.). |
+项目保留原始版权声明与 [LICENSE](LICENSE)。

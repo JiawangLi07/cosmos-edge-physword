@@ -1,6 +1,0 @@
-{
-  "approved_for_batch": false,
-  "reviewer": "",
-  "pilot_report": "/aifs/lijiawang/physword/cosmos-framework-data/docs/physword_data/pilot_report.md",
-  "reason": "Pilot labels retain separate complete left/right tracks, but require human semantic review and a configured VLM transport before batch annotation. No external paid API was called."
-}

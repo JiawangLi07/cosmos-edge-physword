@@ -1,0 +1,535 @@
+diff --git a/cosmos_framework/configs/base/defaults/model_config.py b/cosmos_framework/configs/base/defaults/model_config.py
+index 9486c13..354564f 100644
+--- a/cosmos_framework/configs/base/defaults/model_config.py
++++ b/cosmos_framework/configs/base/defaults/model_config.py
+@@ -5,7 +5,6 @@ from typing import Any, Literal
+ 
+ import attrs
+ 
+-from cosmos_framework.utils.lazy_config import LazyDict
+ from cosmos_framework.configs.base.defaults.activation_checkpointing import ActivationCheckpointingConfig
+ from cosmos_framework.configs.base.defaults.compile import CompileConfig
+ from cosmos_framework.configs.base.defaults.ema import EMAConfig
+@@ -15,8 +14,10 @@ from cosmos_framework.configs.base.defaults.parallelism import ParallelismConfig
+ from cosmos_framework.configs.base.defaults.quantization import QuantizationConfig
+ from cosmos_framework.configs.base.defaults.reasoner import VLMConfig
+ from cosmos_framework.model.generator.mot.action_io_projector import ACTION_IO_PROJECTOR_TYPES
++from cosmos_framework.model.generator.physword.config import PhysWordConfig
+ from cosmos_framework.model.generator.utils.load_balancing_stats import LBLConfig
+ from cosmos_framework.model.generator.utils.sr_latent_noise import SRLatentConditionNoiseConfig
++from cosmos_framework.utils.lazy_config import LazyDict
+ 
+ # Keep these layout names compatible with exported checkpoint metadata.
+ # Define the type locally so configuration loading needs no separate workspace package.
+@@ -198,6 +199,7 @@ class OmniMoTModelConfig:
+     Config for Omni MoT model.
+     """
+ 
++    physword: PhysWordConfig = attrs.field(factory=PhysWordConfig)
+     tokenizer: LazyDict = None
+     load_vision_tokenizer: bool = True
+     """Instantiate the vision tokenizer.
+diff --git a/cosmos_framework/data/generator/sequence_packing/packers.py b/cosmos_framework/data/generator/sequence_packing/packers.py
+index 957f36c..36c24d3 100644
+--- a/cosmos_framework/data/generator/sequence_packing/packers.py
++++ b/cosmos_framework/data/generator/sequence_packing/packers.py
+@@ -13,11 +13,17 @@ from typing import TYPE_CHECKING
+ import torch
+ 
+ from cosmos_framework.data.generator.sequence_packing.modality import ModalityData
+-from cosmos_framework.data.generator.sequence_packing.sequence import PackedSequence, PackedSequenceBuilder, SequencePlan
++from cosmos_framework.data.generator.sequence_packing.sequence import (
++    PackedSequence,
++    PackedSequenceBuilder,
++    SequencePlan,
++)
+ from cosmos_framework.data.generator.sequence_packing.temporal_causal import pack_supertokens_temporal_causal
++from cosmos_framework.model.generator.physword.config import PhysWordConfig, resolve_physword_config
+ 
+ if TYPE_CHECKING:
+     from cosmos_framework.configs.base.defaults.model_config import MultiviewActionConditioningConfig
++    from cosmos_framework.model.generator.physword.multimodal import ReasonerCondition
+     from cosmos_framework.model.generator.utils.data_and_condition import GenerationDataClean
+ 
+ 
+@@ -347,6 +353,9 @@ def pack_input_sequence(
+     radar_temporal_compression_factor: int | None = None,
+     lidar_patch_spatial_hw: int | tuple[int, int] | None = None,
+     radar_patch_spatial_hw: int | tuple[int, int] | None = None,
++    physword: PhysWordConfig | dict | None = None,
++    physical_words: list[list[str]] | None = None,
++    reasoner_condition: ReasonerCondition | None = None,
+ ) -> PackedSequence:
+     """
+     Pack a sequence of input strings and VAE latents into a packed tensor format.
+@@ -408,6 +417,39 @@ def pack_input_sequence(
+     """
+     del max_num_tokens
+ 
++    pw_config = resolve_physword_config(physword)
++    if reasoner_condition is not None:
++        if (
++            not pw_config.enabled
++            or physical_words is not None
++            or skip_text_tokens
++            or video_temporal_causal
++            or len(sequence_plans) != 1
++            or gen_data_clean.batch_size != 1
++            or len(input_text_indexes) != 1
++            or any(input_text_indexes)
++        ):
++            raise ValueError("M2 requires enabled PW, B=1, an exclusive typed prefix and no caption retokenization")
++        plan = sequence_plans[0]
++        if (
++            not plan.has_text
++            or not plan.has_vision
++            or plan.text_view_ids is not None
++            or plan.has_action
++            or plan.has_sound
++            or plan.has_lidar
++            or plan.has_radar
++        ):
++            raise ValueError("M2 supports RGB-only single-caption conditions")
++        if not reasoner_condition.boundaries:
++            raise ValueError("Finalize four predicted words and EOS/BOV before repacking")
++    elif pw_config.enabled:
++        from cosmos_framework.model.generator.physword.conditioning import append_manual_words
++
++        if skip_text_tokens or video_temporal_causal:
++            raise ValueError("M1 Physical Words require a causal UND prefix and bidirectional video")
++        input_text_indexes = append_manual_words(input_text_indexes, sequence_plans, physical_words, pw_config)
++
+     assert special_tokens is not None, "Special tokens must be provided"
+     assert isinstance(input_timesteps, torch.Tensor), "input_timesteps must be a tensor"
+     if input_timesteps.is_cuda:
+@@ -537,7 +579,16 @@ def pack_input_sequence(
+                 or sequence_plan.has_action
+                 or sequence_plan.has_sound
+             )
+-            if sequence_plan.text_view_ids is None:
++            if reasoner_condition is not None:
++                text_sample_len = reasoner_condition.input_ids.numel()
++                seq_builder.append_text_span(reasoner_condition.input_ids.tolist(), reasoner_condition.position_ids)
++                seq_builder.set_mrope_temporal_offset(reasoner_condition.next_position)
++                seq_builder.attn_modes.append("causal")
++                seq_builder.split_lens.append(text_sample_len)
++                seq_builder.text_caption_lens.append([text_sample_len])
++                seq_builder.text_caption_view_ids.append([-1])
++                idx_text += 1
++            elif sequence_plan.text_view_ids is None:
+                 text_ids = input_text_indexes[idx_text]
+                 idx_text += 1
+                 text_sample_len = seq_builder.pack_text_tokens(
+@@ -1064,6 +1115,7 @@ def pack_input_sequence(
+             if getattr(plan, f"has_{name}")
+             for _ in range(counts[sample_index] if counts is not None else 1)
+         ]
++    packed.reasoner_condition = reasoner_condition
+     return packed
+ 
+ 
+diff --git a/cosmos_framework/data/generator/sequence_packing/sequence.py b/cosmos_framework/data/generator/sequence_packing/sequence.py
+index d22e50e..6da79ce 100644
+--- a/cosmos_framework/data/generator/sequence_packing/sequence.py
++++ b/cosmos_framework/data/generator/sequence_packing/sequence.py
+@@ -24,6 +24,7 @@ from cosmos_framework.data.generator.sequence_packing.runtime import (
+ from cosmos_framework.utils.generator.spatial_patch import normalize_spatial_patch_hw
+ 
+ if TYPE_CHECKING:
++    from cosmos_framework.model.generator.physword.multimodal import ReasonerCondition
+     from cosmos_framework.model.generator.utils.data_and_condition import GenerationDataClean
+ 
+ 
+@@ -1389,6 +1390,8 @@ class PackedSequence:
+     # without interpreting arbitrary control/target items as separate cameras.
+     multiview_action_temporal_factor: int | None = None
+ 
++    reasoner_condition: ReasonerCondition | None = None
++
+     def __post_init__(self) -> None:
+         self._sequence_pack_metadata: SequencePackMetadata | None = None
+         assert isinstance(self.text_ids, torch.Tensor), "PackedSequence.text_ids must be finalized"
+diff --git a/cosmos_framework/model/generator/algorithm/loss/flow_matching.py b/cosmos_framework/model/generator/algorithm/loss/flow_matching.py
+index b523dd4..65d7130 100644
+--- a/cosmos_framework/model/generator/algorithm/loss/flow_matching.py
++++ b/cosmos_framework/model/generator/algorithm/loss/flow_matching.py
+@@ -11,6 +11,7 @@ passed explicitly instead of being read from ``self``.
+ from __future__ import annotations
+ 
+ from dataclasses import dataclass
++from typing import TYPE_CHECKING
+ 
+ import torch
+ 
+@@ -18,7 +19,9 @@ from cosmos_framework.data.generator.action.utils.unified_action_schema import (
+     UNIFIED_ACTION_DIM,
+     UNIFIED_ACTION_SLOT_GROUPS,
+ )
+-from cosmos_framework.model.generator.diffusion.rectified_flow import RectifiedFlow
++
++if TYPE_CHECKING:
++    from cosmos_framework.model.generator.diffusion.rectified_flow import RectifiedFlow
+ 
+ ACTION_SLOT_SAMPLE_LOSS_KEY = "_action_slot_sample_loss"
+ ACTION_SLOT_SAMPLE_COUNT_KEY = "_action_slot_sample_count"
+diff --git a/cosmos_framework/model/generator/diffusion/rectified_flow.py b/cosmos_framework/model/generator/diffusion/rectified_flow.py
+index c5ce723..fe85bda 100644
+--- a/cosmos_framework/model/generator/diffusion/rectified_flow.py
++++ b/cosmos_framework/model/generator/diffusion/rectified_flow.py
+@@ -164,6 +164,35 @@ class RectifiedFlow:
+         timesteps = self.noise_scheduler.timesteps.to(**tensor_kwargs)[indices]  # [B]
+         return timesteps.unsqueeze(0) if timesteps.ndim == 0 else timesteps  # [B]
+ 
++    def sample_continuous_train_time(self, batch_size, shifts, tensor_kwargs, *, iteration=None, frames=1):
++        """Native Cosmos3 continuous RF protocol, shared by OmniMoT and PW.
++
++        ``shifts`` has one value per sample, resolved by the caller's native
++        resolution/token-count policy. No scheduler-table indexing is involved.
++        """
++        sigmas = (
++            self.sample_train_time(batch_size * frames, iteration=iteration, shifts=shifts.repeat_interleave(frames))
++            .to(**tensor_kwargs)
++            .reshape(batch_size, frames)
++        )
++        return sigmas * self.noise_scheduler.config.num_train_timesteps, sigmas
++
++    @staticmethod
++    def vision_sigmas(clean, sigmas, condition_masks):
++        return [
++            sigma.view(-1, 1, 1)[: item.shape[-3]] * (1.0 - mask)
++            for item, sigma, mask in zip(clean, sigmas, condition_masks, strict=True)
++        ]
++
++    def noise_vision(self, epsilon, clean, sigmas, condition_masks):
++        """Apply the native history mask before linear RF interpolation.
++
++        Each clean/noise item is [C,T,H,W] or [B,C,T,H,W]; masks are [T,1,1].
++        Targets retain epsilon-clean even at conditioned frames (loss masks them).
++        """
++        effective = self.vision_sigmas(clean, sigmas, condition_masks)
++        return self.get_interpolation(epsilon, clean, effective)
++
+     def get_sigmas(self, timesteps, tensor_kwargs):  # timesteps: [B], returns [B]
+         sigmas = self.noise_scheduler.sigmas.to(**tensor_kwargs)  # [N_timesteps+1]
+         schedule_timesteps = self.noise_scheduler.timesteps.to(**tensor_kwargs)  # [N_timesteps]
+diff --git a/cosmos_framework/model/generator/mot/cosmos3_vfm_network.py b/cosmos_framework/model/generator/mot/cosmos3_vfm_network.py
+index 6f8fe24..8200c8a 100644
+--- a/cosmos_framework/model/generator/mot/cosmos3_vfm_network.py
++++ b/cosmos_framework/model/generator/mot/cosmos3_vfm_network.py
+@@ -11,7 +11,6 @@ from torch import nn
+ from transformers.configuration_utils import PretrainedConfig
+ from transformers.modeling_utils import PreTrainedModel
+ 
+-from cosmos_framework.utils import log
+ from cosmos_framework.configs.base.defaults.joint_attention import packing_layout
+ from cosmos_framework.configs.base.defaults.multiview_attention import (
+     CrossViewTemporalWindowConfig,
+@@ -23,6 +22,15 @@ from cosmos_framework.configs.base.defaults.multiview_attention import (
+     normalize_multiview_temporal_windows,
+     upgrade_saved_multiview_attention,
+ )
++from cosmos_framework.data.generator.sequence_packing import ModalityData, PackedSequence
++from cosmos_framework.data.generator.sequence_packing.natten import verify_natten_parameter_list
++from cosmos_framework.data.generator.sequence_packing.runtime import (
++    SequencePack,
++    from_all_seq,
++    get_caption_seq_offsets,
++    get_causal_seq,
++    get_full_only_seq,
++)
+ from cosmos_framework.model.generator.mot.action_io_projector import (
+     ACTION_IO_PROJECTOR_DOMAIN_AWARE,
+     ACTION_IO_PROJECTOR_TYPES,
+@@ -57,21 +65,14 @@ from cosmos_framework.model.generator.mot.multiview_maskless_attention import (
+     rigrope_local_head_masks,
+ )
+ from cosmos_framework.model.generator.mot.rigrope import RopeRigPE, resize_rig_features, spread_over_even_pairs
++from cosmos_framework.model.generator.physword.config import resolve_physword_config
+ from cosmos_framework.model.generator.utils.camera_relative_pose import (
+     invert_affine_transform,
+     invert_rigid_transform,
+ )
+ from cosmos_framework.model.generator.utils.memory import MemoryState
+ from cosmos_framework.model.generator.utils.rig_view_embedding import add_view_embeddings
+-from cosmos_framework.data.generator.sequence_packing import ModalityData, PackedSequence
+-from cosmos_framework.data.generator.sequence_packing.natten import verify_natten_parameter_list
+-from cosmos_framework.data.generator.sequence_packing.runtime import (
+-    SequencePack,
+-    from_all_seq,
+-    get_caption_seq_offsets,
+-    get_causal_seq,
+-    get_full_only_seq,
+-)
++from cosmos_framework.utils import log
+ from cosmos_framework.utils.generator.spatial_patch import normalize_spatial_patch_hw
+ 
+ 
+@@ -120,6 +121,7 @@ class Cosmos3VFMNetworkConfig(PretrainedConfig):
+         temporal_compression_factor_sound=1,
+         sound_latent_fps: int = 25,
+         enable_input_bias: bool = True,
++        physword=None,
+         lidar_patch_spatial_hw: int | tuple[int, int] | None = None,
+         radar_patch_spatial_hw: int | tuple[int, int] | None = None,
+         **kwargs,
+@@ -171,6 +173,18 @@ class Cosmos3VFMNetworkConfig(PretrainedConfig):
+             )
+         self.timestep_embedding_chunk_size = timestep_embedding_chunk_size
+         self.predict_text_tokens = predict_text_tokens
++        pw_config = resolve_physword_config(physword)
++        self.physword = dataclasses.asdict(pw_config)
++        if pw_config.enabled and (
++            joint_attn_implementation != "two_way"
++            or video_temporal_causal
++            or action_gen
++            or sound_gen
++            or predict_text_tokens
++            or lidar_latent_channel_size is not None
++            or radar_latent_channel_size is not None
++        ):
++            raise ValueError("M1 physword requires RGB-only two_way attention without text prediction")
+         self.joint_attn_implementation = joint_attn_implementation
+         # One object rather than five fields flattened out of it: the mask reads its scope and
+         # window, the folds read all of it through ``maskless_unavailable_reason``, and a copy of
+@@ -439,8 +453,20 @@ class Cosmos3VFMNetwork(PreTrainedModel):
+ 
+         self.config = config
+         self.parallel_dims = None
++        self.physword = None
++        pw_config = resolve_physword_config(config.physword)
++        if pw_config.enabled:
++            from cosmos_framework.model.generator.physword.conditioning import PhysicalWordEmbedding
++
++            self.physword = PhysicalWordEmbedding(
++                self.hidden_size,
++                self.language_model.model.embed_tokens.num_embeddings,
++                pw_config,
++            )
+ 
+     def init_weights(self, buffer_device: torch.device | None):
++        if self.physword is not None and self.physword.initialization is not None:
++            raise RuntimeError("Initialize native weights before semantic PW warm-start or resume")
+         if self.config.vision_gen or self.config.action_gen or self.config.sound_gen:
+             self.time_embedder._init_weights(buffer_device=buffer_device)
+ 
+@@ -521,6 +547,8 @@ class Cosmos3VFMNetwork(PreTrainedModel):
+                 torch.nn.init.trunc_normal_(self.sound_modality_embed, std=std, a=-3 * std, b=3 * std)
+ 
+         self.language_model.init_weights(buffer_device=buffer_device)
++        if self.physword is not None:
++            self.physword.reset_parameters()
+ 
+     def generate_reasoner_text(
+         self,
+@@ -894,7 +922,17 @@ class Cosmos3VFMNetwork(PreTrainedModel):
+         Returns:
+             tuple of (packed_sequence, target_dtype) where packed_sequence has text embeddings filled in.
+         """
+-        packed_text_embedding = self.language_model.model.embed_tokens(packed_seq.text_ids)  # [N_text,hidden_size]
++        if self.physword is None:
++            packed_text_embedding = self.language_model.model.embed_tokens(packed_seq.text_ids)  # [N_text,hidden_size]
++        else:
++            packed_text_embedding = self.physword(packed_seq.text_ids, self.language_model.model.embed_tokens)
++        if packed_seq.reasoner_condition is not None:
++            condition = packed_seq.reasoner_condition
++            packed_text_embedding = packed_text_embedding.index_copy(
++                0,
++                condition.visual_indexes.to(packed_text_embedding.device),
++                condition.visual_features.to(device=packed_text_embedding.device, dtype=packed_text_embedding.dtype),
++            )
+         packed_sequence = packed_text_embedding.new_zeros(
+             size=(packed_seq.sequence_length, self.hidden_size)
+         )  # [N_total,hidden_size]
+diff --git a/cosmos_framework/model/generator/omni_mot_model.py b/cosmos_framework/model/generator/omni_mot_model.py
+index 4bee26d..b7a1108 100644
+--- a/cosmos_framework/model/generator/omni_mot_model.py
++++ b/cosmos_framework/model/generator/omni_mot_model.py
+@@ -21,13 +21,31 @@ from torch.distributed.device_mesh import DeviceMesh
+ from torch.distributed.fsdp import MixedPrecisionPolicy
+ from torch.nn.modules.module import _IncompatibleKeys
+ 
+-from cosmos_framework.utils.flags import DEVICE, Device
+-from cosmos_framework.utils.lazy_config import LazyDict
+-from cosmos_framework.utils.lazy_config import instantiate as lazy_instantiate
+-from cosmos_framework.utils.lazy_config.registry import locate
++from cosmos_framework.configs.base.defaults.joint_attention import JointAttnImplementation
++from cosmos_framework.configs.base.defaults.model_config import OmniMoTModelConfig
++from cosmos_framework.configs.base.defaults.multiview_attention import upgrade_saved_multiview_attention
++from cosmos_framework.configs.base.defaults.parallelism import PRECISION_TO_TORCH_DTYPE
++from cosmos_framework.data.generator.action.utils.action_processing import (
++    ActionProcessor,
++    get_action_processing_records,
++)
++from cosmos_framework.data.generator.action.utils.unified_action_schema import UNIFIED_ACTION_SLOT_GROUPS
++from cosmos_framework.data.generator.sequence_packing import (
++    PackedSequence,
++    SequencePlan,
++    build_sequence_plans_from_data_batch,
++    pack_input_sequence,
++)
++from cosmos_framework.data.generator.sequence_packing.modality import add_special_tokens
++from cosmos_framework.data.generator.sequence_packing.packers import (
++    is_item_generated,
++    pack_multiview_action_conditioning,
++    replicate_multiview_actions,
++    uses_single_timestep,
++    validate_cross_view_fps,
++)
++from cosmos_framework.data.generator.utils import IMAGE_RES_SIZE_INFO, VIDEO_RES_SIZE_INFO
+ from cosmos_framework.model._base import ImaginaireModel
+-from cosmos_framework.utils import log, misc
+-from cosmos_framework.utils.count_params import count_params
+ from cosmos_framework.model.generator.algorithm.loss.flow_matching import (
+     ACTION_SLOT_SAMPLE_COUNT_KEY,
+     ACTION_SLOT_SAMPLE_LOSS_KEY,
+@@ -40,16 +58,6 @@ from cosmos_framework.model.generator.algorithm.loss.modality_reduction import (
+     build_modality_loss_items,
+     reduce_global_modality_means,
+ )
+-from cosmos_framework.configs.base.defaults.joint_attention import JointAttnImplementation
+-from cosmos_framework.configs.base.defaults.model_config import OmniMoTModelConfig
+-from cosmos_framework.configs.base.defaults.multiview_attention import upgrade_saved_multiview_attention
+-from cosmos_framework.configs.base.defaults.parallelism import PRECISION_TO_TORCH_DTYPE
+-from cosmos_framework.data.generator.action.utils.action_processing import (
+-    ActionProcessor,
+-    get_action_processing_records,
+-)
+-from cosmos_framework.data.generator.action.utils.unified_action_schema import UNIFIED_ACTION_SLOT_GROUPS
+-from cosmos_framework.data.generator.utils import IMAGE_RES_SIZE_INFO, VIDEO_RES_SIZE_INFO
+ from cosmos_framework.model.generator.diffusion.rectified_flow import RectifiedFlow
+ from cosmos_framework.model.generator.diffusion.samplers.edm import EDMSampler
+ from cosmos_framework.model.generator.diffusion.samplers.fixed_step import FixedStepSampler
+@@ -77,6 +85,8 @@ from cosmos_framework.model.generator.sensor_encoder import (
+     get_vae_pixel_shapes,
+     normalize_uint8_item,
+ )
++from cosmos_framework.model.generator.tokenizers.interface import VideoTokenizerInterface
++from cosmos_framework.model.generator.upsampler.prompts import build_messages, clean_response
+ from cosmos_framework.model.generator.utils.batch_normalization import normalize_vision_batch_inplace
+ from cosmos_framework.model.generator.utils.camera_relative_pose import (
+     prepare_camera_relative_poses,
+@@ -110,27 +120,17 @@ from cosmos_framework.model.generator.utils.sr_latent_noise import (
+     apply_sr_latent_condition_noise,
+     sr_sample_mask,
+ )
+-from cosmos_framework.data.generator.sequence_packing import (
+-    PackedSequence,
+-    SequencePlan,
+-    build_sequence_plans_from_data_batch,
+-    pack_input_sequence,
+-)
+-from cosmos_framework.data.generator.sequence_packing.modality import add_special_tokens
+-from cosmos_framework.data.generator.sequence_packing.packers import (
+-    is_item_generated,
+-    pack_multiview_action_conditioning,
+-    replicate_multiview_actions,
+-    uses_single_timestep,
+-    validate_cross_view_fps,
+-)
+-from cosmos_framework.model.generator.tokenizers.interface import VideoTokenizerInterface
+-from cosmos_framework.model.generator.upsampler.prompts import build_messages, clean_response
++from cosmos_framework.utils import log, misc
++from cosmos_framework.utils.count_params import count_params
++from cosmos_framework.utils.flags import DEVICE, Device
+ from cosmos_framework.utils.generator.data_utils import get_vision_data_resolution, read_positive_int_metadata
+ from cosmos_framework.utils.generator.dtensor_helper import DTensorFastEmaModelUpdater
+ from cosmos_framework.utils.generator.model_weights_stats import WeightTrainingStat
+ from cosmos_framework.utils.generator.parallelism import ParallelDims
+ from cosmos_framework.utils.generator.quantization import swap_modelopt_fp8_linears_on_meta
++from cosmos_framework.utils.lazy_config import LazyDict
++from cosmos_framework.utils.lazy_config import instantiate as lazy_instantiate
++from cosmos_framework.utils.lazy_config.registry import locate
+ 
+ # "LIDA" in ASCII: fixed domain tag separating joint LiDAR noise from RGB.
+ # Changing this value changes all joint LiDAR inference noise.
+@@ -489,7 +489,6 @@ class OmniMoTModel(ImaginaireModel):
+         else:
+             self.tokenizer_sound_gen = None
+ 
+-
+     def build_net(
+         self,
+         dtype: torch.dtype,
+@@ -557,6 +556,7 @@ class OmniMoTModel(ImaginaireModel):
+             # the configured scheduler resolution.
+             num_train_timesteps = self.config.rectified_flow_inference_config.num_train_timesteps
+             network_config = Cosmos3VFMNetworkConfig(
++                physword=self.config.physword,
+                 vlm_config=language_model.config,
+                 latent_patch_size=self.config.diffusion_expert_config.patch_spatial,
+                 lidar_patch_spatial_hw=self.config.diffusion_expert_config.lidar_patch_spatial_hw,
+@@ -1006,6 +1006,7 @@ class OmniMoTModel(ImaginaireModel):
+         include_end_of_generation_token: bool = False,
+         skip_text_tokens: bool = False,
+         initial_mrope_temporal_offset: int | float = 0,
++        physical_words: list[list[str]] | None = None,
+     ) -> PackedSequence:
+         """Wrap ``pack_input_sequence`` with all config-derived args pre-filled.
+ 
+@@ -1056,6 +1057,8 @@ class OmniMoTModel(ImaginaireModel):
+                 base_fps=float(self.config.diffusion_expert_config.base_fps),
+             )
+         packed = pack_input_sequence(
++            physword=self.config.physword,
++            physical_words=physical_words,
+             sequence_plans=sequence_plans,
+             input_text_indexes=input_text_indexes,
+             gen_data_clean=gen_data_clean,
+@@ -2401,7 +2404,6 @@ class OmniMoTModel(ImaginaireModel):
+             "Discrete RF is not supported for Cosmos3"
+         )
+         # Continuous RF implementation
+-        max_timestep = rectified_flow.noise_scheduler.config.num_train_timesteps
+ 
+         # Get shift value(s) - images can override the shared/video shift.
+         rf_config = self.config.rectified_flow_training_config
+@@ -2471,27 +2473,10 @@ class OmniMoTModel(ImaginaireModel):
+             # Override before frame expansion while preserving the sampling call and RNG order.
+             shifts[lidar_only_indexes] = shift_lidar  # [N_lidar_only]
+ 
+-        # Sample noise times: B×T_max for DF (one per video latent frame), B×1 for base/TF
+-        if self.config.causal_training_strategy == "diffusion_forcing":
+-            # T_max = max(num_vision_latent_frames) across the batch; trailing entries for shorter
+-            # sequences are unused (sliced away in _add_noise_to_input).
+-            T_max = max(num_vision_latent_frames)
+-            sigmas = (
+-                rectified_flow.sample_train_time(
+-                    batch_size * T_max, iteration=iteration, shifts=shifts.repeat_interleave(T_max)
+-                )
+-                .to(**self.tensor_kwargs_fp32)
+-                .reshape(batch_size, T_max)
+-            )  # [B,T_max]
+-        else:
+-            sigmas = (
+-                rectified_flow.sample_train_time(batch_size, iteration=iteration, shifts=shifts)
+-                .to(**self.tensor_kwargs_fp32)
+-                .unsqueeze(1)
+-            )  # [B,1]
+-
+-        timesteps = sigmas * max_timestep  # [B,1] or [B,T_max]
+-        return timesteps, sigmas
++        frames = max(num_vision_latent_frames) if self.config.causal_training_strategy == "diffusion_forcing" else 1
++        return rectified_flow.sample_continuous_train_time(
++            batch_size, shifts, self.tensor_kwargs_fp32, iteration=iteration, frames=frames
++        )
+ 
+     def _get_train_noise_level_action(
+         self, batch_size: int, iteration: int | None = None
+@@ -2647,16 +2632,12 @@ class OmniMoTModel(ImaginaireModel):
+         # view(-1,1,1)[:T_latent]: for base/TF sigmas[i] is (1,), view gives (1,1,1) and the slice is a no-op;
+         # for DF sigmas[i] is (T_max,) — one sigma per video latent frame — view gives (T_max,1,1)
+         # and [:T_latent] slices to (T_latent,1,1) matching the per-item latent frame count.
+-        num_vision_items = len(condition_mask_vision)
+-        noisy_mask_vision = [1.0 - cond_mask for cond_mask in condition_mask_vision]
+-        sigmas_vision = [
+-            sigmas[i].view(-1, 1, 1)[: x0_vision[i].shape[2]] * noisy_mask_vision[i] for i in range(num_vision_items)
+-        ]
+         # Image/video interpolation has the same linear equation; modality-specific
+         # distributions and weights are selected in scheduling and loss computation.
+         rectified_flow_vision = (
+             self.rectified_flow_image if gen_data_clean.is_image_batch else self.rectified_flow_video
+         )
++        sigmas_vision = rectified_flow_vision.vision_sigmas(x0_vision, sigmas, condition_mask_vision)
+         xt_vision, vt_vision = rectified_flow_vision.get_interpolation(
+             epsilon_vision, x0_vision, sigmas_vision
+         )  # list of [C,T,H,W], list of [C,T,H,W]
